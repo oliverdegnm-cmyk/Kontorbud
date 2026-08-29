@@ -23,6 +23,7 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({ connected: true, payoutsEnabled });
   } catch (err) {
+    console.error("Stripe-fejl i app/api/stripe/status/[name]/route.js:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke hente Stripe-status." }, { status: 500 });
   }
 }

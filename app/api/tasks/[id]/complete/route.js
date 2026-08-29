@@ -76,6 +76,7 @@ export async function POST(request, { params }) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    console.error("Stripe-fejl i app/api/tasks/[id]/complete/route.js:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke markere opgaven som udført." }, { status: 500 });
   }
 }

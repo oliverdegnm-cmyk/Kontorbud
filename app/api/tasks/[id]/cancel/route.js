@@ -40,6 +40,7 @@ export async function POST(request, { params }) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    console.error("Stripe-fejl i app/api/tasks/[id]/cancel/route.js:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke annullere opgaven." }, { status: 500 });
   }
 }

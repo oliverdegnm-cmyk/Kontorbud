@@ -78,6 +78,7 @@ export async function POST(request, { params }) {
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
+    console.error("Stripe-fejl i app/api/tasks/[id]/checkout/route.js:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke starte betalingen." }, { status: 500 });
   }
 }

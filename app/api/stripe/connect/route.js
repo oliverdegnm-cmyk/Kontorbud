@@ -45,6 +45,7 @@ export async function POST(request) {
 
     return NextResponse.json({ url: accountLink.url });
   } catch (err) {
+    console.error("Stripe-fejl i app/api/stripe/connect/route.js:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke starte Stripe-forbindelsen." }, { status: 500 });
   }
 }
