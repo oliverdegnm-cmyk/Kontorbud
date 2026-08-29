@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useName } from "@/lib/NameContext";
+import { LogOut } from "lucide-react";
 import NotificationBell from "@/components/NotificationBell";
 
 function initials(name) {
@@ -11,7 +12,14 @@ function initials(name) {
 
 export default function TopBar() {
   const pathname = usePathname();
-  const { name } = useName();
+  const { name, logOut } = useName();
+
+  function handleLogOut() {
+    if (confirm("Skift bruger? Du bliver bedt om et nyt navn.")) {
+      logOut();
+      window.location.href = "/";
+    }
+  }
 
   const links = [
     { href: "/", label: "Opgaver" },
@@ -93,6 +101,13 @@ export default function TopBar() {
             </div>
             {name}
           </div>
+          <button
+            onClick={handleLogOut}
+            title="Skift bruger"
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+          >
+            <LogOut size={14} />
+          </button>
         </div>
       )}
     </div>
