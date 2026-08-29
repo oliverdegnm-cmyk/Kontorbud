@@ -179,7 +179,13 @@ export default function BrowsePage() {
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
-                  {t.bids.length === 0 ? <Badge tone="open">Ledig</Badge> : <Badge tone="bids">{t.bids.length} bud</Badge>}
+                  {t.status === "matched" ? (
+                    <Badge tone="matched">Tildelt</Badge>
+                  ) : t.bids.length === 0 ? (
+                    <Badge tone="open">Ledig</Badge>
+                  ) : (
+                    <Badge tone="bids">{t.bids.length} bud</Badge>
+                  )}
                   <div style={{ textAlign: "right" }}>
                     <div style={{ fontSize: 14, fontWeight: 800 }}>{t.budget}</div>
                     <div style={{ fontSize: 10.5, fontWeight: 600, color: "#5B6478" }}>Budget</div>

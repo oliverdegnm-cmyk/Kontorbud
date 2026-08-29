@@ -11,12 +11,18 @@ function mapTask(row, bids) {
     deadline: row.deadline,
     description: row.description,
     postedBy: row.posted_by,
+    status: row.status,
+    acceptedBidId: row.accepted_bid_id,
+    acceptedAt: row.accepted_at,
+    contactEmail: row.contact_email,
     createdAt: row.created_at,
     bids: bids.map((b) => ({
       id: b.id,
       bidderName: b.bidder_name,
       amount: b.amount,
+      amountValue: b.amount_value,
       message: b.message,
+      contactEmail: b.contact_email,
       createdAt: b.created_at,
     })),
   };
@@ -38,7 +44,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { title, category, budget, deadline, description, postedBy } = body;
+    const { title, category, budget, deadline, description, postedBy, contactEmail } = body;
 
     if (!title?.trim() || !description?.trim() || !postedBy?.trim()) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
@@ -48,8 +54,8 @@ export async function POST(request) {
     const caseNo = `K-2026-${String(100 + countRows[0].count).padStart(3, "0")}`;
 
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, contact_email)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       [
         caseNo,
         title.trim(),
@@ -58,6 +64,7 @@ export async function POST(request) {
         deadline?.trim() || "Ikke angivet",
         description.trim(),
         postedBy.trim(),
+        contactEmail?.trim() || null,
       ]
     );
 

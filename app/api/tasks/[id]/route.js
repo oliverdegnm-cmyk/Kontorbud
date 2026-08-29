@@ -21,7 +21,18 @@ export async function GET(request, { params }) {
         deadline: t.deadline,
         description: t.description,
         postedBy: t.posted_by,
-        bids: bidRows.map((b) => ({ id: b.id, bidderName: b.bidder_name, amount: b.amount, message: b.message })),
+        status: t.status,
+        acceptedBidId: t.accepted_bid_id,
+        acceptedAt: t.accepted_at,
+        contactEmail: t.contact_email,
+        bids: bidRows.map((b) => ({
+          id: b.id,
+          bidderName: b.bidder_name,
+          amount: b.amount,
+          amountValue: b.amount_value,
+          message: b.message,
+          contactEmail: b.contact_email,
+        })),
       },
     });
   } catch (err) {
