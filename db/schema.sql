@@ -23,6 +23,13 @@ ALTER TABLE tasks ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'open';
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS accepted_bid_id INTEGER REFERENCES bids(id);
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS accepted_at TIMESTAMPTZ;
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS contact_email TEXT;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS area TEXT;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS cancelled_at TIMESTAMPTZ;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS payment_status TEXT NOT NULL DEFAULT 'unpaid';
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS pending_bid_id INTEGER REFERENCES bids(id);
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS stripe_checkout_session_id TEXT;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS stripe_payment_intent_id TEXT;
 ALTER TABLE bids ADD COLUMN IF NOT EXISTS contact_email TEXT;
 ALTER TABLE bids ADD COLUMN IF NOT EXISTS amount_value INTEGER;
 
@@ -32,5 +39,35 @@ CREATE TABLE IF NOT EXISTS messages (
   bidder_name TEXT NOT NULL,
   sender_name TEXT NOT NULL,
   body TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS profiles (
+  name TEXT PRIMARY KEY,
+  bio TEXT,
+  skills TEXT,
+  portfolio TEXT,
+  stripe_account_id TEXT,
+  stripe_payouts_enabled BOOLEAN NOT NULL DEFAULT false,
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id SERIAL PRIMARY KEY,
+  task_id INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  reviewer_name TEXT NOT NULL,
+  reviewee_name TEXT NOT NULL,
+  rating INTEGER NOT NULL,
+  comment TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id SERIAL PRIMARY KEY,
+  recipient_name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now()
 );

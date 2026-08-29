@@ -13,6 +13,7 @@ export default function PostTaskPage() {
   const [category, setCategory] = useState(CATS[0].name);
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [area, setArea] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [okId, setOkId] = useState("");
@@ -27,7 +28,7 @@ export default function PostTaskPage() {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name }),
+        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area }),
       });
       const data = await res.json();
       if (data.error) {
@@ -85,6 +86,15 @@ export default function PostTaskPage() {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               placeholder="f.eks. 5 dage"
+              style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Område (valgfrit)</label>
+            <input
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              placeholder="f.eks. København eller Kan løses eksternt"
               style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
             />
           </div>

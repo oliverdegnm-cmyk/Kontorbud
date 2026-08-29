@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
+import { notify } from "@/lib/notify";
 
 export async function GET(request, { params }) {
   try {
@@ -33,13 +34,12 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "Besked mangler indhold." }, { status: 400 });
     }
 
-    const { rows: taskRows } = await pool.query("SELECT posted_by FROM tasks WHERE id = $1", [id]);
+    const { rows: taskRows } = await pool.query("SELECT posted_by, title FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
-    const postedBy = taskRows[0].posted_by;
+    const { posted_by: postedBy, title } = taskRows[0];
 
-    // Kun opgavestilleren eller den specifikke byder må skrive i denne tråd.
     if (senderName.trim() !== postedBy && senderName.trim() !== bidderName.trim()) {
       return NextResponse.json({ error: "Du har ikke adgang til denne samtale." }, { status: 403 });
     }
@@ -48,6 +48,10 @@ export async function POST(request, { params }) {
       "INSERT INTO messages (task_id, bidder_name, sender_name, body) VALUES ($1, $2, $3, $4) RETURNING *",
       [id, bidderName.trim(), senderName.trim(), text.trim()]
     );
+
+    const recipient = senderName.trim() === postedBy ? bidderName.trim() : postedBy;
+    await notify(recipient, "new_message", id, `Ny besked fra ${senderName.trim()} om "${title}".`);
+
     const m = rows[0];
     return NextResponse.json({ message: { id: m.id, senderName: m.sender_name, body: m.body, createdAt: m.created_at } }, { status: 201 });
   } catch (err) {

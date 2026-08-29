@@ -24,7 +24,10 @@ export async function GET(request, { params }) {
         status: t.status,
         acceptedBidId: t.accepted_bid_id,
         acceptedAt: t.accepted_at,
-        contactEmail: t.contact_email,
+        completedAt: t.completed_at,
+        cancelledAt: t.cancelled_at,
+        paymentStatus: t.payment_status,
+        area: t.area,
         bids: bidRows.map((b) => ({
           id: b.id,
           bidderName: b.bidder_name,

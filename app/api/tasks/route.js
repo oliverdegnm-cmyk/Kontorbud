@@ -14,7 +14,10 @@ function mapTask(row, bids) {
     status: row.status,
     acceptedBidId: row.accepted_bid_id,
     acceptedAt: row.accepted_at,
-    contactEmail: row.contact_email,
+    completedAt: row.completed_at,
+    cancelledAt: row.cancelled_at,
+    paymentStatus: row.payment_status,
+    area: row.area,
     createdAt: row.created_at,
     bids: bids.map((b) => ({
       id: b.id,
@@ -44,7 +47,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { title, category, budget, deadline, description, postedBy, contactEmail } = body;
+    const { title, category, budget, deadline, description, postedBy, area } = body;
 
     if (!title?.trim() || !description?.trim() || !postedBy?.trim()) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
@@ -54,7 +57,7 @@ export async function POST(request) {
     const caseNo = `K-2026-${String(100 + countRows[0].count).padStart(3, "0")}`;
 
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, contact_email)
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       [
         caseNo,
@@ -64,7 +67,7 @@ export async function POST(request) {
         deadline?.trim() || "Ikke angivet",
         description.trim(),
         postedBy.trim(),
-        contactEmail?.trim() || null,
+        area?.trim() || null,
       ]
     );
 

@@ -5,8 +5,10 @@ export default function Badge({ children, tone }) {
     open: { bg: "#FFF1E0", color: "#B5610E" },
     bids: { bg: "#EEF2FF", color: "#1B3AA6" },
     matched: { bg: "#E9F9F1", color: "#1AA37A" },
+    completed: { bg: "#E9F9F1", color: "#146B4E" },
+    cancelled: { bg: "#F5F7FB", color: "#5B6478" },
   };
-  const t = tones[tone];
+  const t = tones[tone] || tones.bids;
   return (
     <span
       style={{

@@ -40,6 +40,50 @@ Appen opretter selv sine databasetabeller (`tasks` og `bids`), første gang noge
 
 Køb et domæne (f.eks. kontorbud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
 
+## Sådan forbinder du rigtig betaling (Stripe Connect)
+
+Kontorbud bruger Stripe Connect til at holde betalingen, når et bud vælges, og frigive den til hjælperen (minus servicegebyr) når opgaven markeres som udført — præcis som Handyhands "HandyhandPay".
+
+### 1. Opret en Stripe-konto
+
+Gå til [dashboard.stripe.com/register](https://dashboard.stripe.com/register) og opret en konto. Du starter automatisk i **testtilstand** — det er fint til at afprøve hele flowet, uden at rigtige penge bevæger sig.
+
+### 2. Find din hemmelige nøgle
+
+I Stripe Dashboard: **Developers → API keys**. Kopiér **Secret key** (starter med `sk_test_...` i testtilstand).
+
+### 3. Opret en webhook
+
+Kontorbud skal vide, når en betaling er gennemført. Gå til **Developers → Webhooks → Add endpoint**:
+
+- **Endpoint URL**: `https://dit-projekt.vercel.app/api/stripe/webhook`
+- **Events to send**: vælg `checkout.session.completed`
+
+Efter oprettelse, kopiér **Signing secret** (starter med `whsec_...`).
+
+### 4. Tilføj nøglerne i Vercel
+
+Under dit projekts **Settings → Environment Variables** i Vercel, tilføj:
+
+- `STRIPE_SECRET_KEY` — din secret key fra trin 2
+- `STRIPE_WEBHOOK_SECRET` — din signing secret fra trin 3
+
+Redeploy projektet (Vercel gør det automatisk ved næste push, eller klik "Redeploy" manuelt), så de nye variabler tages i brug.
+
+### 5. Sådan tester du uden rigtige penge
+
+I Stripe testtilstand kan alle hjælpere gennemføre Stripe-onboarding med testdata (Stripe udfylder ofte automatisk). Til selve betalingen, brug Stripes testkort:
+
+- Kortnummer: `4242 4242 4242 4242`
+- Udløbsdato: enhver fremtidig dato
+- CVC: enhver 3-cifret kode
+
+### 6. Gå live med rigtige betalinger
+
+Når I er klar til rigtige penge: aktivér din Stripe-konto til **Live mode** (kræver virksomhedsoplysninger, CVR-nummer osv.), og udskift de to nøgler i Vercel med jeres live-nøgler (`sk_live_...` og en ny live-webhook med `whsec_...`).
+
+**Vigtigt om ansvar:** Stripe Connect gør jer teknisk set til en betalingsformidler for jeres brugere. Læs Stripes vilkår for platforme/marketplaces, og overvej at få gennemgået jeres egne forretningsbetingelser af en, der kan rådgive juridisk om det — det er uden for hvad jeg kan hjælpe med.
+
 ## Kør det lokalt (til udvikling)
 
 ```bash

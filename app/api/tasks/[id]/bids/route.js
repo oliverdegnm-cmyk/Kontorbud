@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { formatKr } from "@/lib/fees";
+import { notify } from "@/lib/notify";
 
 function parseAmount(input) {
   if (typeof input === "number") return Math.round(input);
@@ -20,7 +21,7 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "Navn og et gyldigt beløb i kr er påkrævet." }, { status: 400 });
     }
 
-    const { rows: taskRows } = await pool.query("SELECT id, status FROM tasks WHERE id = $1", [id]);
+    const { rows: taskRows } = await pool.query("SELECT id, status, title, posted_by FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
@@ -33,6 +34,8 @@ export async function POST(request, { params }) {
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [id, bidderName.trim(), formatKr(amountValue), amountValue, message?.trim() || "Ingen besked tilføjet.", contactEmail?.trim() || null]
     );
+
+    await notify(taskRows[0].posted_by, "new_bid", id, `${bidderName.trim()} bød ${formatKr(amountValue)} på "${taskRows[0].title}".`);
 
     const b = rows[0];
     return NextResponse.json(

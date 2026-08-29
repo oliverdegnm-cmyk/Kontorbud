@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import Badge from "@/components/Badge";
 import MessageThread from "@/components/MessageThread";
+import ReviewForm from "@/components/ReviewForm";
 import { useName } from "@/lib/NameContext";
 import { feeBreakdown, formatKr } from "@/lib/fees";
+import { statusInfo } from "@/lib/status";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -16,7 +18,9 @@ function initials(name) {
 export default function TaskDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { name } = useName();
+  const [checkoutBanner, setCheckoutBanner] = useState(null);
 
   const [task, setTask] = useState(null);
   const [notFound, setNotFound] = useState(false);
@@ -24,9 +28,10 @@ export default function TaskDetailPage() {
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
-  const [acceptError, setAcceptError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [openThread, setOpenThread] = useState(null);
   const [myLevel, setMyLevel] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   function load() {
     fetch(`/api/tasks/${id}`)
@@ -36,12 +41,32 @@ export default function TaskDetailPage() {
         else setTask(data.task);
       })
       .catch(() => setNotFound(true));
+    fetch(`/api/tasks/${id}/reviews`)
+      .then((r) => r.json())
+      .then((data) => setReviews(data.reviews || []));
   }
 
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    const checkout = searchParams.get("checkout");
+    if (checkout === "success") {
+      setCheckoutBanner("Betaling gennemført. Vi venter på bekræftelse fra Stripe — opdaterer om lidt…");
+      let attempts = 0;
+      const interval = setInterval(() => {
+        attempts += 1;
+        load();
+        if (attempts >= 6) clearInterval(interval);
+      }, 2000);
+      return () => clearInterval(interval);
+    } else if (checkout === "cancelled") {
+      setCheckoutBanner("Betalingen blev annulleret. Buddet er ikke valgt.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!name) return;
@@ -57,43 +82,69 @@ export default function TaskDetailPage() {
       return;
     }
     setError("");
-    try {
-      const res = await fetch(`/api/tasks/${id}/bids`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bidderName: name, amount: amount.trim(), message: msg.trim() }),
-      });
-      const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-        return;
-      }
-      setOk(true);
-      setAmount("");
-      setMsg("");
-      load();
-    } catch (e) {
-      setError("Kunne ikke afgive bud. Prøv igen.");
+    const res = await fetch(`/api/tasks/${id}/bids`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bidderName: name, amount: amount.trim(), message: msg.trim() }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      setError(data.error);
+      return;
     }
+    setOk(true);
+    setAmount("");
+    setMsg("");
+    load();
   }
 
+  const [checkingOut, setCheckingOut] = useState(null);
+
   async function acceptBid(bidId) {
-    setAcceptError("");
+    setActionError("");
+    setCheckingOut(bidId);
     try {
-      const res = await fetch(`/api/tasks/${id}/accept`, {
+      const res = await fetch(`/api/tasks/${id}/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bidId, requesterName: name }),
       });
       const data = await res.json();
       if (data.error) {
-        setAcceptError(data.error);
+        setActionError(data.error);
+        setCheckingOut(null);
         return;
       }
-      load();
+      window.location.href = data.url;
     } catch (e) {
-      setAcceptError("Kunne ikke vælge buddet. Prøv igen.");
+      setActionError("Kunne ikke starte betalingen. Prøv igen.");
+      setCheckingOut(null);
     }
+  }
+
+  async function completeTask() {
+    setActionError("");
+    const res = await fetch(`/api/tasks/${id}/complete`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requesterName: name }),
+    });
+    const data = await res.json();
+    if (data.error) return setActionError(data.error);
+    load();
+  }
+
+  async function cancelTask() {
+    if (!confirm("Er du sikker på at du vil annullere denne opgave?")) return;
+    setActionError("");
+    const res = await fetch(`/api/tasks/${id}/cancel`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requesterName: name }),
+    });
+    const data = await res.json();
+    if (data.error) return setActionError(data.error);
+    load();
   }
 
   if (notFound) {
@@ -109,9 +160,15 @@ export default function TaskDetailPage() {
 
   const isOwner = task.postedBy === name;
   const isMatched = task.status === "matched";
-  const acceptedBid = isMatched ? task.bids.find((b) => b.id === task.acceptedBidId) : null;
+  const isCompleted = task.status === "completed";
+  const isCancelled = task.status === "cancelled";
+  const acceptedBid = isMatched || isCompleted ? task.bids.find((b) => b.id === task.acceptedBidId) : null;
   const isAcceptedBidder = acceptedBid && acceptedBid.bidderName === name;
-  const myFee = isAcceptedBidder && myLevel && acceptedBid.amountValue ? feeBreakdown(acceptedBid.amountValue, myLevel.earnings30d) : null;
+  const myFee = isAcceptedBidder && myLevel && acceptedBid.amountValue ? feeBreakdown(acceptedBid.amountValue, myLevel.earnings30d, myLevel.completionRate) : null;
+  const status = statusInfo(task);
+
+  const myReview = reviews.find((r) => r.reviewerName === name);
+  const canReview = isCompleted && (isOwner || isAcceptedBidder) && !myReview;
 
   return (
     <div>
@@ -122,35 +179,106 @@ export default function TaskDetailPage() {
         <ArrowLeft size={14} /> Tilbage til opgaver
       </div>
 
-      {isMatched && acceptedBid && (isOwner || isAcceptedBidder) && (
+      {actionError && (
+        <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" }}>
+          {actionError}
+        </div>
+      )}
+
+      {checkoutBanner && (
+        <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#EEF2FF", color: "#1B3AA6" }}>
+          {checkoutBanner}
+        </div>
+      )}
+
+      {isCancelled && (
+        <div style={{ background: "#F5F7FB", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "16px 20px", marginBottom: 20, fontSize: 13.5, color: "#5B6478" }}>
+          Denne opgave blev annulleret af opgavestilleren.
+        </div>
+      )}
+
+      {(isMatched || isCompleted) && acceptedBid && (isOwner || isAcceptedBidder) && (
         <div style={{ background: "#E9F9F1", border: "1.5px solid #1AA37A", borderRadius: 16, padding: "16px 20px", marginBottom: 20 }}>
-          <div style={{ fontWeight: 800, fontSize: 14.5, color: "#146B4E", marginBottom: 6 }}>
-            ✓ Opgaven er tildelt {isOwner ? acceptedBid.bidderName : "dig"}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
+            <div style={{ fontWeight: 800, fontSize: 14.5, color: "#146B4E", marginBottom: 6 }}>
+              {isCompleted ? "✓ Opgaven er udført" : `✓ Opgaven er tildelt ${isOwner ? acceptedBid.bidderName : "dig"}`}
+            </div>
+            {isOwner && isMatched && (
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={completeTask}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "none", background: "#1AA37A", color: "#fff", cursor: "pointer" }}
+                >
+                  Marker som udført
+                </button>
+                <button
+                  onClick={cancelTask}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+                >
+                  Annullér
+                </button>
+              </div>
+            )}
           </div>
           {isAcceptedBidder && myFee && (
             <div style={{ fontSize: 13, color: "#146B4E", lineHeight: 1.6 }}>
-              Buddet var på {formatKr(acceptedBid.amountValue)}. Som <b>{myFee.level.label}</b>-hjælper ({myFee.level.feePercent}% servicegebyr) modtager du ca. <b>{formatKr(myFee.net)}</b> efter gebyr.
+              Buddet var på {formatKr(acceptedBid.amountValue)}. Som <b>{myFee.level.label}</b>-hjælper ({myFee.level.feePercent}% servicegebyr) {isCompleted ? "modtog" : "modtager"} du ca. <b>{formatKr(myFee.net)}</b>.
             </div>
           )}
-          <div style={{ fontSize: 13, color: "#146B4E", marginTop: 6 }}>
-            Aftal de sidste detaljer i beskederne nedenfor — al kontakt foregår her på siden.
-          </div>
+          {task.paymentStatus === "held" && (
+            <div style={{ fontSize: 12.5, color: "#146B4E", marginTop: 4 }}>
+              💳 Betalingen er modtaget og holdes af platformen, indtil opgaven markeres som udført.
+            </div>
+          )}
+          {task.paymentStatus === "released" && (
+            <div style={{ fontSize: 12.5, color: "#146B4E", marginTop: 4 }}>
+              💳 Betalingen er frigivet til hjælperen.
+            </div>
+          )}
+          {!isCompleted && (
+            <div style={{ fontSize: 13, color: "#146B4E", marginTop: 6 }}>
+              Aftal de sidste detaljer i beskederne nedenfor — al kontakt foregår her på siden.
+            </div>
+          )}
           <MessageThread taskId={task.id} bidderName={acceptedBid.bidderName} currentName={name} />
+
+          {canReview && <ReviewForm taskId={task.id} currentName={name} onSubmitted={load} />}
+          {isCompleted && myReview && (
+            <div style={{ marginTop: 10, fontSize: 12.5, color: "#146B4E" }}>Du har allerede anmeldt denne opgave.</div>
+          )}
+        </div>
+      )}
+
+      {isCompleted && reviews.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10 }}>Anmeldelser af denne opgave</div>
+          {reviews.map((r) => (
+            <div key={r.id} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 14, marginBottom: 8, fontSize: 13 }}>
+              <b>{r.reviewerName}</b> gav <b>{r.revieweeName}</b> {r.rating} ★{r.comment ? ` — ${r.comment}` : ""}
+            </div>
+          ))}
         </div>
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 26, alignItems: "start" }}>
         <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 26 }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap", alignItems: "center" }}>
             <span style={{ fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478" }}>
               {task.category}
             </span>
-            {isMatched ? (
-              <Badge tone="matched">Tildelt</Badge>
-            ) : task.bids.length === 0 ? (
-              <Badge tone="open">Ledig</Badge>
-            ) : (
-              <Badge tone="bids">{task.bids.length} bud</Badge>
+            {task.area && (
+              <span style={{ fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478" }}>
+                📍 {task.area}
+              </span>
+            )}
+            <Badge tone={status.tone}>{status.label}</Badge>
+            {isOwner && task.status === "open" && (
+              <button
+                onClick={cancelTask}
+                style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+              >
+                Annullér opgave
+              </button>
             )}
           </div>
           <h2 style={{ fontSize: 22, lineHeight: 1.25, marginBottom: 12 }}>{task.title}</h2>
@@ -158,7 +286,9 @@ export default function TaskDetailPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginTop: 20, paddingTop: 20, borderTop: "1px solid #E4E8F0" }}>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Oprettet af</div>
-              <div style={{ fontSize: 14.5, fontWeight: 700 }}>{task.postedBy}</div>
+              <Link href={`/bruger/${encodeURIComponent(task.postedBy)}`} style={{ fontSize: 14.5, fontWeight: 700, color: "#2A55E5" }}>
+                {task.postedBy}
+              </Link>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Frist</div>
@@ -169,52 +299,51 @@ export default function TaskDetailPage() {
           <div style={{ marginTop: 30 }}>
             <h3 style={{ fontSize: 15, marginBottom: 14 }}>Bud ({task.bids.length})</h3>
             {task.bids.length === 0 && <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen bud endnu. Vær den første.</p>}
-            {acceptError && (
-              <div style={{ marginBottom: 14, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" }}>
-                {acceptError}
-              </div>
-            )}
             {task.bids.map((b, i) => {
               const canChat = isOwner || b.bidderName === name;
+              const isTheAcceptedOne = (isMatched || isCompleted) && task.acceptedBidId === b.id;
               return (
                 <div key={b.id} style={{ padding: "14px 0", borderBottom: i < task.bids.length - 1 ? "1px solid #E4E8F0" : "none" }}>
                   <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                    <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: "50%",
-                        background: "#EEF2FF",
-                        color: "#1B3AA6",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 800,
-                        fontSize: 13,
-                        flex: "0 0 auto",
-                      }}
-                    >
-                      {initials(b.bidderName)}
-                    </div>
+                    <Link href={`/bruger/${encodeURIComponent(b.bidderName)}`}>
+                      <div
+                        style={{
+                          width: 38,
+                          height: 38,
+                          borderRadius: "50%",
+                          background: "#EEF2FF",
+                          color: "#1B3AA6",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontWeight: 800,
+                          fontSize: 13,
+                          flex: "0 0 auto",
+                        }}
+                      >
+                        {initials(b.bidderName)}
+                      </div>
+                    </Link>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                        <span style={{ fontWeight: 700, fontSize: 13.5 }}>
+                        <Link href={`/bruger/${encodeURIComponent(b.bidderName)}`} style={{ fontWeight: 700, fontSize: 13.5, color: "#14213D" }}>
                           {b.bidderName}
                           {b.bidderName === name ? " (dig)" : ""}
-                        </span>
-                        {isMatched && task.acceptedBidId === b.id && <Badge tone="matched">Valgt</Badge>}
+                        </Link>
+                        {isTheAcceptedOne && <Badge tone="matched">Valgt</Badge>}
                       </div>
                       <div style={{ fontSize: 13, color: "#5B6478", marginTop: 5, lineHeight: 1.55 }}>{b.message}</div>
                       <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
                         {isOwner && task.status === "open" && (
                           <button
                             onClick={() => acceptBid(b.id)}
-                            style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #2A55E5", background: "#fff", color: "#2A55E5", cursor: "pointer" }}
+                            disabled={checkingOut === b.id}
+                            style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #2A55E5", background: "#fff", color: "#2A55E5", cursor: checkingOut === b.id ? "default" : "pointer", opacity: checkingOut === b.id ? 0.6 : 1 }}
                           >
-                            Vælg dette bud
+                            {checkingOut === b.id ? "Åbner betaling…" : "Vælg og betal for dette bud"}
                           </button>
                         )}
-                        {canChat && !(isMatched && task.acceptedBidId === b.id) && (
+                        {canChat && !isTheAcceptedOne && (
                           <button
                             onClick={() => setOpenThread(openThread === b.bidderName ? null : b.bidderName)}
                             style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
@@ -223,7 +352,7 @@ export default function TaskDetailPage() {
                           </button>
                         )}
                       </div>
-                      {canChat && openThread === b.bidderName && !(isMatched && task.acceptedBidId === b.id) && (
+                      {canChat && openThread === b.bidderName && !isTheAcceptedOne && (
                         <MessageThread taskId={task.id} bidderName={b.bidderName} currentName={name} />
                       )}
                     </div>
@@ -241,7 +370,7 @@ export default function TaskDetailPage() {
           <h3 style={{ fontSize: 15, marginBottom: 16 }}>Budget: {task.budget}</h3>
           {task.status !== "open" ? (
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6 }}>
-              Denne opgave er allerede tildelt og modtager ikke flere bud.
+              Denne opgave modtager ikke flere bud.
             </p>
           ) : (
             <>
@@ -257,7 +386,7 @@ export default function TaskDetailPage() {
               {myLevel && amount && !isNaN(Number(amount)) && Number(amount) > 0 && (
                 <div style={{ fontSize: 12, color: "#5B6478", marginTop: 6 }}>
                   Som {myLevel.level.label}-hjælper ({myLevel.level.feePercent}% gebyr) modtager du ca.{" "}
-                  <b>{formatKr(feeBreakdown(Number(amount), myLevel.earnings30d).net)}</b> hvis buddet vælges.
+                  <b>{formatKr(feeBreakdown(Number(amount), myLevel.earnings30d, myLevel.completionRate).net)}</b> hvis buddet vælges.
                 </div>
               )}
               <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#5B6478", margin: "14px 0 6px" }}>Besked til opgavestiller</label>
