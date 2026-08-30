@@ -147,6 +147,24 @@ export default function TaskDetailPage() {
     load();
   }
 
+  async function deleteTask() {
+    if (!confirm("Slet denne opgave permanent? Det kan ikke fortrydes.")) return;
+    setActionError("");
+    const res = await fetch(`/api/tasks/${id}?requesterName=${encodeURIComponent(name)}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.error) return setActionError(data.error);
+    router.push("/");
+  }
+
+  async function withdrawBid(bidId) {
+    if (!confirm("Træk dit bud tilbage?")) return;
+    setActionError("");
+    const res = await fetch(`/api/tasks/${id}/bids/${bidId}?requesterName=${encodeURIComponent(name)}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.error) return setActionError(data.error);
+    load();
+  }
+
   if (notFound) {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>
@@ -273,12 +291,29 @@ export default function TaskDetailPage() {
             )}
             <Badge tone={status.tone}>{status.label}</Badge>
             {isOwner && task.status === "open" && (
-              <button
-                onClick={cancelTask}
-                style={{ marginLeft: "auto", fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
-              >
-                Annullér opgave
-              </button>
+              <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
+                <Link
+                  href={`/opgave/${task.id}/rediger`}
+                  style={{ fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478" }}
+                >
+                  Redigér
+                </Link>
+                {task.bids.length === 0 ? (
+                  <button
+                    onClick={deleteTask}
+                    style={{ fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", cursor: "pointer" }}
+                  >
+                    Slet opgave
+                  </button>
+                ) : (
+                  <button
+                    onClick={cancelTask}
+                    style={{ fontSize: 12, fontWeight: 700, padding: "6px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+                  >
+                    Annullér opgave
+                  </button>
+                )}
+              </div>
             )}
           </div>
           <h2 style={{ fontSize: 22, lineHeight: 1.25, marginBottom: 12 }}>{task.title}</h2>
@@ -349,6 +384,14 @@ export default function TaskDetailPage() {
                             style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
                           >
                             <MessageCircle size={13} /> {openThread === b.bidderName ? "Skjul besked" : "Send besked"}
+                          </button>
+                        )}
+                        {b.bidderName === name && task.status === "open" && (
+                          <button
+                            onClick={() => withdrawBid(b.id)}
+                            style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", cursor: "pointer" }}
+                          >
+                            Træk bud tilbage
                           </button>
                         )}
                       </div>

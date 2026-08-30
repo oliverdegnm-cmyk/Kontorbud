@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
+import { geocodeArea } from "@/lib/geocode";
 
 function mapTask(row, bids) {
   return {
@@ -18,6 +19,8 @@ function mapTask(row, bids) {
     cancelledAt: row.cancelled_at,
     paymentStatus: row.payment_status,
     area: row.area,
+    lat: row.lat,
+    lng: row.lng,
     createdAt: row.created_at,
     bids: bids.map((b) => ({
       id: b.id,
@@ -56,9 +59,11 @@ export async function POST(request) {
     const { rows: countRows } = await pool.query("SELECT COUNT(*)::int AS count FROM tasks");
     const caseNo = `K-2026-${String(100 + countRows[0].count).padStart(3, "0")}`;
 
+    const coords = await geocodeArea(area);
+
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area, lat, lng)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
       [
         caseNo,
         title.trim(),
@@ -68,6 +73,8 @@ export async function POST(request) {
         description.trim(),
         postedBy.trim(),
         area?.trim() || null,
+        coords?.lat ?? null,
+        coords?.lng ?? null,
       ]
     );
 

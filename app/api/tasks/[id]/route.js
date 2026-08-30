@@ -1,5 +1,36 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
+import { geocodeArea } from "@/lib/geocode";
+
+function mapFullTask(t, bidRows) {
+  return {
+    id: t.id,
+    caseNo: t.case_no,
+    title: t.title,
+    category: t.category,
+    budget: t.budget,
+    deadline: t.deadline,
+    description: t.description,
+    postedBy: t.posted_by,
+    status: t.status,
+    acceptedBidId: t.accepted_bid_id,
+    acceptedAt: t.accepted_at,
+    completedAt: t.completed_at,
+    cancelledAt: t.cancelled_at,
+    paymentStatus: t.payment_status,
+    area: t.area,
+    lat: t.lat,
+    lng: t.lng,
+    bids: bidRows.map((b) => ({
+      id: b.id,
+      bidderName: b.bidder_name,
+      amount: b.amount,
+      amountValue: b.amount_value,
+      message: b.message,
+      contactEmail: b.contact_email,
+    })),
+  };
+}
 
 export async function GET(request, { params }) {
   try {
@@ -10,35 +41,90 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
     const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
-    const t = taskRows[0];
-    return NextResponse.json({
-      task: {
-        id: t.id,
-        caseNo: t.case_no,
-        title: t.title,
-        category: t.category,
-        budget: t.budget,
-        deadline: t.deadline,
-        description: t.description,
-        postedBy: t.posted_by,
-        status: t.status,
-        acceptedBidId: t.accepted_bid_id,
-        acceptedAt: t.accepted_at,
-        completedAt: t.completed_at,
-        cancelledAt: t.cancelled_at,
-        paymentStatus: t.payment_status,
-        area: t.area,
-        bids: bidRows.map((b) => ({
-          id: b.id,
-          bidderName: b.bidder_name,
-          amount: b.amount,
-          amountValue: b.amount_value,
-          message: b.message,
-          contactEmail: b.contact_email,
-        })),
-      },
-    });
+    return NextResponse.json({ task: mapFullTask(taskRows[0], bidRows) });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaven." }, { status: 500 });
+  }
+}
+
+// Redigér en åben opgave. Kun opgavestilleren kan ændre den, og kun mens den stadig er åben.
+export async function PATCH(request, { params }) {
+  try {
+    await ensureSchema();
+    const id = Number(params.id);
+    const body = await request.json();
+    const { requesterName, title, category, budget, deadline, description, area } = body;
+
+    const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
+    if (taskRows.length === 0) {
+      return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
+    }
+    const task = taskRows[0];
+
+    if (task.posted_by !== requesterName?.trim()) {
+      return NextResponse.json({ error: "Kun opgavestilleren kan redigere opgaven." }, { status: 403 });
+    }
+    if (task.status !== "open") {
+      return NextResponse.json({ error: "Opgaven kan kun redigeres, mens den er åben." }, { status: 400 });
+    }
+    if (!title?.trim() || !description?.trim()) {
+      return NextResponse.json({ error: "Titel og beskrivelse er påkrævet." }, { status: 400 });
+    }
+
+    let coords = { lat: task.lat, lng: task.lng };
+    if ((area?.trim() || null) !== task.area) {
+      coords = (await geocodeArea(area)) || { lat: null, lng: null };
+    }
+
+    const { rows } = await pool.query(
+      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, description = $5, area = $6, lat = $7, lng = $8
+       WHERE id = $9 RETURNING *`,
+      [
+        title.trim(),
+        category || task.category,
+        budget?.trim() || "Ikke angivet",
+        deadline?.trim() || "Ikke angivet",
+        description.trim(),
+        area?.trim() || null,
+        coords.lat,
+        coords.lng,
+        id,
+      ]
+    );
+
+    const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
+    return NextResponse.json({ task: mapFullTask(rows[0], bidRows) });
+  } catch (err) {
+    return NextResponse.json({ error: "Kunne ikke opdatere opgaven." }, { status: 500 });
+  }
+}
+
+// Slet en opgave permanent. Kun tilladt hvis den stadig er åben og ingen har budt endnu,
+// så vi aldrig sletter noget en byder allerede har lagt arbejde i.
+export async function DELETE(request, { params }) {
+  try {
+    await ensureSchema();
+    const id = Number(params.id);
+    const { searchParams } = new URL(request.url);
+    const requesterName = searchParams.get("requesterName");
+
+    const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
+    if (taskRows.length === 0) {
+      return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
+    }
+    const task = taskRows[0];
+
+    if (task.posted_by !== requesterName?.trim()) {
+      return NextResponse.json({ error: "Kun opgavestilleren kan slette opgaven." }, { status: 403 });
+    }
+    const { rows: bidCountRows } = await pool.query("SELECT COUNT(*)::int AS count FROM bids WHERE task_id = $1", [id]);
+    if (task.status !== "open" || bidCountRows[0].count > 0) {
+      return NextResponse.json({ error: "Opgaver med bud kan ikke slettes — annullér den i stedet." }, { status: 400 });
+    }
+
+    await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    return NextResponse.json({ error: "Kunne ikke slette opgaven." }, { status: 500 });
   }
 }
