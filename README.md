@@ -36,7 +36,16 @@ Appen opretter selv sine databasetabeller (`tasks` og `bids`), første gang noge
 
 (Foretrækker du at oprette tabellerne manuelt på forhånd, ligger `npm run db:init` stadig i projektet og gør præcis det samme.)
 
-### 5. Eget domæne (valgfrit)
+### 5. Login (påkrævet variabel)
+
+Kontorbud bruger rigtige konti med email og adgangskode. For at det virker, skal du tilføje en hemmelig nøgle, appen bruger til at signere login-sessioner:
+
+- **Name**: `JWT_SECRET`
+- **Value**: en lang, tilfældig streng — mindst 32 tegn. Du kan generere en med f.eks. [1password.com/password-generator](https://1password.com/password-generator) (vælg "Random" og 40+ tegn), eller køre `openssl rand -hex 32` i en terminal, hvis du har det installeret.
+
+Tilføj den under **Environment Variables** i Vercel, ligesom `DATABASE_URL`.
+
+### 6. Eget domæne (valgfrit)
 
 Køb et domæne (f.eks. kontorbud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
 

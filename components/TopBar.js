@@ -15,9 +15,10 @@ export default function TopBar() {
   const { name, logOut } = useName();
 
   function handleLogOut() {
-    if (confirm("Skift bruger? Du bliver bedt om et nyt navn.")) {
-      logOut();
-      window.location.href = "/";
+    if (confirm("Log ud af Kontorbud?")) {
+      logOut().then(() => {
+        window.location.href = "/";
+      });
     }
   }
 
@@ -103,7 +104,7 @@ export default function TopBar() {
           </div>
           <button
             onClick={handleLogOut}
-            title="Skift bruger"
+            title="Log ud"
             style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
           >
             <LogOut size={14} />
