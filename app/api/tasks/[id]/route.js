@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { geocodeArea } from "@/lib/geocode";
 
-function mapFullTask(t, bidRows) {
+function mapFullTask(t, bidRows, attRows) {
   return {
     id: t.id,
     caseNo: t.case_no,
@@ -21,6 +21,7 @@ function mapFullTask(t, bidRows) {
     area: t.area,
     lat: t.lat,
     lng: t.lng,
+    attachments: (attRows || []).map((a) => ({ id: a.id, url: a.url, filename: a.filename })),
     bids: bidRows.map((b) => ({
       id: b.id,
       bidderName: b.bidder_name,
@@ -41,19 +42,19 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
     const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
-    return NextResponse.json({ task: mapFullTask(taskRows[0], bidRows) });
+    const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
+    return NextResponse.json({ task: mapFullTask(taskRows[0], bidRows, attRows) });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaven." }, { status: 500 });
   }
 }
 
-// Redigér en åben opgave. Kun opgavestilleren kan ændre den, og kun mens den stadig er åben.
 export async function PATCH(request, { params }) {
   try {
     await ensureSchema();
     const id = Number(params.id);
     const body = await request.json();
-    const { requesterName, title, category, budget, deadline, description, area } = body;
+    const { requesterName, title, category, budget, deadline, description, area, newAttachments } = body;
 
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
@@ -92,15 +93,24 @@ export async function PATCH(request, { params }) {
       ]
     );
 
+    if (Array.isArray(newAttachments)) {
+      for (const a of newAttachments) {
+        if (!a?.url || !a?.filename) continue;
+        await pool.query(
+          "INSERT INTO task_attachments (task_id, url, filename, uploaded_by) VALUES ($1, $2, $3, $4)",
+          [id, a.url, a.filename, requesterName.trim()]
+        );
+      }
+    }
+
     const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
-    return NextResponse.json({ task: mapFullTask(rows[0], bidRows) });
+    const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
+    return NextResponse.json({ task: mapFullTask(rows[0], bidRows, attRows) });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke opdatere opgaven." }, { status: 500 });
   }
 }
 
-// Slet en opgave permanent. Kun tilladt hvis den stadig er åben og ingen har budt endnu,
-// så vi aldrig sletter noget en byder allerede har lagt arbejde i.
 export async function DELETE(request, { params }) {
   try {
     await ensureSchema();

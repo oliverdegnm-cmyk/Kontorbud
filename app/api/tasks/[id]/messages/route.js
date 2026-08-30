@@ -16,7 +16,14 @@ export async function GET(request, { params }) {
       [id, bidderName]
     );
     return NextResponse.json({
-      messages: rows.map((m) => ({ id: m.id, senderName: m.sender_name, body: m.body, createdAt: m.created_at })),
+      messages: rows.map((m) => ({
+        id: m.id,
+        senderName: m.sender_name,
+        body: m.body,
+        attachmentUrl: m.attachment_url,
+        attachmentName: m.attachment_name,
+        createdAt: m.created_at,
+      })),
     });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente beskeder." }, { status: 500 });
@@ -28,9 +35,9 @@ export async function POST(request, { params }) {
     await ensureSchema();
     const id = Number(params.id);
     const body = await request.json();
-    const { bidderName, senderName, text } = body;
+    const { bidderName, senderName, text, attachmentUrl, attachmentName } = body;
 
-    if (!bidderName?.trim() || !senderName?.trim() || !text?.trim()) {
+    if (!bidderName?.trim() || !senderName?.trim() || (!text?.trim() && !attachmentUrl)) {
       return NextResponse.json({ error: "Besked mangler indhold." }, { status: 400 });
     }
 
@@ -45,15 +52,27 @@ export async function POST(request, { params }) {
     }
 
     const { rows } = await pool.query(
-      "INSERT INTO messages (task_id, bidder_name, sender_name, body) VALUES ($1, $2, $3, $4) RETURNING *",
-      [id, bidderName.trim(), senderName.trim(), text.trim()]
+      "INSERT INTO messages (task_id, bidder_name, sender_name, body, attachment_url, attachment_name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [id, bidderName.trim(), senderName.trim(), text?.trim() || "", attachmentUrl || null, attachmentName || null]
     );
 
     const recipient = senderName.trim() === postedBy ? bidderName.trim() : postedBy;
     await notify(recipient, "new_message", id, `Ny besked fra ${senderName.trim()} om "${title}".`);
 
     const m = rows[0];
-    return NextResponse.json({ message: { id: m.id, senderName: m.sender_name, body: m.body, createdAt: m.created_at } }, { status: 201 });
+    return NextResponse.json(
+      {
+        message: {
+          id: m.id,
+          senderName: m.sender_name,
+          body: m.body,
+          attachmentUrl: m.attachment_url,
+          attachmentName: m.attachment_name,
+          createdAt: m.created_at,
+        },
+      },
+      { status: 201 }
+    );
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke sende besked." }, { status: 500 });
   }

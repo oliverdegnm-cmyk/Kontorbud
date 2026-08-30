@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CATS } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
+import FileUploader from "@/components/FileUploader";
 
 export default function PostTaskPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function PostTaskPage() {
   const [deadline, setDeadline] = useState("");
   const [area, setArea] = useState("");
   const [description, setDescription] = useState("");
+  const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState("");
   const [okId, setOkId] = useState("");
 
@@ -28,7 +30,7 @@ export default function PostTaskPage() {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area }),
+        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments }),
       });
       const data = await res.json();
       if (data.error) {
@@ -106,6 +108,10 @@ export default function PostTaskPage() {
               placeholder="Beskriv opgaven, omfang og eventuelle systemer eller filer bydere skal kende til."
               style={{ width: "100%", minHeight: 110, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", resize: "vertical" }}
             />
+          </div>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Vedhæftninger (valgfrit)</label>
+            <FileUploader files={attachments} setFiles={setAttachments} />
           </div>
         </div>
         <button

@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
+import FileUploader from "@/components/FileUploader";
 
 export default function EditTaskPage() {
   const { id } = useParams();
@@ -18,6 +19,8 @@ export default function EditTaskPage() {
   const [category, setCategory] = useState(CATS[0].name);
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [existingAttachments, setExistingAttachments] = useState([]);
+  const [newAttachments, setNewAttachments] = useState([]);
   const [area, setArea] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
@@ -44,6 +47,7 @@ export default function EditTaskPage() {
         setDeadline(t.deadline === "Ikke angivet" ? "" : t.deadline);
         setArea(t.area || "");
         setDescription(t.description);
+        setExistingAttachments(t.attachments || []);
         setLoaded(true);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +62,7 @@ export default function EditTaskPage() {
     const res = await fetch(`/api/tasks/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ requesterName: name, title, category, budget, deadline, description, area }),
+      body: JSON.stringify({ requesterName: name, title, category, budget, deadline, description, area, newAttachments }),
     });
     const data = await res.json();
     if (data.error) {
@@ -122,6 +126,25 @@ export default function EditTaskPage() {
           <div style={{ gridColumn: "1 / -1" }}>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Beskrivelse</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} style={{ width: "100%", minHeight: 110, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", resize: "vertical" }} />
+          </div>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Vedhæftninger</label>
+            {existingAttachments.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
+                {existingAttachments.map((a) => (
+                  <a
+                    key={a.id}
+                    href={a.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 8, width: "fit-content" }}
+                  >
+                    <FileText size={13} /> {a.filename}
+                  </a>
+                ))}
+              </div>
+            )}
+            <FileUploader files={newAttachments} setFiles={setNewAttachments} />
           </div>
         </div>
         <button

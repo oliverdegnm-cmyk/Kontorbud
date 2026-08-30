@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Send } from "lucide-react";
+import { Send, FileText } from "lucide-react";
+import FileUploader from "@/components/FileUploader";
 
 export default function MessageThread({ taskId, bidderName, currentName }) {
   const [messages, setMessages] = useState(null);
   const [text, setText] = useState("");
+  const [pendingFiles, setPendingFiles] = useState([]);
   const [error, setError] = useState("");
 
   function load() {
@@ -21,13 +23,20 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
   }, [taskId, bidderName]);
 
   async function send() {
-    if (!text.trim()) return;
+    if (!text.trim() && pendingFiles.length === 0) return;
     setError("");
     try {
+      const attachment = pendingFiles[0]; // én vedhæftning ad gangen pr. besked, ligesom de fleste chatapps
       const res = await fetch(`/api/tasks/${taskId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bidderName, senderName: currentName, text: text.trim() }),
+        body: JSON.stringify({
+          bidderName,
+          senderName: currentName,
+          text: text.trim(),
+          attachmentUrl: attachment?.url,
+          attachmentName: attachment?.filename,
+        }),
       });
       const data = await res.json();
       if (data.error) {
@@ -35,6 +44,7 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
         return;
       }
       setText("");
+      setPendingFiles([]);
       load();
     } catch (e) {
       setError("Kunne ikke sende besked.");
@@ -62,7 +72,26 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
                     lineHeight: 1.5,
                   }}
                 >
-                  {m.body}
+                  {m.body && <div>{m.body}</div>}
+                  {m.attachmentUrl && (
+                    <a
+                      href={m.attachmentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        marginTop: m.body ? 6 : 0,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: mine ? "#fff" : "#2A55E5",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      <FileText size={13} /> {m.attachmentName || "Vedhæftet fil"}
+                    </a>
+                  )}
                 </div>
                 <div style={{ fontSize: 10.5, color: "#9AA2B1", marginTop: 3, textAlign: mine ? "right" : "left" }}>
                   {mine ? "Dig" : m.senderName}
@@ -71,7 +100,14 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
             );
           })}
       </div>
-      <div style={{ display: "flex", gap: 8 }}>
+
+      {pendingFiles.length > 0 && (
+        <div style={{ marginBottom: 8 }}>
+          <FileUploader files={pendingFiles} setFiles={setPendingFiles} compact />
+        </div>
+      )}
+
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -79,10 +115,15 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
           placeholder="Skriv en besked…"
           style={{ flex: 1, fontSize: 13, padding: "9px 12px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff" }}
         />
+        {pendingFiles.length === 0 && (
+          <div style={{ flex: "0 0 auto" }}>
+            <FileUploader files={pendingFiles} setFiles={setPendingFiles} compact />
+          </div>
+        )}
         <button
           onClick={send}
           aria-label="Send besked"
-          style={{ width: 36, height: 36, borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+          style={{ width: 36, height: 36, borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flex: "0 0 auto" }}
         >
           <Send size={15} />
         </button>

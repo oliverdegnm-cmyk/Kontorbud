@@ -49,6 +49,17 @@ Tilføj den under **Environment Variables** i Vercel, ligesom `DATABASE_URL`.
 
 Køb et domæne (f.eks. kontorbud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
 
+## Sådan forbinder du vedhæftede filer (Vercel Blob)
+
+Kontorbud bruger Vercel Blob til at gemme filer, folk vedhæfter til opgaver og beskeder. Det er markant nemmere end de andre integrationer, fordi det foregår direkte i Vercel:
+
+1. Gå til dit projekt på vercel.com → fanen **"Storage"**
+2. Klik **"Create Database"** → vælg **"Blob"**
+3. Giv den et navn (f.eks. "kontorbud-filer") og klik **"Create"**
+4. Vercel spørger, om den skal forbindes til dit projekt — sig ja
+
+Det er det. Vercel tilføjer selv en `BLOB_READ_WRITE_TOKEN`-miljøvariabel til projektet — du skal ikke kopiere eller indsætte noget nøgle manuelt. Redeploy projektet én gang, så er filuploads aktive.
+
 ## Sådan forbinder du rigtig betaling (Stripe Connect)
 
 Kontorbud bruger Stripe Connect til at holde betalingen, når et bud vælges, og frigive den til hjælperen (minus servicegebyr) når opgaven markeres som udført — præcis som Handyhands "HandyhandPay".

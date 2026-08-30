@@ -9,6 +9,7 @@
     "db:init": "node scripts/init-db.js"
   },
   "dependencies": {
+    "@vercel/blob": "^0.27.1",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
