@@ -38,6 +38,20 @@ export async function GET() {
   try {
     await ensureSchema();
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks ORDER BY created_at DESC");
+
+    // Efterudfyld koordinater for opgaver, der blev oprettet, før geokodning fandtes
+    // (eller hvor det første forsøg fejlede). Begrænset til et par ad gangen, så vi
+    // ikke rammer den gratis geokodningstjenestes hastighedsgrænse på ét enkelt kald.
+    const needsGeocode = taskRows.filter((t) => t.area && (t.lat === null || t.lng === null)).slice(0, 3);
+    for (const t of needsGeocode) {
+      const coords = await geocodeArea(t.area);
+      if (coords) {
+        await pool.query("UPDATE tasks SET lat = $1, lng = $2 WHERE id = $3", [coords.lat, coords.lng, t.id]);
+        t.lat = coords.lat;
+        t.lng = coords.lng;
+      }
+    }
+
     const { rows: bidRows } = await pool.query("SELECT * FROM bids ORDER BY created_at ASC");
     const tasks = taskRows.map((t) => mapTask(t, bidRows.filter((b) => b.task_id === t.id)));
     return NextResponse.json({ tasks });
