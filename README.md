@@ -60,6 +60,36 @@ Kontorbud bruger Vercel Blob til at gemme filer, folk vedhæfter til opgaver og 
 
 Det er det. Vercel tilføjer selv en `BLOB_READ_WRITE_TOKEN`-miljøvariabel til projektet — du skal ikke kopiere eller indsætte noget nøgle manuelt. Redeploy projektet én gang, så er filuploads aktive.
 
+## Sådan forbinder du kortet (Google Maps)
+
+Kontorbud viser opgavernes placering på et Google Maps-kort med klynge-tal, ligesom Handyhand. Det kræver en Google Cloud-konto med faktureringsoplysninger tilknyttet (også selvom I bliver inden for den gratis kvote).
+
+### 1. Opret et Google Cloud-projekt
+
+Gå til [console.cloud.google.com](https://console.cloud.google.com), opret et nyt projekt (f.eks. "Kontorbud"), og tilknyt en faktureringskonto under "Billing" — det er obligatorisk, men I betaler kun, hvis I overstiger de gratis 10.000 kald om måneden pr. tjeneste.
+
+### 2. Aktivér de nødvendige API'er
+
+Under "APIs & Services" → "Library", søg efter og aktivér:
+- **Maps JavaScript API**
+- **Geocoding API**
+
+### 3. Opret to nøgler
+
+Under "APIs & Services" → "Credentials" → "Create Credentials" → "API key", opret **to separate nøgler**:
+
+- **Browser-nøgle**: begræns den under "Application restrictions" til "Websites", og tilføj jeres Vercel-domæne (f.eks. `kontorbud-xxxx.vercel.app/*` og evt. jeres eget domæne). Begræns den under "API restrictions" til kun **Maps JavaScript API**.
+- **Server-nøgle**: begræns den under "API restrictions" til kun **Geocoding API**. Denne skal ikke have en website-begrænsning, da den kaldes fra serveren, ikke browseren.
+
+### 4. Tilføj nøglerne i Vercel
+
+Under **Environment Variables**, tilføj begge:
+
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — browser-nøglen fra trin 3
+- `GOOGLE_MAPS_API_KEY` — server-nøglen fra trin 3
+
+Redeploy projektet bagefter.
+
 ## Sådan forbinder du rigtig betaling (Stripe Connect)
 
 Kontorbud bruger Stripe Connect til at holde betalingen, når et bud vælges, og frigive den til hjælperen (minus servicegebyr) når opgaven markeres som udført — præcis som Handyhands "HandyhandPay".
