@@ -438,6 +438,18 @@ export default function TaskDetailPage() {
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6 }}>
               Denne opgave modtager ikke flere bud.
             </p>
+          ) : myLevel && !myLevel.stripePayoutsEnabled && task.postedBy !== name ? (
+            <div>
+              <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 14 }}>
+                Du skal forbinde Stripe, før du kan afgive bud — så er du sikker på at kunne modtage betaling, hvis du vinder.
+              </p>
+              <Link
+                href="/profil"
+                style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 20px", borderRadius: 10, background: "#2A55E5", color: "#fff" }}
+              >
+                Forbind Stripe på din profil
+              </Link>
+            </div>
           ) : (
             <>
               <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Dit bud (kr)</label>

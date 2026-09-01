@@ -39,6 +39,8 @@ export async function GET(request, { params }) {
       [name]
     );
 
+    const { rows: profileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [name]);
+
     return NextResponse.json({
       name,
       earnings30d,
@@ -48,6 +50,7 @@ export async function GET(request, { params }) {
       level,
       avgRating: reviewRows[0].avg_rating,
       reviewCount: reviewRows[0].count,
+      stripePayoutsEnabled: !!profileRows[0]?.stripe_payouts_enabled,
     });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke beregne niveau." }, { status: 500 });

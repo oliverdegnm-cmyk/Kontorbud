@@ -29,6 +29,16 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "Opgaven er allerede tildelt og modtager ikke flere bud." }, { status: 400 });
     }
 
+    // Kræver Stripe forbundet, før man kan byde - så vinderen altid rent faktisk
+    // kan modtage betaling, og ingen bliver fristet til at aftale betaling uden om platformen.
+    const { rows: profileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [bidderName.trim()]);
+    if (!profileRows[0]?.stripe_payouts_enabled) {
+      return NextResponse.json(
+        { error: "Du skal forbinde Stripe under din profil, før du kan afgive bud — så er du sikker på at kunne modtage betaling, hvis du vinder." },
+        { status: 400 }
+      );
+    }
+
     const { rows } = await pool.query(
       `INSERT INTO bids (task_id, bidder_name, amount, amount_value, message, contact_email)
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,

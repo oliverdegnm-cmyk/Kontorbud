@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ChevronRight, ShieldCheck, Search } from "lucide-react";
+import { ChevronRight, ShieldCheck, Search, MessageCircle, Star, CreditCard } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -112,6 +112,11 @@ export default function BrowsePage() {
           >
             Opret opgave gratis
           </Link>
+          <div style={{ display: "flex", gap: 18, marginTop: 20, flexWrap: "wrap" }}>
+            <TrustBadge icon={CreditCard} text="Betaling holdes sikkert" />
+            <TrustBadge icon={MessageCircle} text="Al kontakt på siden" />
+            <TrustBadge icon={Star} text="Anmeldelser begge veje" />
+          </div>
         </div>
         <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #E4E8F0", padding: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "#1AA37A", marginBottom: 10 }}>
@@ -160,6 +165,31 @@ export default function BrowsePage() {
             </div>
           );
         })}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          background: "#F5F7FB",
+          borderRadius: 18,
+          padding: "20px 26px",
+          margin: "40px 0",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Ny på Kontorbud?</div>
+          <div style={{ fontSize: 13, color: "#5B6478" }}>Se hvordan bud, betaling og udbetaling fungerer, trin for trin.</div>
+        </div>
+        <Link
+          href="/hvordan-det-virker"
+          style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 20px", borderRadius: 10, background: "#fff", border: "1.5px solid #E4E8F0", color: "#14213D", whiteSpace: "nowrap" }}
+        >
+          Sådan fungerer det →
+        </Link>
       </div>
 
       <SectionHead title="Åbne opgaver" sub={`${list.length} sager ${catFilter === "all" ? "" : "i " + catFilter} · ${withLocation} med placering på kortet`} />
@@ -267,6 +297,15 @@ export default function BrowsePage() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function TrustBadge({ icon: Icon, text }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 600, color: "#5B6478" }}>
+      <Icon size={15} color="#2A55E5" />
+      {text}
     </div>
   );
 }
