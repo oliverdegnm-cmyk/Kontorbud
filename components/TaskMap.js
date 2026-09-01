@@ -32,6 +32,14 @@ export default function TaskMap({ tasks }) {
       setError("Google Maps-nøgle mangler. Tilføj NEXT_PUBLIC_GOOGLE_MAPS_API_KEY i Vercel.");
       return;
     }
+
+    // Google kalder denne globale funktion, hvis nøglen bliver afvist (ugyldig,
+    // forkert domænebegrænsning, eller ikke aktiveret) - uden den crasher hele
+    // siden i stedet for at vise en pæn fejlbesked.
+    window.gm_authFailure = () => {
+      setError("Google afviste kort-nøglen (InvalidKey). Tjek at nøglen er kopieret korrekt, og at jeres domæne er tilføjet under nøglens \"HTTP referrers\"-begrænsning i Google Cloud.");
+    };
+
     const loader = new Loader({ apiKey, version: "weekly" });
     loader
       .load()
@@ -48,6 +56,10 @@ export default function TaskMap({ tasks }) {
         setGoogleObj(google);
       })
       .catch(() => setError("Kunne ikke indlæse Google Maps. Tjek at nøglen er korrekt og faktureringen er aktiveret."));
+
+    return () => {
+      delete window.gm_authFailure;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

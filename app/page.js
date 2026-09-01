@@ -7,6 +7,7 @@ import { ChevronRight, ShieldCheck, Search } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
+import MapErrorBoundary from "@/components/MapErrorBoundary";
 import { statusInfo } from "@/lib/status";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
@@ -254,7 +255,9 @@ export default function BrowsePage() {
           </div>
           {showMap && (
             <div style={{ position: "sticky", top: 20 }}>
-              <TaskMap tasks={list} />
+              <MapErrorBoundary>
+                <TaskMap tasks={list} />
+              </MapErrorBoundary>
               {withLocation < list.length && (
                 <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 8 }}>
                   {list.length - withLocation} opgave(r) har ikke et genkendeligt område og vises ikke på kortet.
