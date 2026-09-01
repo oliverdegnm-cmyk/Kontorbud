@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 import Stars from "@/components/Stars";
 import { formatKr } from "@/lib/fees";
 
@@ -58,7 +58,17 @@ export default function PublicProfilePage() {
           {initials(decoded)}
         </div>
         <div>
-          <div style={{ fontSize: 20, fontWeight: 800 }}>{decoded}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ fontSize: 20, fontWeight: 800 }}>{decoded}</div>
+            {profile && profile.stripePayoutsEnabled && (
+              <span
+                title="Identitet bekræftet via Stripe"
+                style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 700, color: "#1AA37A", background: "#E9F9F1", padding: "3px 10px", borderRadius: 999 }}
+              >
+                <ShieldCheck size={12} /> Verificeret
+              </span>
+            )}
+          </div>
           {level && level.reviewCount > 0 && (
             <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#5B6478", marginTop: 3 }}>
               <Stars value={level.avgRating} /> {level.avgRating.toFixed(1)} ({level.reviewCount} anmeldelser)

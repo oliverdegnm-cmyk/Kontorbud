@@ -6,7 +6,7 @@ import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
 
 export default function ProfilePage() {
-  const { name } = useName();
+  const { name, emailVerified } = useName();
   const searchParams = useSearchParams();
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
@@ -100,6 +100,8 @@ export default function ProfilePage() {
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>
         Vises for andre, når de ser dine bud eller opgaver — ligesom en hjælperprofil på Handyhand.
       </p>
+
+      {!emailVerified && <EmailVerifyBanner />}
 
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 22 }}>
         <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 6 }}>Betaling</div>
@@ -207,3 +209,42 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+function EmailVerifyBanner() {
+  const { name } = useName();
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+
+  async function resend() {
+    setError("");
+    const res = await fetch("/api/auth/resend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      setError(data.error);
+      return;
+    }
+    setSent(true);
+  }
+
+  return (
+    <div style={{ background: "#FFF1E0", border: "1.5px solid #F5D9AE", borderRadius: 14, padding: "14px 18px", marginBottom: 22, fontSize: 13.5, color: "#B5610E" }}>
+      <b>Din email er ikke bekræftet endnu.</b> Tjek din indbakke for et bekræftelseslink.
+      {!sent ? (
+        <button
+          onClick={resend}
+          style={{ marginLeft: 8, fontSize: 12.5, fontWeight: 700, color: "#B5610E", background: "none", border: "none", textDecoration: "underline", cursor: "pointer", padding: 0 }}
+        >
+          Send igen
+        </button>
+      ) : (
+        <span style={{ marginLeft: 8, fontWeight: 700 }}>✓ Sendt igen</span>
+      )}
+      {error && <div style={{ marginTop: 6 }}>{error}</div>}
+    </div>
+  );
+}
+

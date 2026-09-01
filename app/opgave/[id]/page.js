@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle, FileText } from "lucide-react";
+import { ArrowLeft, MessageCircle, FileText, ShieldCheck } from "lucide-react";
 import Badge from "@/components/Badge";
 import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
@@ -380,6 +380,14 @@ export default function TaskDetailPage() {
                           {b.bidderName}
                           {b.bidderName === name ? " (dig)" : ""}
                         </Link>
+                        {b.verified && (
+                          <span
+                            title="Identitet bekræftet via Stripe"
+                            style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10.5, fontWeight: 700, color: "#1AA37A", background: "#E9F9F1", padding: "2px 8px", borderRadius: 999 }}
+                          >
+                            <ShieldCheck size={11} /> Verificeret
+                          </span>
+                        )}
                         {isTheAcceptedOne && <Badge tone="matched">Valgt</Badge>}
                       </div>
                       <div style={{ fontSize: 13, color: "#5B6478", marginTop: 5, lineHeight: 1.55 }}>{b.message}</div>

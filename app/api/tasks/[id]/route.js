@@ -29,6 +29,7 @@ function mapFullTask(t, bidRows, attRows) {
       amountValue: b.amount_value,
       message: b.message,
       contactEmail: b.contact_email,
+      verified: !!b.stripe_payouts_enabled,
     })),
   };
 }
@@ -41,7 +42,7 @@ export async function GET(request, { params }) {
     if (taskRows.length === 0) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
-    const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
+    const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
     return NextResponse.json({ task: mapFullTask(taskRows[0], bidRows, attRows) });
   } catch (err) {
@@ -103,7 +104,7 @@ export async function PATCH(request, { params }) {
       }
     }
 
-    const { rows: bidRows } = await pool.query("SELECT * FROM bids WHERE task_id = $1 ORDER BY created_at ASC", [id]);
+    const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
     return NextResponse.json({ task: mapFullTask(rows[0], bidRows, attRows) });
   } catch (err) {

@@ -12,6 +12,7 @@ export default function TopBar() {
 
   const links = [
     { href: "/", label: "Opgaver" },
+    { href: "/hvordan-det-virker", label: "Hvordan fungerer det?" },
     { href: "/opret", label: "Opret opgave" },
     { href: "/mine", label: "Mine sager" },
     { href: "/beskeder", label: "Beskeder" },

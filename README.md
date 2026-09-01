@@ -49,6 +49,16 @@ Tilføj den under **Environment Variables** i Vercel, ligesom `DATABASE_URL`.
 
 Køb et domæne (f.eks. kontorbud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
 
+## Sådan forbinder du email-bekræftelse (Resend)
+
+Kontorbud sender en bekræftelsesmail, når nogen opretter en konto. Det kræver Resend, en mailudbyder med en gratis kvote (100 mails/dag).
+
+1. Gå til [resend.com](https://resend.com) og opret en gratis konto
+2. Under "API Keys", opret en ny nøgle og kopiér den
+3. Tilføj den i Vercel som `RESEND_API_KEY`
+
+Til at starte med sender Resend automatisk fra `onboarding@resend.dev` — det virker med det samme, uden yderligere opsætning, men mails kan ende i spam hos nogle modtagere. For et mere troværdigt afsenderdomæne (f.eks. `noreply@kontorbud.dk`), skal I under "Domains" hos Resend verificere jeres eget domæne (tilføje et par DNS-poster), og derefter sætte `RESEND_FROM_EMAIL` i Vercel til den nye adresse.
+
 ## Sådan forbinder du vedhæftede filer (Vercel Blob)
 
 Kontorbud bruger Vercel Blob til at gemme filer, folk vedhæfter til opgaver og beskeder. Det er markant nemmere end de andre integrationer, fordi det foregår direkte i Vercel:

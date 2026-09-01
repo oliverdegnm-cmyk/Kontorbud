@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import crypto from "crypto";
 import { pool, ensureSchema } from "@/lib/db";
 import { hashPassword, signSession, SESSION_COOKIE } from "@/lib/auth";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(request) {
   try {
@@ -22,11 +24,16 @@ export async function POST(request) {
     }
 
     const passwordHash = await hashPassword(password);
+    const verificationToken = crypto.randomBytes(24).toString("hex");
+
     const { rows } = await pool.query(
-      "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email",
-      [trimmedName, normalizedEmail, passwordHash]
+      "INSERT INTO users (name, email, password_hash, verification_token, verification_sent_at) VALUES ($1, $2, $3, $4, now()) RETURNING id, name, email",
+      [trimmedName, normalizedEmail, passwordHash, verificationToken]
     );
     const user = rows[0];
+
+    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    await sendVerificationEmail(normalizedEmail, trimmedName, verificationToken, origin);
 
     const token = signSession({ userId: user.id, name: user.name });
     cookies().set(SESSION_COOKIE, token, {
