@@ -97,12 +97,25 @@ export default function TaskMap({ tasks }) {
   }
 
   return (
-    <div
-      ref={mapRef}
-      style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #E4E8F0", height: "100%", minHeight: 420 }}
-    >
+    <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", border: "1.5px solid #E4E8F0", height: "100%", minHeight: 420 }}>
+      {/* Google Maps styrer selv DOM-indholdet i denne boks - den må derfor ALDRIG
+          have React-børn, ellers kolliderer React og Google om at fjerne/tilføje
+          elementer i den (giver "NotFoundError"). Loading-teksten ligger i stedet
+          som et separat, ovenpåliggende lag. */}
+      <div ref={mapRef} style={{ height: "100%", width: "100%", minHeight: 420 }} />
       {!googleObj && (
-        <div style={{ height: "100%", minHeight: 420, display: "flex", alignItems: "center", justifyContent: "center", color: "#5B6478", fontSize: 13 }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#5B6478",
+            fontSize: 13,
+            background: "#F5F7FB",
+          }}
+        >
           Indlæser kort…
         </div>
       )}
