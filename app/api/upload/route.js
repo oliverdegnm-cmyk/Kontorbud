@@ -8,6 +8,10 @@ export async function POST(request) {
     const jsonResponse = await handleUpload({
       body,
       request,
+      // Understøtter både det almindelige variabelnavn og et præfikset navn
+      // (f.eks. BLOB2_READ_WRITE_TOKEN), hvis I har måttet forbinde et nyt
+      // Blob-lager med et præfiks for at undgå navnekonflikt med et gammelt.
+      token: process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB2_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async () => {
         return {
           // 100 MB dækker stort set alt, en administrativ opgave kræver (store
