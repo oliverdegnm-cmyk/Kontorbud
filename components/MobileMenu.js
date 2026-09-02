@@ -18,6 +18,7 @@ export default function MobileMenu() {
           { href: "/mine", label: "Mine sager" },
           { href: "/beskeder", label: "Beskeder" },
           { href: "/profil", label: "Profil" },
+          { href: "/indstillinger", label: "Indstillinger" },
         ]
       : []),
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, LogOut, ChevronDown, Briefcase, MessageCircle, ShieldCheck } from "lucide-react";
+import { User, LogOut, ChevronDown, Briefcase, MessageCircle, ShieldCheck, Settings } from "lucide-react";
 import { useName } from "@/lib/NameContext";
 
 function initials(name) {
@@ -108,6 +108,13 @@ export default function UserMenu() {
             style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
           >
             <User size={15} color="#5B6478" /> Profil
+          </Link>
+          <Link
+            href="/indstillinger"
+            onClick={() => setOpen(false)}
+            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
+          >
+            <Settings size={15} color="#5B6478" /> Indstillinger
           </Link>
           {isAdmin && (
             <Link

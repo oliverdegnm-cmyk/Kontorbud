@@ -9,8 +9,16 @@ export async function GET(request, { params }) {
     const p = rows[0];
     return NextResponse.json({
       profile: p
-        ? { name: p.name, bio: p.bio, skills: p.skills, portfolio: p.portfolio, stripeConnected: !!p.stripe_account_id, stripePayoutsEnabled: p.stripe_payouts_enabled }
-        : { name, bio: "", skills: "", portfolio: "", stripeConnected: false, stripePayoutsEnabled: false },
+        ? {
+            name: p.name,
+            bio: p.bio,
+            skills: p.skills,
+            portfolio: p.portfolio,
+            avatarUrl: p.avatar_url,
+            stripeConnected: !!p.stripe_account_id,
+            stripePayoutsEnabled: p.stripe_payouts_enabled,
+          }
+        : { name, bio: "", skills: "", portfolio: "", avatarUrl: null, stripeConnected: false, stripePayoutsEnabled: false },
     });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente profil." }, { status: 500 });
@@ -22,7 +30,16 @@ export async function POST(request, { params }) {
     await ensureSchema();
     const name = decodeURIComponent(params.name);
     const body = await request.json();
-    const { bio, skills, portfolio } = body;
+    const { bio, skills, portfolio, avatarUrl } = body;
+
+    if (avatarUrl !== undefined) {
+      await pool.query(
+        `INSERT INTO profiles (name, avatar_url, updated_at) VALUES ($1, $2, now())
+         ON CONFLICT (name) DO UPDATE SET avatar_url = $2, updated_at = now()`,
+        [name, avatarUrl || null]
+      );
+      return NextResponse.json({ ok: true });
+    }
 
     await pool.query(
       `INSERT INTO profiles (name, bio, skills, portfolio, updated_at)

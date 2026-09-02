@@ -14,11 +14,25 @@ export async function GET() {
     const payload = verifySession(token);
     if (!payload) return NextResponse.json({ user: null });
 
-    const { rows } = await pool.query("SELECT id, name, email, email_verified, is_admin FROM users WHERE id = $1", [payload.userId]);
+    const { rows } = await pool.query(
+      `SELECT u.id, u.name, u.email, u.email_verified, u.is_admin, u.phone, u.email_notifications, p.avatar_url
+       FROM users u LEFT JOIN profiles p ON p.name = u.name
+       WHERE u.id = $1`,
+      [payload.userId]
+    );
     if (!rows[0]) return NextResponse.json({ user: null });
 
     return NextResponse.json({
-      user: { id: rows[0].id, name: rows[0].name, email: rows[0].email, emailVerified: rows[0].email_verified, isAdmin: rows[0].is_admin },
+      user: {
+        id: rows[0].id,
+        name: rows[0].name,
+        email: rows[0].email,
+        emailVerified: rows[0].email_verified,
+        isAdmin: rows[0].is_admin,
+        phone: rows[0].phone,
+        emailNotifications: rows[0].email_notifications,
+        avatarUrl: rows[0].avatar_url,
+      },
     });
   } catch (err) {
     return NextResponse.json({ user: null });

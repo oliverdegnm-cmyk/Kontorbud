@@ -44,8 +44,8 @@ export default function HowItWorksPage() {
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ position: "relative", marginBottom: 44 }}>
         <img
-          src="https://images.unsplash.com/photo-1758876017801-f5a892ee460a?w=1400&auto=format&fit=crop&q=70"
-          alt="Professionel der arbejder på computeren"
+          src="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
+          alt="Kollegaer gennemgår dokumenter ved skrivebordet"
           style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 28, display: "block" }}
         />
         <div
