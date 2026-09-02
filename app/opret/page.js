@@ -15,6 +15,8 @@ export default function PostTaskPage() {
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
   const [area, setArea] = useState("");
+  const [posterType, setPosterType] = useState("private");
+  const [companyName, setCompanyName] = useState("");
   const [description, setDescription] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState("");
@@ -30,7 +32,7 @@ export default function PostTaskPage() {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments }),
+        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments, posterType, companyName }),
       });
       const data = await res.json();
       if (data.error) {
@@ -51,6 +53,53 @@ export default function PostTaskPage() {
         Beskriv opgaven klart, så bydere ved præcis, hvad de byder på. Det er gratis at oprette.
       </p>
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 30, maxWidth: 660 }}>
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 8 }}>Opretter du som</label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => setPosterType("private")}
+              style={{
+                flex: 1,
+                padding: "11px 0",
+                borderRadius: 10,
+                border: posterType === "private" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                background: posterType === "private" ? "#EEF2FF" : "#fff",
+                color: posterType === "private" ? "#1B3AA6" : "#5B6478",
+                fontSize: 13.5,
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              Privatperson
+            </button>
+            <button
+              type="button"
+              onClick={() => setPosterType("business")}
+              style={{
+                flex: 1,
+                padding: "11px 0",
+                borderRadius: 10,
+                border: posterType === "business" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                background: posterType === "business" ? "#EEF2FF" : "#fff",
+                color: posterType === "business" ? "#1B3AA6" : "#5B6478",
+                fontSize: 13.5,
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              Virksomhed
+            </button>
+          </div>
+          {posterType === "business" && (
+            <input
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Virksomhedens navn"
+              style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginTop: 10 }}
+            />
+          )}
+        </div>
         <div className="kb-grid-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           <div style={{ gridColumn: "1 / -1" }}>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Titel</label>

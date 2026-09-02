@@ -339,6 +339,11 @@ export default function TaskDetailPage() {
               <Link href={`/bruger/${encodeURIComponent(task.postedBy)}`} style={{ fontSize: 14.5, fontWeight: 700, color: "#2A55E5" }}>
                 {task.postedBy}
               </Link>
+              {task.posterType === "business" && (
+                <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
+                  {task.companyName ? `${task.companyName} · ` : ""}Virksomhed
+                </div>
+              )}
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Frist</div>

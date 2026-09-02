@@ -31,6 +31,7 @@ export default function BrowsePage() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [showMap, setShowMap] = useState(true);
+  const [posterFilter, setPosterFilter] = useState("all");
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export default function BrowsePage() {
   let list = tasks
     .filter((t) => t.status !== "cancelled")
     .filter((t) => catFilter === "all" || t.category === catFilter)
+    .filter((t) => posterFilter === "all" || t.posterType === posterFilter)
     .filter((t) => !q || t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || (t.area || "").toLowerCase().includes(q));
 
   if (sort === "fewbids") list = [...list].sort((a, b) => a.bids.length - b.bids.length);
@@ -197,6 +199,31 @@ export default function BrowsePage() {
 
       <SectionHead title="Åbne opgaver" sub={`${list.length} sager ${catFilter === "all" ? "" : "i " + catFilter} · ${withLocation} med placering på kortet`} />
 
+      <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
+        {[
+          { key: "all", label: "Alle" },
+          { key: "business", label: "Virksomheder" },
+          { key: "private", label: "Private" },
+        ].map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setPosterFilter(f.key)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 8,
+              border: "none",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              background: posterFilter === f.key ? "#2A55E5" : "transparent",
+              color: posterFilter === f.key ? "#fff" : "#5B6478",
+            }}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
         <div style={{ position: "relative", flex: "1 1 260px", maxWidth: 360 }}>
           <Search size={16} color="#9AA2B1" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
@@ -268,7 +295,14 @@ export default function BrowsePage() {
                     <CatIcon name={cat ? cat.icon : "FileText"} size={20} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 2 }}>{t.title}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                      <div style={{ fontSize: 14.5, fontWeight: 700 }}>{t.title}</div>
+                      {t.posterType === "business" && (
+                        <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478", flex: "0 0 auto" }}>
+                          Virksomhed
+                        </span>
+                      )}
+                    </div>
                     <div style={{ fontSize: 12.5, color: "#5B6478" }}>
                       {t.category} · Frist: {t.deadline}
                       {t.area ? ` · 📍 ${t.area}` : ""}

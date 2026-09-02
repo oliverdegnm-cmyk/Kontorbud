@@ -12,6 +12,8 @@ function mapTask(row, bids, attachments) {
     deadline: row.deadline,
     description: row.description,
     postedBy: row.posted_by,
+    posterType: row.poster_type,
+    companyName: row.company_name,
     status: row.status,
     acceptedBidId: row.accepted_bid_id,
     acceptedAt: row.accepted_at,
@@ -65,7 +67,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { title, category, budget, deadline, description, postedBy, area, attachments } = body;
+    const { title, category, budget, deadline, description, postedBy, area, attachments, posterType, companyName } = body;
 
     if (!title?.trim() || !description?.trim() || !postedBy?.trim()) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
@@ -77,8 +79,8 @@ export async function POST(request) {
     const coords = await geocodeArea(area);
 
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area, lat, lng)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area, lat, lng, poster_type, company_name)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
       [
         caseNo,
         title.trim(),
@@ -90,6 +92,8 @@ export async function POST(request) {
         area?.trim() || null,
         coords?.lat ?? null,
         coords?.lng ?? null,
+        posterType === "business" ? "business" : "private",
+        posterType === "business" ? companyName?.trim() || null : null,
       ]
     );
     const task = rows[0];

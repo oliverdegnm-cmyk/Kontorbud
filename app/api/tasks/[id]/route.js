@@ -12,6 +12,8 @@ function mapFullTask(t, bidRows, attRows) {
     deadline: t.deadline,
     description: t.description,
     postedBy: t.posted_by,
+    posterType: t.poster_type,
+    companyName: t.company_name,
     status: t.status,
     acceptedBidId: t.accepted_bid_id,
     acceptedAt: t.accepted_at,
@@ -55,7 +57,7 @@ export async function PATCH(request, { params }) {
     await ensureSchema();
     const id = Number(params.id);
     const body = await request.json();
-    const { requesterName, title, category, budget, deadline, description, area, newAttachments } = body;
+    const { requesterName, title, category, budget, deadline, description, area, newAttachments, posterType, companyName } = body;
 
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
@@ -79,8 +81,8 @@ export async function PATCH(request, { params }) {
     }
 
     const { rows } = await pool.query(
-      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, description = $5, area = $6, lat = $7, lng = $8
-       WHERE id = $9 RETURNING *`,
+      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, description = $5, area = $6, lat = $7, lng = $8, poster_type = $9, company_name = $10
+       WHERE id = $11 RETURNING *`,
       [
         title.trim(),
         category || task.category,
@@ -90,6 +92,8 @@ export async function PATCH(request, { params }) {
         area?.trim() || null,
         coords.lat,
         coords.lng,
+        posterType === "business" ? "business" : "private",
+        posterType === "business" ? companyName?.trim() || null : null,
         id,
       ]
     );
