@@ -189,7 +189,7 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
         setTimeout(() => setSaved(false), 2500);
       }
     } catch (err) {
-      setError("Kunne ikke uploade billedet. Prøv igen (max 100 MB).");
+      setError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
     }
     setUploading(false);
     e.target.value = "";
@@ -235,13 +235,13 @@ function ImagesTab() {
       <ImageSetting
         label="Forsidens hero-billede"
         settingKey="hero_image_url"
-        defaultUrl="/images/hero-illustration.svg"
+        defaultUrl="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
         hint="Vises øverst på forsiden, bag det hvide kort."
       />
       <ImageSetting
         label='"Hvordan fungerer det"-billede'
         settingKey="how_it_works_image_url"
-        defaultUrl="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
+        defaultUrl="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70"
         hint="Vises øverst på siden, der forklarer platformen."
       />
     </div>

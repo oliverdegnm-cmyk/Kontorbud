@@ -31,7 +31,7 @@ export default function BrowsePage() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [showMap, setShowMap] = useState(true);
-  const [heroImage, setHeroImage] = useState("/images/hero-illustration.svg");
+  const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
 
   useEffect(() => {
     fetch("/api/site-settings")
