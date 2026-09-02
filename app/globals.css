@@ -28,3 +28,32 @@ select,
 textarea {
   font-family: inherit;
 }
+
+/* ---------- responsive grid helpers ---------- */
+/* Disse klasser bruges sammen med inline grid-template-columns på desktop;
+   på mindre skærme vinder disse regler (fordi !important i et stylesheet slår
+   inline-styling uden !important), så sektionerne falder ned i én kolonne. */
+@media (max-width: 760px) {
+  .kb-grid-hero,
+  .kb-grid-detail,
+  .kb-grid-browse,
+  .kb-grid-form,
+  .kb-grid-3,
+  .kb-grid-howto2 {
+    grid-template-columns: 1fr !important;
+  }
+  .kb-grid-cat,
+  .kb-grid-steps4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .kb-hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .kb-grid-cat,
+  .kb-grid-steps4 {
+    grid-template-columns: 1fr !important;
+  }
+}

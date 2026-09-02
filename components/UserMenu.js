@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, LogOut, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown, Briefcase, MessageCircle } from "lucide-react";
 import { useName } from "@/lib/NameContext";
 
 function initials(name) {
@@ -89,12 +89,27 @@ export default function UserMenu() {
           }}
         >
           <Link
+            href="/mine"
+            onClick={() => setOpen(false)}
+            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
+          >
+            <Briefcase size={15} color="#5B6478" /> Mine sager
+          </Link>
+          <Link
+            href="/beskeder"
+            onClick={() => setOpen(false)}
+            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
+          >
+            <MessageCircle size={15} color="#5B6478" /> Beskeder
+          </Link>
+          <Link
             href="/profil"
             onClick={() => setOpen(false)}
             style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
           >
             <User size={15} color="#5B6478" /> Profil
           </Link>
+          <div style={{ borderTop: "1px solid #E4E8F0", margin: "6px 0" }} />
           <button
             onClick={handleLogOut}
             style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#C0392B", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}

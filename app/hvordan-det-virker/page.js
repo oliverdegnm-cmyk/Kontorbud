@@ -62,7 +62,7 @@ export default function HowItWorksPage() {
           <h2 style={{ fontSize: 19, fontWeight: 800 }}>Har du en opgave?</h2>
           <span style={{ fontSize: 12.5, color: "#5B6478" }}>Gratis at oprette</span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+        <div className="kb-grid-steps4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
           <StepCard icon={FileText} num="1" title="Opret opgaven">
             Beskriv hvad du har brug for, sæt budget og frist. Vedhæft gerne filer, bydere skal kende til.
           </StepCard>
@@ -83,7 +83,7 @@ export default function HowItWorksPage() {
           <h2 style={{ fontSize: 19, fontWeight: 800 }}>Vil du byde og tjene penge?</h2>
           <span style={{ fontSize: 12.5, color: "#5B6478" }}>Gebyr fra 10,2%</span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+        <div className="kb-grid-steps4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
           <StepCard icon={UserPlus} num="1" title="Opret profil">
             Skriv om dine kompetencer og evt. et CV, så opgavestillere kan se, hvad du kan.
           </StepCard>
@@ -101,7 +101,7 @@ export default function HowItWorksPage() {
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
+        <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
           <div style={{ textAlign: "center" }}>
             <ShieldCheck size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Betaling holdes sikkert</div>

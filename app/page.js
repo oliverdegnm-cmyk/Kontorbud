@@ -65,6 +65,7 @@ export default function BrowsePage() {
   return (
     <div>
       <div
+        className="kb-grid-hero"
         style={{
           background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
           borderRadius: 28,
@@ -90,7 +91,7 @@ export default function BrowsePage() {
               marginBottom: 16,
             }}
           >
-            Danmarks nyeste opgaveplatform for kontorarbejde
+            Danmarks platform for administrative opgaver
           </div>
           <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 440, margin: 0 }}>
             Få klaret dine administrative opgaver
@@ -129,7 +130,7 @@ export default function BrowsePage() {
       </div>
 
       <SectionHead title="Hvad skal du have løst?" sub="Vælg en kategori, eller se alle åbne sager nedenfor." />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
         {CATS.map((c) => {
           const active = catFilter === c.name;
           const count = activeTasks.filter((t) => t.category === c.name).length;
@@ -230,7 +231,7 @@ export default function BrowsePage() {
           </div>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: showMap ? "1.1fr 0.9fr" : "1fr", gap: 20, alignItems: "start" }}>
+        <div className="kb-grid-browse" style={{ display: "grid", gridTemplateColumns: showMap ? "1.1fr 0.9fr" : "1fr", gap: 20, alignItems: "start" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {list.map((t) => {
               const cat = CATS.find((c) => c.name === t.category);
