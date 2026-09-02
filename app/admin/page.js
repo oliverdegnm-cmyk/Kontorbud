@@ -154,8 +154,11 @@ export default function AdminPage() {
 
 function ImageSetting({ label, settingKey, defaultUrl, hint }) {
   const [current, setCurrent] = useState(defaultUrl);
+  const [position, setPosition] = useState(50);
+  const [zoom, setZoom] = useState(100);
   const [uploading, setUploading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [adjustSaved, setAdjustSaved] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -163,6 +166,8 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
       .then((r) => r.json())
       .then((data) => {
         if (data.settings?.[settingKey]) setCurrent(data.settings[settingKey]);
+        if (data.settings?.[`${settingKey}_position`]) setPosition(parseFloat(data.settings[`${settingKey}_position`]));
+        if (data.settings?.[`${settingKey}_zoom`]) setZoom(parseFloat(data.settings[`${settingKey}_zoom`]));
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -185,6 +190,9 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
         setError(data.error);
       } else {
         setCurrent(blob.url);
+        setPosition(50);
+        setZoom(100);
+        await saveAdjustment(settingKey, 50, 100);
         setSaved(true);
         setTimeout(() => setSaved(false), 2500);
       }
@@ -195,11 +203,72 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
     e.target.value = "";
   }
 
+  async function saveAdjustment(key, pos, zm) {
+    await Promise.all([
+      fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `${key}_position`, value: String(pos) }),
+      }),
+      fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `${key}_zoom`, value: String(zm) }),
+      }),
+    ]);
+  }
+
+  async function handleSaveAdjustment() {
+    await saveAdjustment(settingKey, position, zoom);
+    setAdjustSaved(true);
+    setTimeout(() => setAdjustSaved(false), 2000);
+  }
+
   return (
     <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 16 }}>
       <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>{label}</div>
       <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 14 }}>{hint}</div>
-      <img src={current} alt={label} style={{ width: "100%", maxWidth: 480, height: 140, objectFit: "cover", borderRadius: 12, border: "1px solid #E4E8F0", display: "block", marginBottom: 14 }} />
+
+      <div style={{ width: "100%", maxWidth: 480, height: 140, borderRadius: 12, border: "1px solid #E4E8F0", overflow: "hidden", marginBottom: 14 }}>
+        <img
+          src={current}
+          alt={label}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: `center ${position}%`,
+            transform: `scale(${zoom / 100})`,
+            transformOrigin: "center",
+            display: "block",
+          }}
+        />
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 480, marginBottom: 14 }}>
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+            <span>Lodret position</span>
+            <span>{position}%</span>
+          </div>
+          <input type="range" min="0" max="100" value={position} onChange={(e) => setPosition(Number(e.target.value))} style={{ width: "100%" }} />
+        </div>
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+            <span>Zoom</span>
+            <span>{zoom}%</span>
+          </div>
+          <input type="range" min="100" max="200" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} style={{ width: "100%" }} />
+        </div>
+        <button
+          onClick={handleSaveAdjustment}
+          style={{ alignSelf: "flex-start", fontSize: 12.5, fontWeight: 700, padding: "8px 16px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#14213D", cursor: "pointer" }}
+        >
+          Gem justering
+        </button>
+        {adjustSaved && <span style={{ fontSize: 12, fontWeight: 700, color: "#1AA37A" }}>✓ Justering gemt</span>}
+      </div>
+
       <label
         style={{
           display: "inline-flex",

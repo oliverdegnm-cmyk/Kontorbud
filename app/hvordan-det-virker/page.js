@@ -42,12 +42,16 @@ function StepCard({ icon: Icon, num, title, children }) {
 
 export default function HowItWorksPage() {
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70");
+  const [heroPosition, setHeroPosition] = useState(50);
+  const [heroZoom, setHeroZoom] = useState(100);
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((r) => r.json())
       .then((data) => {
         if (data.settings?.how_it_works_image_url) setHeroImage(data.settings.how_it_works_image_url);
+        if (data.settings?.how_it_works_image_url_position) setHeroPosition(parseFloat(data.settings.how_it_works_image_url_position));
+        if (data.settings?.how_it_works_image_url_zoom) setHeroZoom(parseFloat(data.settings.how_it_works_image_url_zoom));
       })
       .catch(() => {});
   }, []);
@@ -55,11 +59,21 @@ export default function HowItWorksPage() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ position: "relative", marginBottom: 44 }}>
-        <img
-          src={heroImage}
-          alt="Samarbejde om en opgave"
-          style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 28, display: "block" }}
-        />
+        <div style={{ width: "100%", height: 200, borderRadius: 28, overflow: "hidden" }}>
+          <img
+            src={heroImage}
+            alt="Samarbejde om en opgave"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: `center ${heroPosition}%`,
+              transform: `scale(${heroZoom / 100})`,
+              transformOrigin: "center",
+              display: "block",
+            }}
+          />
+        </div>
         <div
           style={{
             position: "relative",

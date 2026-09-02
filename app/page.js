@@ -33,12 +33,16 @@ export default function BrowsePage() {
   const [showMap, setShowMap] = useState(true);
   const [posterFilter, setPosterFilter] = useState("all");
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
+  const [heroPosition, setHeroPosition] = useState(50);
+  const [heroZoom, setHeroZoom] = useState(100);
 
   useEffect(() => {
     fetch("/api/site-settings")
       .then((r) => r.json())
       .then((data) => {
         if (data.settings?.hero_image_url) setHeroImage(data.settings.hero_image_url);
+        if (data.settings?.hero_image_url_position) setHeroPosition(parseFloat(data.settings.hero_image_url_position));
+        if (data.settings?.hero_image_url_zoom) setHeroZoom(parseFloat(data.settings.hero_image_url_zoom));
       })
       .catch(() => {});
   }, []);
@@ -77,11 +81,21 @@ export default function BrowsePage() {
   return (
     <div>
       <div style={{ position: "relative", marginTop: 6 }}>
-        <img
-          src={heroImage}
-          alt="Overvældet af administrative opgaver — beder om hjælp"
-          style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 28, display: "block" }}
-        />
+        <div style={{ width: "100%", height: 260, borderRadius: 28, overflow: "hidden" }}>
+          <img
+            src={heroImage}
+            alt="Overvældet af administrative opgaver — beder om hjælp"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: `center ${heroPosition}%`,
+              transform: `scale(${heroZoom / 100})`,
+              transformOrigin: "center",
+              display: "block",
+            }}
+          />
+        </div>
         <div
           style={{
             position: "relative",
