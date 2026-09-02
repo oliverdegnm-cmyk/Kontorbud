@@ -64,25 +64,26 @@ export default function BrowsePage() {
 
   return (
     <div>
-      <div
-        className="kb-grid-hero"
-        style={{
-          background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
-          borderRadius: 28,
-          padding: "48px 40px",
-          display: "grid",
-          gridTemplateColumns: "1.2fr 0.8fr",
-          gap: 32,
-          alignItems: "center",
-          marginTop: 6,
-        }}
-      >
-        <div>
+      <div style={{ position: "relative", marginTop: 6 }}>
+        <img
+          src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1400&auto=format&fit=crop&q=70"
+          alt="Administrativt arbejde ved skrivebordet"
+          style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 28, display: "block" }}
+        />
+        <div
+          style={{
+            position: "relative",
+            background: "#fff",
+            borderRadius: 24,
+            padding: "32px 36px",
+            margin: "-64px 20px 0",
+            boxShadow: "0 24px 48px -24px rgba(20,33,61,.25)",
+          }}
+        >
           <div
             style={{
               display: "inline-block",
-              background: "#fff",
-              border: "1px solid #E4E8F0",
+              background: "#EEF2FF",
               padding: "6px 14px",
               borderRadius: 999,
               fontSize: 12.5,
@@ -93,10 +94,10 @@ export default function BrowsePage() {
           >
             Danmarks platform for administrative opgaver
           </div>
-          <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 440, margin: 0 }}>
+          <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
             Få klaret dine administrative opgaver
           </h1>
-          <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 420, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige administrative hjælpere.
           </p>
           <Link
@@ -105,7 +106,7 @@ export default function BrowsePage() {
               display: "inline-block",
               fontSize: 14.5,
               fontWeight: 700,
-              padding: "12px 22px",
+              padding: "12px 24px",
               borderRadius: 999,
               background: "#2A55E5",
               color: "#fff",
@@ -118,12 +119,8 @@ export default function BrowsePage() {
             <TrustBadge icon={MessageCircle} text="Al kontakt på siden" />
             <TrustBadge icon={Star} text="Anmeldelser begge veje" />
           </div>
-        </div>
-        <div style={{ background: "#fff", borderRadius: 18, border: "1px solid #E4E8F0", padding: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "#1AA37A", marginBottom: 10 }}>
-            <ShieldCheck size={16} /> Live opgaveliste
-          </div>
-          <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
+            <ShieldCheck size={15} />
             {activeTasks.length} opgaver oprettet af rigtige brugere — gemt permanent i databasen.
           </div>
         </div>

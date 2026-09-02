@@ -42,19 +42,28 @@ function StepCard({ icon: Icon, num, title, children }) {
 export default function HowItWorksPage() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
-      <div
-        style={{
-          background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
-          borderRadius: 28,
-          padding: "44px 40px",
-          marginBottom: 44,
-          textAlign: "center",
-        }}
-      >
-        <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer Kontorbud</h1>
-        <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
-          Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
-        </p>
+      <div style={{ position: "relative", marginBottom: 44 }}>
+        <img
+          src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1400&auto=format&fit=crop&q=70"
+          alt="Samarbejde om en opgave"
+          style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 28, display: "block" }}
+        />
+        <div
+          style={{
+            position: "relative",
+            background: "#fff",
+            borderRadius: 24,
+            padding: "36px 40px",
+            margin: "-56px 20px 0",
+            textAlign: "center",
+            boxShadow: "0 24px 48px -24px rgba(20,33,61,.25)",
+          }}
+        >
+          <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer Kontorbud</h1>
+          <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
+            Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
+          </p>
+        </div>
       </div>
 
       <div style={{ marginBottom: 52 }}>

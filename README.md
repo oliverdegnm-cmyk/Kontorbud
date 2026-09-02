@@ -144,6 +144,17 @@ Når I er klar til rigtige penge: aktivér din Stripe-konto til **Live mode** (k
 
 **Vigtigt om ansvar:** Stripe Connect gør jer teknisk set til en betalingsformidler for jeres brugere. Læs Stripes vilkår for platforme/marketplaces, og overvej at få gennemgået jeres egne forretningsbetingelser af en, der kan rådgive juridisk om det — det er uden for hvad jeg kan hjælpe med.
 
+## Sådan gør du dig selv til administrator
+
+Kontorbud har en admin-side (`/admin`), hvor kundeservice kan se alle opgaver og brugere og om nødvendigt slette en opgave permanent. Der er ingen knap til at blive admin i selve appen — det gøres én gang direkte i databasen, så det ikke kan misbruges:
+
+1. Gå til dit Neon-projekt → fanen **"SQL Editor"**
+2. Kør denne kommando, med din egen email indsat:
+   ```sql
+   UPDATE users SET is_admin = true WHERE email = 'din@email.dk';
+   ```
+3. Log ud og ind igen på Kontorbud — der dukker nu et "Admin"-punkt op i menuen
+
 ## Kør det lokalt (til udvikling)
 
 ```bash

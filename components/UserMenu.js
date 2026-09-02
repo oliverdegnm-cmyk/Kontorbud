@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, LogOut, ChevronDown, Briefcase, MessageCircle } from "lucide-react";
+import { User, LogOut, ChevronDown, Briefcase, MessageCircle, ShieldCheck } from "lucide-react";
 import { useName } from "@/lib/NameContext";
 
 function initials(name) {
@@ -11,7 +11,7 @@ function initials(name) {
 }
 
 export default function UserMenu() {
-  const { name, logOut } = useName();
+  const { name, logOut, isAdmin } = useName();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -109,6 +109,15 @@ export default function UserMenu() {
           >
             <User size={15} color="#5B6478" /> Profil
           </Link>
+          {isAdmin && (
+            <Link
+              href="/admin"
+              onClick={() => setOpen(false)}
+              style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: "#14213D" }}
+            >
+              <ShieldCheck size={15} color="#5B6478" /> Admin
+            </Link>
+          )}
           <div style={{ borderTop: "1px solid #E4E8F0", margin: "6px 0" }} />
           <button
             onClick={handleLogOut}

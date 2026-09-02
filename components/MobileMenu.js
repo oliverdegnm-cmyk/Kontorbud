@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useName } from "@/lib/NameContext";
 
 export default function MobileMenu() {
-  const { name, logOut } = useName();
+  const { name, logOut, isAdmin } = useName();
   const [open, setOpen] = useState(false);
 
   const links = [
@@ -20,6 +20,7 @@ export default function MobileMenu() {
           { href: "/profil", label: "Profil" },
         ]
       : []),
+    ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
   ];
 
   function handleLogOut() {

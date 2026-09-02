@@ -14,10 +14,12 @@ export async function GET() {
     const payload = verifySession(token);
     if (!payload) return NextResponse.json({ user: null });
 
-    const { rows } = await pool.query("SELECT id, name, email, email_verified FROM users WHERE id = $1", [payload.userId]);
+    const { rows } = await pool.query("SELECT id, name, email, email_verified, is_admin FROM users WHERE id = $1", [payload.userId]);
     if (!rows[0]) return NextResponse.json({ user: null });
 
-    return NextResponse.json({ user: { id: rows[0].id, name: rows[0].name, email: rows[0].email, emailVerified: rows[0].email_verified } });
+    return NextResponse.json({
+      user: { id: rows[0].id, name: rows[0].name, email: rows[0].email, emailVerified: rows[0].email_verified, isAdmin: rows[0].is_admin },
+    });
   } catch (err) {
     return NextResponse.json({ user: null });
   }
