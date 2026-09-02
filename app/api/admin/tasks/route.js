@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { requireAdmin } from "@/lib/adminAuth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await ensureSchema();
