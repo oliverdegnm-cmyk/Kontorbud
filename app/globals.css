@@ -44,16 +44,26 @@ textarea {
   }
   .kb-grid-cat,
   .kb-grid-steps4 {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
   }
   .kb-hide-mobile {
     display: none !important;
   }
+  .kb-desktop-nav,
+  .kb-desktop-usermenu {
+    display: none !important;
+  }
+  .kb-mobile-menu-btn {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 480px) {
-  .kb-grid-cat,
   .kb-grid-steps4 {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
   }
+}
+
+.kb-mobile-menu-btn {
+  display: none;
 }

@@ -106,7 +106,7 @@ export default function BrowsePage() {
               fontSize: 14.5,
               fontWeight: 700,
               padding: "12px 22px",
-              borderRadius: 12,
+              borderRadius: 999,
               background: "#2A55E5",
               color: "#fff",
             }}
@@ -130,7 +130,7 @@ export default function BrowsePage() {
       </div>
 
       <SectionHead title="Hvad skal du have løst?" sub="Vælg en kategori, eller se alle åbne sager nedenfor." />
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
         {CATS.map((c) => {
           const active = catFilter === c.name;
           const count = activeTasks.filter((t) => t.category === c.name).length;
@@ -138,31 +138,26 @@ export default function BrowsePage() {
             <div
               key={c.name}
               onClick={() => setCatFilter(active ? "all" : c.name)}
-              style={{
-                background: active ? "#EEF2FF" : "#F5F7FB",
-                border: active ? "1.5px solid #2A55E5" : "1.5px solid transparent",
-                borderRadius: 16,
-                padding: "18px 14px",
-                cursor: "pointer",
-              }}
+              style={{ cursor: "pointer", textAlign: "center" }}
             >
               <div
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
-                  background: "#fff",
+                  width: 62,
+                  height: 62,
+                  borderRadius: "50%",
+                  background: active ? "#EEF2FF" : "#F5F7FB",
+                  border: active ? "2px solid #2A55E5" : "2px solid transparent",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: 10,
+                  margin: "0 auto 10px",
                   color: "#2A55E5",
                 }}
               >
-                <CatIcon name={c.icon} />
+                <CatIcon name={c.icon} size={24} />
               </div>
-              <div style={{ fontSize: 13, fontWeight: 700 }}>{c.name}</div>
-              <div style={{ fontSize: 11.5, color: "#5B6478", marginTop: 2 }}>{count} opgaver</div>
+              <div style={{ fontSize: 12.5, fontWeight: 700, lineHeight: 1.3 }}>{c.name}</div>
+              <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 2 }}>{count} opgaver</div>
             </div>
           );
         })}

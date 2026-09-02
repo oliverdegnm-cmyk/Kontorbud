@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import NotificationBell from "@/components/NotificationBell";
 import UserMenu from "@/components/UserMenu";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -48,7 +49,7 @@ export default function TopBar() {
         </div>
         <div style={{ fontSize: 19, fontWeight: 800 }}>Kontorbud</div>
       </Link>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      <div className="kb-desktop-nav" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
         {links.map((l) => (
           <Link
             key={l.href}
@@ -66,12 +67,15 @@ export default function TopBar() {
           </Link>
         ))}
       </div>
-      {name && (
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <NotificationBell name={name} />
-          <UserMenu />
-        </div>
-      )}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        {name && <NotificationBell name={name} />}
+        {name && (
+          <div className="kb-desktop-usermenu">
+            <UserMenu />
+          </div>
+        )}
+        <MobileMenu />
+      </div>
     </div>
   );
 }
