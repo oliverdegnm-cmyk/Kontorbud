@@ -66,8 +66,8 @@ export default function BrowsePage() {
     <div>
       <div style={{ position: "relative", marginTop: 6 }}>
         <img
-          src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1400&auto=format&fit=crop&q=70"
-          alt="Administrativt arbejde ved skrivebordet"
+          src="https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70"
+          alt="Administrativt arbejde på kontoret"
           style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 28, display: "block" }}
         />
         <div
