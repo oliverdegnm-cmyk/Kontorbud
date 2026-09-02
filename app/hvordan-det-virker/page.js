@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FileText, Users, CreditCard, CheckCircle2, UserPlus, Search, Trophy, Wallet, ShieldCheck, MessageCircle, Star } from "lucide-react";
 
@@ -40,12 +41,23 @@ function StepCard({ icon: Icon, num, title, children }) {
 }
 
 export default function HowItWorksPage() {
+  const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings?.how_it_works_image_url) setHeroImage(data.settings.how_it_works_image_url);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ position: "relative", marginBottom: 44 }}>
         <img
-          src="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
-          alt="Kollegaer gennemgår dokumenter ved skrivebordet"
+          src={heroImage}
+          alt="Samarbejde om en opgave"
           style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 28, display: "block" }}
         />
         <div

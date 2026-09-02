@@ -31,6 +31,16 @@ export default function BrowsePage() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [showMap, setShowMap] = useState(true);
+  const [heroImage, setHeroImage] = useState("/images/hero-illustration.svg");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings?.hero_image_url) setHeroImage(data.settings.hero_image_url);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch("/api/tasks")
@@ -66,7 +76,7 @@ export default function BrowsePage() {
     <div>
       <div style={{ position: "relative", marginTop: 6 }}>
         <img
-          src="/images/hero-illustration.svg"
+          src={heroImage}
           alt="Overvældet af administrative opgaver — beder om hjælp"
           style={{ width: "100%", height: 260, objectFit: "cover", borderRadius: 28, display: "block" }}
         />

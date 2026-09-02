@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
-import { ShieldCheck, Trash2 } from "lucide-react";
+import { ShieldCheck, Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import { upload } from "@vercel/blob/client";
 
 function Badge({ children, tone }) {
   const tones = {
@@ -87,6 +88,12 @@ export default function AdminPage() {
         >
           Brugere
         </button>
+        <button
+          onClick={() => setTab("images")}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#2A55E5" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
+        >
+          Billeder
+        </button>
       </div>
 
       {error && <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" }}>{error}</div>}
@@ -139,6 +146,104 @@ export default function AdminPage() {
             ))}
         </div>
       )}
+
+      {tab === "images" && <ImagesTab />}
+    </div>
+  );
+}
+
+function ImageSetting({ label, settingKey, defaultUrl, hint }) {
+  const [current, setCurrent] = useState(defaultUrl);
+  const [uploading, setUploading] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings?.[settingKey]) setCurrent(data.settings[settingKey]);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function handleChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setError("");
+    setSaved(false);
+    try {
+      const blob = await upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" });
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: settingKey, value: blob.url }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setCurrent(blob.url);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2500);
+      }
+    } catch (err) {
+      setError("Kunne ikke uploade billedet. Prøv igen (max 100 MB).");
+    }
+    setUploading(false);
+    e.target.value = "";
+  }
+
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 16 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 14 }}>{hint}</div>
+      <img src={current} alt={label} style={{ width: "100%", maxWidth: 480, height: 140, objectFit: "cover", borderRadius: 12, border: "1px solid #E4E8F0", display: "block", marginBottom: 14 }} />
+      <label
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 13,
+          fontWeight: 700,
+          padding: "10px 18px",
+          borderRadius: 10,
+          border: "1.5px solid #E4E8F0",
+          color: "#14213D",
+          cursor: uploading ? "default" : "pointer",
+          opacity: uploading ? 0.6 : 1,
+        }}
+      >
+        <Upload size={14} />
+        {uploading ? "Uploader…" : "Upload nyt billede"}
+        <input type="file" accept="image/*" onChange={handleChange} disabled={uploading} style={{ display: "none" }} />
+      </label>
+      {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
+      {error && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
+    </div>
+  );
+}
+
+function ImagesTab() {
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+        <ImageIcon size={16} color="#5B6478" />
+        <span style={{ fontSize: 13, color: "#5B6478" }}>Skift billederne på forsiden og "Hvordan fungerer det" — ændringer er synlige for alle med det samme.</span>
+      </div>
+      <ImageSetting
+        label="Forsidens hero-billede"
+        settingKey="hero_image_url"
+        defaultUrl="/images/hero-illustration.svg"
+        hint="Vises øverst på forsiden, bag det hvide kort."
+      />
+      <ImageSetting
+        label='"Hvordan fungerer det"-billede'
+        settingKey="how_it_works_image_url"
+        defaultUrl="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
+        hint="Vises øverst på siden, der forklarer platformen."
+      />
     </div>
   );
 }
