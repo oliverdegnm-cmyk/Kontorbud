@@ -40,7 +40,7 @@ export default function HomePage() {
         <div style={{ width: "100%", height: 260, borderRadius: 28, overflow: "hidden" }}>
           <img
             src={heroImage}
-            alt="Overvældet af administrative opgaver — beder om hjælp"
+            alt="Overvældet af kontoropgaver — beder om hjælp"
             style={{
               width: "100%",
               height: "100%",
@@ -74,13 +74,13 @@ export default function HomePage() {
               marginBottom: 16,
             }}
           >
-            🇩🇰 Danmarks platform for administrative opgaver
+            🇩🇰 Danmarks platform for kontoropgaver
           </div>
           <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
-            Få klaret dine administrative opgaver
+            Få klaret dine kontoropgaver
           </h1>
           <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
-            Beskriv opgaven, sæt et budget, og modtag bud fra dygtige administrative hjælpere.
+            Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link

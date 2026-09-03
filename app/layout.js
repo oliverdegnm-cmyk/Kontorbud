@@ -4,8 +4,8 @@ import TopBar from "@/components/TopBar";
 import NameGate from "@/components/NameGate";
 
 export const metadata = {
-  title: "Kontorbud — Byd ind på administrative opgaver",
-  description: "Opret administrative opgaver og modtag bud fra kvalificerede hjælpere.",
+  title: "Kontorbud — Byd ind på kontoropgaver",
+  description: "Opret kontoropgaver og modtag bud fra kvalificerede hjælpere.",
 };
 
 export default function RootLayout({ children }) {
