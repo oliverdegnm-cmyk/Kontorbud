@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
+import { getOrCreateStripeCustomer } from "@/lib/stripeCustomer";
 
 export async function POST(request, { params }) {
   try {
@@ -50,9 +51,17 @@ export async function POST(request, { params }) {
     const stripe = getStripe();
     const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
+    // Kobler betalingen til opgavestillerens Stripe-kunde, så kortet automatisk
+    // gemmes og kan genbruges med ét klik næste gang, ligesom Handyhands "HandyhandPay".
+    const customerId = await getOrCreateStripeCustomer(task.posted_by);
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      customer: customerId,
       payment_method_types: ["card"],
+      payment_intent_data: {
+        setup_future_usage: "on_session",
+      },
       line_items: [
         {
           price_data: {

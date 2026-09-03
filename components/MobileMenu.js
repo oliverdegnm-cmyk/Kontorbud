@@ -20,6 +20,7 @@ export default function MobileMenu() {
           { href: "/beskeder", label: "Beskeder" },
           { href: "/profil", label: "Profil" },
           { href: "/indstillinger", label: "Indstillinger" },
+          { href: "/betalinger", label: "Betalinger" },
         ]
       : []),
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
