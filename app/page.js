@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
+import Badge from "@/components/Badge";
+import { statusInfo } from "@/lib/status";
 
 export default function HomePage() {
   const [tasks, setTasks] = useState(null);
@@ -137,7 +139,7 @@ export default function HomePage() {
 
       <SectionHead title="Hvad skal du have løst?" sub="Vælg en kategori for at starte en ny opgave i det felt." />
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-        {CATS.map((c) => {
+        {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
           const count = activeTasks.filter((t) => t.category === c.name).length;
           return (
             <Link
@@ -167,6 +169,70 @@ export default function HomePage() {
           );
         })}
       </div>
+
+      <SectionHead title="Seneste opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
+      {activeTasks.length === 0 ? (
+        <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen opgaver oprettet endnu.</p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+          {activeTasks.slice(0, 5).map((t) => {
+            const cat = CATS.find((c) => c.name === t.category);
+            const status = statusInfo(t);
+            return (
+              <Link
+                key={t.id}
+                href={`/opgave/${t.id}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  background: "#fff",
+                  border: "1.5px solid #E4E8F0",
+                  borderRadius: 16,
+                  padding: "14px 18px",
+                }}
+              >
+                <div
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: 11,
+                    background: "#EEF2FF",
+                    color: "#2A55E5",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{t.title}</div>
+                  <div style={{ fontSize: 12, color: "#5B6478" }}>{t.category}</div>
+                </div>
+                <Badge tone={status.tone}>{status.label}</Badge>
+                <div style={{ fontSize: 13.5, fontWeight: 800, minWidth: 70, textAlign: "right" }}>{t.budget}</div>
+                <ChevronRight size={16} color="#5B6478" />
+              </Link>
+            );
+          })}
+        </div>
+      )}
+      <Link
+        href="/opgaver"
+        style={{
+          display: "inline-block",
+          fontSize: 13.5,
+          fontWeight: 700,
+          padding: "11px 22px",
+          borderRadius: 10,
+          border: "1.5px solid #E4E8F0",
+          color: "#14213D",
+        }}
+      >
+        Se alle opgaver →
+      </Link>
 
       <div
         style={{
