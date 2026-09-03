@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CATS } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
 import FileUploader from "@/components/FileUploader";
@@ -11,7 +11,9 @@ export default function PostTaskPage() {
   const { name } = useName();
 
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(CATS[0].name);
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+  const [category, setCategory] = useState(CATS.some((c) => c.name === categoryFromUrl) ? categoryFromUrl : CATS[0].name);
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
   const [area, setArea] = useState("");

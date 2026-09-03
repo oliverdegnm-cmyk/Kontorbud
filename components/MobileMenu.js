@@ -11,7 +11,7 @@ export default function MobileMenu() {
 
   const links = [
     { href: "/opret", label: "Opret opgave", cta: true },
-    { href: "/", label: "Opgaver" },
+    { href: "/opgaver", label: "Opgaver" },
     { href: "/hvordan-det-virker", label: "Hvordan fungerer det?" },
     { href: "/kontakt", label: "Kontakt" },
     ...(name

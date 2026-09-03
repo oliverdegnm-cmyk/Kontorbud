@@ -12,7 +12,7 @@ export default function TopBar() {
   const { name } = useName();
 
   const links = [
-    { href: "/", label: "Opgaver" },
+    { href: "/opgaver", label: "Opgaver" },
     { href: "/hvordan-det-virker", label: "Hvordan fungerer det?" },
     { href: "/kontakt", label: "Kontakt" },
   ];
