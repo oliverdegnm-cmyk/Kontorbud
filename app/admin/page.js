@@ -94,6 +94,12 @@ export default function AdminPage() {
         >
           Billeder
         </button>
+        <button
+          onClick={() => setTab("contact")}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "contact" ? "#2A55E5" : "transparent", color: tab === "contact" ? "#fff" : "#5B6478" }}
+        >
+          Kontakt
+        </button>
       </div>
 
       {error && <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" }}>{error}</div>}
@@ -148,6 +154,7 @@ export default function AdminPage() {
       )}
 
       {tab === "images" && <ImagesTab />}
+      {tab === "contact" && <ContactSettings />}
     </div>
   );
 }
@@ -343,7 +350,6 @@ function ContactSettings() {
 function ImagesTab() {
   return (
     <div>
-      <ContactSettings />
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
         <ImageIcon size={16} color="#5B6478" />
         <span style={{ fontSize: 13, color: "#5B6478" }}>Skift billederne på forsiden og "Hvordan fungerer det" — ændringer er synlige for alle med det samme.</span>

@@ -89,6 +89,7 @@ export default function HowItWorksPage() {
           <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
             Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
           </p>
+          <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 10 }}>🇩🇰 Dansk platform, dansk kundeservice</div>
         </div>
       </div>
 

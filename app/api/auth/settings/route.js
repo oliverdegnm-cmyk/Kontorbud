@@ -11,11 +11,12 @@ export async function PATCH(request) {
     if (!payload) return NextResponse.json({ error: "Ikke logget ind." }, { status: 401 });
 
     const body = await request.json();
-    const { phone, emailNotifications } = body;
+    const { phone, emailNotifications, smsNotifications } = body;
 
-    await pool.query("UPDATE users SET phone = $1, email_notifications = $2 WHERE id = $3", [
+    await pool.query("UPDATE users SET phone = $1, email_notifications = $2, sms_notifications = $3 WHERE id = $4", [
       phone?.trim() || null,
       emailNotifications !== false,
+      smsNotifications === true,
       payload.userId,
     ]);
 

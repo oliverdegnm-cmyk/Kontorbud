@@ -50,6 +50,20 @@ export default function TopBar() {
         <div style={{ fontSize: 19, fontWeight: 800 }}>Kontorbud</div>
       </Link>
       <div className="kb-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+        <Link
+          href="/opret"
+          style={{
+            padding: "10px 18px",
+            borderRadius: 999,
+            fontSize: 13.5,
+            fontWeight: 700,
+            background: "#2A55E5",
+            color: "#fff",
+            marginRight: 4,
+          }}
+        >
+          Opret opgave
+        </Link>
         {links.map((l) => (
           <Link
             key={l.href}
@@ -66,20 +80,6 @@ export default function TopBar() {
             {l.label}
           </Link>
         ))}
-        <Link
-          href="/opret"
-          style={{
-            padding: "10px 18px",
-            borderRadius: 999,
-            fontSize: 13.5,
-            fontWeight: 700,
-            background: "#2A55E5",
-            color: "#fff",
-            marginLeft: 4,
-          }}
-        >
-          + Opret opgave
-        </Link>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         {name && <NotificationBell name={name} />}

@@ -40,9 +40,10 @@ export default function ContactPage() {
         <Mail size={20} color="#2A55E5" />
         <h2 style={{ fontSize: 24, fontWeight: 800 }}>Kontakt kundeservice</h2>
       </div>
-      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>
+      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 6 }}>
         Har du et spørgsmål, et problem med en opgave, eller brug for hjælp til noget andet? Skriv til os herunder.
       </p>
+      <p style={{ color: "#5B6478", fontSize: 13, marginBottom: 24 }}>🇩🇰 Dansk kundeservice — vi svarer på dansk, hurtigst muligt.</p>
 
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 30 }}>
         {done ? (

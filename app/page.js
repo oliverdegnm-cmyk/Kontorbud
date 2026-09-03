@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ChevronRight, ShieldCheck, Search, MessageCircle, Star, CreditCard } from "lucide-react";
+import { ChevronRight, ShieldCheck, Search, MessageCircle, Star, CreditCard, Headset } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -118,7 +118,7 @@ export default function BrowsePage() {
               marginBottom: 16,
             }}
           >
-            Danmarks platform for administrative opgaver
+            🇩🇰 Danmarks platform for administrative opgaver
           </div>
           <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
             Få klaret dine administrative opgaver
@@ -144,6 +144,7 @@ export default function BrowsePage() {
             <TrustBadge icon={CreditCard} text="Betaling holdes sikkert" />
             <TrustBadge icon={MessageCircle} text="Al kontakt på siden" />
             <TrustBadge icon={Star} text="Anmeldelser begge veje" />
+            <TrustBadge icon={Headset} text="Dansk kundeservice" />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
             <ShieldCheck size={15} />

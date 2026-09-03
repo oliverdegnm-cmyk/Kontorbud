@@ -15,7 +15,7 @@ export async function GET() {
     if (!payload) return NextResponse.json({ user: null });
 
     const { rows } = await pool.query(
-      `SELECT u.id, u.name, u.email, u.email_verified, u.is_admin, u.phone, u.email_notifications, p.avatar_url
+      `SELECT u.id, u.name, u.email, u.email_verified, u.is_admin, u.phone, u.email_notifications, u.sms_notifications, p.avatar_url
        FROM users u LEFT JOIN profiles p ON p.name = u.name
        WHERE u.id = $1`,
       [payload.userId]
@@ -31,6 +31,7 @@ export async function GET() {
         isAdmin: rows[0].is_admin,
         phone: rows[0].phone,
         emailNotifications: rows[0].email_notifications,
+        smsNotifications: rows[0].sms_notifications,
         avatarUrl: rows[0].avatar_url,
       },
     });

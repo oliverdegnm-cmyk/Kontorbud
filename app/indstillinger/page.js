@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useName } from "@/lib/NameContext";
 
 export default function SettingsPage() {
-  const { name, email, phone, emailNotifications, refresh } = useName();
+  const { name, email, phone, emailNotifications, smsNotifications, refresh } = useName();
 
   const [newEmail, setNewEmail] = useState(email);
   const [emailSaving, setEmailSaving] = useState(false);
@@ -13,6 +13,7 @@ export default function SettingsPage() {
 
   const [newPhone, setNewPhone] = useState(phone);
   const [notifOn, setNotifOn] = useState(emailNotifications);
+  const [smsOn, setSmsOn] = useState(smsNotifications);
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState(false);
 
@@ -42,7 +43,7 @@ export default function SettingsPage() {
     await fetch("/api/auth/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone: newPhone, emailNotifications: notifOn }),
+      body: JSON.stringify({ phone: newPhone, emailNotifications: notifOn, smsNotifications: smsOn }),
     });
     await refresh();
     setSettingsSaving(false);
@@ -109,6 +110,41 @@ export default function SettingsPage() {
                   position: "absolute",
                   top: 3,
                   left: notifOn ? 21 : 3,
+                  width: 20,
+                  height: 20,
+                  borderRadius: "50%",
+                  background: "#fff",
+                  transition: "left .15s ease",
+                  boxShadow: "0 1px 3px rgba(0,0,0,.25)",
+                }}
+              />
+            </span>
+          </label>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 18, borderTop: "1px solid #E4E8F0" }}>
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>SMS-notifikationer</div>
+            <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>Få besked som SMS om nye bud, beskeder og opdateringer.</div>
+          </div>
+          <label style={{ position: "relative", display: "inline-block", width: 44, height: 26, flex: "0 0 auto" }}>
+            <input type="checkbox" checked={smsOn} onChange={(e) => setSmsOn(e.target.checked)} style={{ opacity: 0, width: 0, height: 0 }} />
+            <span
+              onClick={() => setSmsOn(!smsOn)}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: smsOn ? "#2A55E5" : "#E4E8F0",
+                borderRadius: 999,
+                cursor: "pointer",
+                transition: "background .15s ease",
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: 3,
+                  left: smsOn ? 21 : 3,
                   width: 20,
                   height: 20,
                   borderRadius: "50%",

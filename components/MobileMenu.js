@@ -10,9 +10,9 @@ export default function MobileMenu() {
   const [open, setOpen] = useState(false);
 
   const links = [
+    { href: "/opret", label: "Opret opgave", cta: true },
     { href: "/", label: "Opgaver" },
     { href: "/hvordan-det-virker", label: "Hvordan fungerer det?" },
-    { href: "/opret", label: "Opret opgave", cta: true },
     { href: "/kontakt", label: "Kontakt" },
     ...(name
       ? [
@@ -75,7 +75,6 @@ export default function MobileMenu() {
                   borderBottom: "1px solid #F0F1F5",
                 }}
               >
-                {l.cta ? "+ " : ""}
                 {l.label}
               </Link>
             ))}
