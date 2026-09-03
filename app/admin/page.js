@@ -294,9 +294,56 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
   );
 }
 
+function ContactSettings() {
+  const [contactEmail, setContactEmail] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings?.contact_email) setContactEmail(data.settings.contact_email);
+      });
+  }, []);
+
+  async function save() {
+    await fetch("/api/admin/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "contact_email", value: contactEmail }),
+    });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  }
+
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 16 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Kontaktformular</div>
+      <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 14 }}>Beskeder fra "Kontakt"-siden sendes til denne email.</div>
+      <input
+        type="email"
+        value={contactEmail}
+        onChange={(e) => setContactEmail(e.target.value)}
+        placeholder="support@dinvirksomhed.dk"
+        style={{ width: "100%", maxWidth: 340, fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 12 }}
+      />
+      <div>
+        <button
+          onClick={save}
+          style={{ fontSize: 13, fontWeight: 700, padding: "9px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+        >
+          Gem
+        </button>
+        {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
+      </div>
+    </div>
+  );
+}
+
 function ImagesTab() {
   return (
     <div>
+      <ContactSettings />
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
         <ImageIcon size={16} color="#5B6478" />
         <span style={{ fontSize: 13, color: "#5B6478" }}>Skift billederne på forsiden og "Hvordan fungerer det" — ændringer er synlige for alle med det samme.</span>

@@ -12,7 +12,8 @@ export default function MobileMenu() {
   const links = [
     { href: "/", label: "Opgaver" },
     { href: "/hvordan-det-virker", label: "Hvordan fungerer det?" },
-    { href: "/opret", label: "Opret opgave" },
+    { href: "/opret", label: "Opret opgave", cta: true },
+    { href: "/kontakt", label: "Kontakt" },
     ...(name
       ? [
           { href: "/mine", label: "Mine sager" },
@@ -64,8 +65,16 @@ export default function MobileMenu() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                style={{ display: "block", padding: "18px 0", fontSize: 17, fontWeight: 600, color: "#14213D", borderBottom: "1px solid #F0F1F5" }}
+                style={{
+                  display: "block",
+                  padding: "18px 0",
+                  fontSize: 17,
+                  fontWeight: l.cta ? 800 : 600,
+                  color: l.cta ? "#2A55E5" : "#14213D",
+                  borderBottom: "1px solid #F0F1F5",
+                }}
               >
+                {l.cta ? "+ " : ""}
                 {l.label}
               </Link>
             ))}
