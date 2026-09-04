@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, LogOut, ChevronDown, Briefcase, MessageCircle, ShieldCheck, Settings, CreditCard } from "lucide-react";
+import InviteButton from "@/components/InviteButton";
 import { useName } from "@/lib/NameContext";
 
 function initials(name) {
@@ -123,6 +124,7 @@ export default function UserMenu() {
           >
             <CreditCard size={15} color="#5B6478" /> Betalinger
           </Link>
+          <InviteButton />
           {isAdmin && (
             <Link
               href="/admin"
