@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import InviteButton from "@/components/InviteButton";
+
 import { useName } from "@/lib/NameContext";
 
 export default function MobileMenu() {
@@ -24,7 +24,9 @@ export default function MobileMenu() {
           { href: "/betalinger", label: "Betalinger" },
         ]
       : []),
+    ...(name ? [{ href: "/inviter", label: "Inviter venner" }] : []),
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
+    ...(!name ? [{ href: "/login", label: "Log ind" }] : []),
   ];
 
   function handleLogOut() {
@@ -79,11 +81,6 @@ export default function MobileMenu() {
                 {l.label}
               </Link>
             ))}
-            {name && (
-              <div style={{ padding: "18px 0", borderBottom: "1px solid #F0F1F5" }}>
-                <InviteButton style={{ fontSize: 17, fontWeight: 600, padding: 0 }} />
-              </div>
-            )}
             {name ? (
               <button
                 onClick={handleLogOut}

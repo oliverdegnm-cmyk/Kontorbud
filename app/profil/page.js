@@ -1,11 +1,12 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useEffect, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { useName } from "@/lib/NameContext";
 import { FileText, Upload, X, Globe } from "lucide-react";
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { name, emailVerified } = useName();
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
@@ -229,5 +230,13 @@ function EmailVerifyBanner() {
       )}
       {error && <div style={{ marginTop: 6 }}>{error}</div>}
     </div>
+  );
+}
+
+export default function ProfilePageWrapper() {
+  return (
+    <RequireAuth>
+      <ProfilePage />
+    </RequireAuth>
   );
 }

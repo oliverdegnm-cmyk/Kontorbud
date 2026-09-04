@@ -1,5 +1,6 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
@@ -8,7 +9,7 @@ import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet } from "lucide-reac
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
-export default function PaymentsPage() {
+function PaymentsPage() {
   const { name } = useName();
   const searchParams = useSearchParams();
 
@@ -271,5 +272,13 @@ export default function PaymentsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentsPageWrapper() {
+  return (
+    <RequireAuth>
+      <PaymentsPage />
+    </RequireAuth>
   );
 }

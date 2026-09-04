@@ -1,5 +1,6 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
@@ -7,7 +8,7 @@ import Badge from "@/components/Badge";
 import { formatKr, LEVELS } from "@/lib/fees";
 import { statusInfo } from "@/lib/status";
 
-export default function MinePage() {
+function MinePage() {
   const { name } = useName();
   const [tasks, setTasks] = useState(null);
   const [level, setLevel] = useState(null);
@@ -134,5 +135,13 @@ export default function MinePage() {
         );
       })}
     </div>
+  );
+}
+
+export default function MinePageWrapper() {
+  return (
+    <RequireAuth>
+      <MinePage />
+    </RequireAuth>
   );
 }

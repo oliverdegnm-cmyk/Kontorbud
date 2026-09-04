@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -25,7 +25,7 @@ function budgetNumber(budget) {
   return digits ? parseInt(digits, 10) : null;
 }
 
-export default function OpgaverPage() {
+function OpgaverPage() {
   const searchParams = useSearchParams();
   const [tasks, setTasks] = useState(null);
   const [error, setError] = useState("");
@@ -240,5 +240,13 @@ export default function OpgaverPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OpgaverPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <OpgaverPage />
+    </Suspense>
   );
 }

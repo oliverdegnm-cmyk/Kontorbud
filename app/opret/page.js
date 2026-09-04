@@ -1,12 +1,13 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CATS } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
 import FileUploader from "@/components/FileUploader";
 
-export default function PostTaskPage() {
+function PostTaskPage() {
   const router = useRouter();
   const { name } = useName();
 
@@ -183,5 +184,13 @@ export default function PostTaskPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PostTaskPageWrapper() {
+  return (
+    <RequireAuth title="Log ind for at oprette en opgave" subtitle="Du skal være logget ind, før du kan oprette en opgave.">
+      <PostTaskPage />
+    </RequireAuth>
   );
 }

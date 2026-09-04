@@ -88,6 +88,15 @@ export default function TopBar() {
             <UserMenu />
           </div>
         )}
+        {!name && (
+          <Link
+            href="/login"
+            className="kb-desktop-usermenu"
+            style={{ padding: "9px 16px", borderRadius: 999, fontSize: 13.5, fontWeight: 700, border: "1.5px solid #E4E8F0", color: "#14213D" }}
+          >
+            Log ind
+          </Link>
+        )}
         <MobileMenu />
       </div>
     </div>

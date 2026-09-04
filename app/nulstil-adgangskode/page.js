@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 
-export default function ResetPasswordPage() {
+function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -91,5 +92,13 @@ export default function ResetPasswordPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function ResetPasswordPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordPage />
+    </Suspense>
   );
 }

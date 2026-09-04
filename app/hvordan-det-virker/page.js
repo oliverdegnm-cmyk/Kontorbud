@@ -59,7 +59,7 @@ export default function HowItWorksPage() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ position: "relative", marginBottom: 44 }}>
-        <div style={{ width: "100%", height: 200, borderRadius: 28, overflow: "hidden" }}>
+        <div style={{ width: "100%", height: 320, borderRadius: 28, overflow: "hidden" }}>
           <img
             src={heroImage}
             alt="Samarbejde om en opgave"

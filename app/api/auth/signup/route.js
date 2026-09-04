@@ -9,7 +9,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { name, email, password } = body;
+    const { name, email, password, ref } = body;
 
     if (!name?.trim() || !email?.trim() || !password || password.length < 6) {
       return NextResponse.json({ error: "Udfyld navn, email og en adgangskode på mindst 6 tegn." }, { status: 400 });
@@ -26,9 +26,20 @@ export async function POST(request) {
     const passwordHash = await hashPassword(password);
     const verificationToken = crypto.randomBytes(24).toString("hex");
 
+    // Hvis brugeren kom via et invitationslink, slår vi op hvem der inviterede,
+    // så det senere kan bruges til f.eks. en "inviter en ven"-belønning.
+    let referredBy = null;
+    if (ref) {
+      const refId = parseInt(ref, 36);
+      if (!isNaN(refId)) {
+        const { rows: refRows } = await pool.query("SELECT name FROM users WHERE id = $1", [refId]);
+        if (refRows[0]) referredBy = refRows[0].name;
+      }
+    }
+
     const { rows } = await pool.query(
-      "INSERT INTO users (name, email, password_hash, verification_token, verification_sent_at) VALUES ($1, $2, $3, $4, now()) RETURNING id, name, email",
-      [trimmedName, normalizedEmail, passwordHash, verificationToken]
+      "INSERT INTO users (name, email, password_hash, verification_token, verification_sent_at, referred_by) VALUES ($1, $2, $3, $4, now(), $5) RETURNING id, name, email",
+      [trimmedName, normalizedEmail, passwordHash, verificationToken, referredBy]
     );
     const user = rows[0];
 

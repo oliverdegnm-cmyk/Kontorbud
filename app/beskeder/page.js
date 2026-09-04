@@ -1,5 +1,6 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
@@ -16,7 +17,7 @@ function timeAgo(iso) {
   return `${Math.floor(diff / 86400)} dage siden`;
 }
 
-export default function MessagesInboxPage() {
+function MessagesInboxPage() {
   const { name } = useName();
   const [threads, setThreads] = useState(null);
 
@@ -88,5 +89,13 @@ export default function MessagesInboxPage() {
           </Link>
         ))}
     </div>
+  );
+}
+
+export default function MessagesInboxPageWrapper() {
+  return (
+    <RequireAuth>
+      <MessagesInboxPage />
+    </RequireAuth>
   );
 }

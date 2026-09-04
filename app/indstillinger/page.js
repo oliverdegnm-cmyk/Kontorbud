@@ -1,9 +1,10 @@
 "use client";
 
+import RequireAuth from "@/components/RequireAuth";
 import { useState } from "react";
 import { useName } from "@/lib/NameContext";
 
-export default function SettingsPage() {
+function SettingsPage() {
   const { name, email, phone, emailNotifications, smsNotifications, refresh } = useName();
 
   const [newEmail, setNewEmail] = useState(email);
@@ -167,5 +168,13 @@ export default function SettingsPage() {
         {settingsMsg && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 600, color: "#1AA37A" }}>✓ Gemt.</div>}
       </div>
     </div>
+  );
+}
+
+export default function SettingsPageWrapper() {
+  return (
+    <RequireAuth>
+      <SettingsPage />
+    </RequireAuth>
   );
 }

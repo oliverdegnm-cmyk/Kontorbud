@@ -443,6 +443,18 @@ export default function TaskDetailPage() {
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6 }}>
               Denne opgave modtager ikke flere bud.
             </p>
+          ) : !name ? (
+            <div>
+              <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 14 }}>
+                Log ind for at afgive et bud på denne opgave.
+              </p>
+              <Link
+                href="/login"
+                style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 20px", borderRadius: 10, background: "#2A55E5", color: "#fff" }}
+              >
+                Log ind
+              </Link>
+            </div>
           ) : myLevel && !myLevel.stripePayoutsEnabled && task.postedBy !== name ? (
             <div>
               <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 14 }}>
