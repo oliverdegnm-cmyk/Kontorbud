@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight, Search } from "lucide-react";
@@ -25,13 +26,17 @@ function budgetNumber(budget) {
 }
 
 export default function OpgaverPage() {
+  const searchParams = useSearchParams();
   const [tasks, setTasks] = useState(null);
   const [error, setError] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [showMap, setShowMap] = useState(true);
-  const [posterFilter, setPosterFilter] = useState("all");
+  const [posterFilter, setPosterFilter] = useState(() => {
+    const f = searchParams.get("filter");
+    return f === "business" || f === "private" ? f : "all";
+  });
   const [onlyWithLocation, setOnlyWithLocation] = useState(false);
 
   useEffect(() => {

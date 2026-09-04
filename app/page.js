@@ -233,6 +233,21 @@ export default function HomePage() {
       >
         Se alle opgaver →
       </Link>
+      <Link
+        href="/opgaver?filter=business"
+        style={{
+          display: "inline-block",
+          fontSize: 13.5,
+          fontWeight: 700,
+          padding: "11px 22px",
+          borderRadius: 10,
+          border: "1.5px solid #E4E8F0",
+          color: "#14213D",
+          marginLeft: 10,
+        }}
+      >
+        Er du en virksomhed? Se opgaver fra andre virksomheder →
+      </Link>
 
       <div
         style={{
