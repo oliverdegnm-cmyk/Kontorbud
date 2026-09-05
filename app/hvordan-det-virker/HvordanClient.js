@@ -47,6 +47,7 @@ export default function HowItWorksClient() {
   const [trustImage, setTrustImage] = useState("https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70");
   const [trustPosition, setTrustPosition] = useState(50);
   const [trustZoom, setTrustZoom] = useState(100);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -59,26 +60,29 @@ export default function HowItWorksClient() {
         if (data.settings?.trust_image_url_position) setTrustPosition(parseFloat(data.settings.trust_image_url_position));
         if (data.settings?.trust_image_url_zoom) setTrustZoom(parseFloat(data.settings.trust_image_url_zoom));
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setImagesLoaded(true));
   }, []);
 
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ position: "relative", marginBottom: 44 }}>
-        <div style={{ width: "100%", height: 320, borderRadius: 28, overflow: "hidden" }}>
-          <img
-            src={heroImage}
-            alt="Samarbejde om en opgave"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: `center ${heroPosition}%`,
-              transform: `scale(${heroZoom / 100})`,
-              transformOrigin: "center",
-              display: "block",
-            }}
-          />
+        <div style={{ width: "100%", height: 320, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
+          {imagesLoaded && (
+            <img
+              src={heroImage}
+              alt="Samarbejde om en opgave"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: `center ${heroPosition}%`,
+                transform: `scale(${heroZoom / 100})`,
+                transformOrigin: "center",
+                display: "block",
+              }}
+            />
+          )}
         </div>
         <div
           style={{
@@ -142,20 +146,22 @@ export default function HowItWorksClient() {
       </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
-        <div style={{ width: "100%", height: 140, borderRadius: 14, overflow: "hidden", marginBottom: 24 }}>
-          <img
-            src={trustImage}
-            alt="Tryghed på Kontorbud"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: `center ${trustPosition}%`,
-              transform: `scale(${trustZoom / 100})`,
-              transformOrigin: "center",
-              display: "block",
-            }}
-          />
+        <div style={{ width: "100%", height: 140, borderRadius: 14, overflow: "hidden", marginBottom: 24, background: "#fff" }}>
+          {imagesLoaded && (
+            <img
+              src={trustImage}
+              alt="Tryghed på Kontorbud"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: `center ${trustPosition}%`,
+                transform: `scale(${trustZoom / 100})`,
+                transformOrigin: "center",
+                display: "block",
+              }}
+            />
+          )}
         </div>
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
         <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>

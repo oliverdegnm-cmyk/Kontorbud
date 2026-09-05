@@ -7,12 +7,14 @@ import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import { statusInfo } from "@/lib/status";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
   const [tasks, setTasks] = useState(null);
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
   const [heroPosition, setHeroPosition] = useState(50);
   const [heroZoom, setHeroZoom] = useState(100);
+  const [heroLoaded, setHeroLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -22,7 +24,8 @@ export default function HomePage() {
         if (data.settings?.hero_image_url_position) setHeroPosition(parseFloat(data.settings.hero_image_url_position));
         if (data.settings?.hero_image_url_zoom) setHeroZoom(parseFloat(data.settings.hero_image_url_zoom));
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setHeroLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -37,20 +40,22 @@ export default function HomePage() {
   return (
     <div>
       <div style={{ position: "relative", marginTop: 6 }}>
-        <div style={{ width: "100%", height: 260, borderRadius: 28, overflow: "hidden" }}>
-          <img
-            src={heroImage}
-            alt="Overvældet af kontoropgaver - beder om hjælp"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: `center ${heroPosition}%`,
-              transform: `scale(${heroZoom / 100})`,
-              transformOrigin: "center",
-              display: "block",
-            }}
-          />
+        <div style={{ width: "100%", height: 260, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
+          {heroLoaded && (
+            <img
+              src={heroImage}
+              alt="Overvældet af kontoropgaver - beder om hjælp"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: `center ${heroPosition}%`,
+                transform: `scale(${heroZoom / 100})`,
+                transformOrigin: "center",
+                display: "block",
+              }}
+            />
+          )}
         </div>
         <div
           style={{
@@ -288,6 +293,8 @@ export default function HomePage() {
           Sådan fungerer det →
         </Link>
       </div>
+
+      <Footer />
     </div>
   );
 }

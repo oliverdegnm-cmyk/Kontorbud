@@ -1,7 +1,6 @@
 import "./globals.css";
 import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
-import Footer from "@/components/Footer";
 
 export const metadata = {
   metadataBase: new URL("https://kontorbud.dk"),
@@ -23,10 +22,7 @@ export default function RootLayout({ children }) {
       <body>
         <NameProvider>
           <TopBar />
-          <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 0" }}>{children}</main>
-          <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px" }}>
-            <Footer />
-          </div>
+          <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>
         </NameProvider>
       </body>
     </html>

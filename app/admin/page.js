@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
-import { ShieldCheck, Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import { ShieldCheck, Trash2, Image as ImageIcon, Upload, MessageSquare, UserX } from "lucide-react";
 import { upload } from "@vercel/blob/client";
+import RequireAuth from "@/components/RequireAuth";
 
 function Badge({ children, tone }) {
   const tones = {
@@ -24,15 +24,10 @@ function Badge({ children, tone }) {
 
 export default function AdminPage() {
   const { name, isAdmin, ready } = useName();
-  const router = useRouter();
   const [tab, setTab] = useState("tasks");
   const [tasks, setTasks] = useState(null);
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (ready && name && !isAdmin) router.push("/");
-  }, [ready, name, isAdmin, router]);
 
   function loadTasks() {
     fetch("/api/admin/tasks")
@@ -62,9 +57,43 @@ export default function AdminPage() {
     loadTasks();
   }
 
-  if (!ready || (name && !isAdmin)) return null;
+  async function deleteUser(id, userName) {
+    if (!confirm(`Slet kontoen for "${userName}" permanent? De kan ikke længere logge ind. Deres opgaver og bud bliver ikke slettet. Kan ikke fortrydes.`)) return;
+    const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+    loadUsers();
+  }
+
+  async function messageUser(userName) {
+    const message = prompt(`Skriv en besked til ${userName}:`);
+    if (!message?.trim()) return;
+    const res = await fetch("/api/admin/message-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recipientName: userName, message }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+    alert("Besked sendt.");
+  }
+
+  if (!ready) return null;
+  if (!name) {
+    return (
+      <div style={{ marginTop: 24 }}>
+        <RequireAuth title="Log ind som administrator" subtitle="Denne side kræver administrator-adgang." />
+      </div>
+    );
+  }
   if (!isAdmin) {
-    return <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>Log ind som administrator for at se denne side.</div>;
+    return <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>Ingen adgang.</div>;
   }
 
   return (
@@ -148,6 +177,22 @@ export default function AdminPage() {
                 {u.isAdmin && <Badge tone="matched">Admin</Badge>}
                 {u.emailVerified ? <Badge tone="completed">Email bekræftet</Badge> : <Badge tone="open">Email ikke bekræftet</Badge>}
                 {u.stripeConnected ? <Badge tone="completed">Stripe forbundet</Badge> : <Badge tone="cancelled">Ingen Stripe</Badge>}
+                <button
+                  onClick={() => messageUser(u.name)}
+                  title="Send privat besked"
+                  style={{ width: 32, height: 32, borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flex: "0 0 auto" }}
+                >
+                  <MessageSquare size={14} />
+                </button>
+                {!u.isAdmin && (
+                  <button
+                    onClick={() => deleteUser(u.id, u.name)}
+                    title="Slet konto"
+                    style={{ width: 32, height: 32, borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flex: "0 0 auto" }}
+                  >
+                    <UserX size={14} />
+                  </button>
+                )}
               </div>
             ))}
         </div>
