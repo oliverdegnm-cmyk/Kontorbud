@@ -56,17 +56,18 @@ function PaymentsPage() {
 
   useEffect(() => {
     if (!name) return;
-    const stripeParam = searchParams.get("stripe");
-    if (stripeParam === "return" || stripeParam === "refresh") {
-      fetch(`/api/stripe/status/${encodeURIComponent(name)}`)
-        .then((r) => r.json())
-        .then((data) => {
-          if (!data.error) {
-            setStripeConnected(data.connected);
-            setStripePayoutsEnabled(data.payoutsEnabled);
-          }
-        });
-    }
+    // Tjekker altid den friske status hos Stripe, når siden besøges - ikke kun
+    // lige efter man vender tilbage fra onboarding - så en forbindelse, der er
+    // blevet ugyldig i baggrunden (f.eks. efter et skift til Live mode), bliver
+    // opdaget og vist tydeligt, i stedet for først at fejle ved en udbetaling.
+    fetch(`/api/stripe/status/${encodeURIComponent(name)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          setStripeConnected(data.connected);
+          setStripePayoutsEnabled(data.payoutsEnabled);
+        }
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, searchParams]);
 

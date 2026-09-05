@@ -17,6 +17,18 @@ export async function POST(request) {
     const { rows } = await pool.query("SELECT stripe_account_id FROM profiles WHERE name = $1", [name.trim()]);
     let accountId = rows[0]?.stripe_account_id;
 
+    // Bekræft en evt. gemt konto rent faktisk stadig er gyldig i den tilstand
+    // (test/live), API-nøglen kører i lige nu - ellers opretter vi en frisk
+    // konto i stedet for at genbruge en ugyldig fra en tidligere tilstand
+    // (f.eks. sandbox, før platformen skiftede til Live mode).
+    if (accountId) {
+      try {
+        await stripe.accounts.retrieve(accountId);
+      } catch (err) {
+        accountId = null;
+      }
+    }
+
     if (!accountId) {
       const account = await stripe.accounts.create({
         type: "express",
