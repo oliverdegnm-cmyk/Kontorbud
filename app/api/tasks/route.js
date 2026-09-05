@@ -73,16 +73,16 @@ export async function POST(request) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
     }
 
-    const { rows: countRows } = await pool.query("SELECT COUNT(*)::int AS count FROM tasks");
-    const caseNo = `K-2026-${String(100 + countRows[0].count).padStart(3, "0")}`;
-
+    // Sagsnummeret bygges på opgavens egen unikke id (som Postgres selv sikrer
+    // aldrig genbruges, heller ikke efter sletninger) - IKKE en optælling af
+    // antal opgaver, som gav kollisioner, når ældre opgaver blev slettet.
     const coords = await geocodeArea(area);
 
     const { rows } = await pool.query(
       `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area, lat, lng, poster_type, company_name)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
       [
-        caseNo,
+        "midlertidig",
         title.trim(),
         category || "Andet",
         budget?.trim() || "Ikke angivet",
@@ -97,6 +97,9 @@ export async function POST(request) {
       ]
     );
     const task = rows[0];
+    const caseNo = `K-2026-${String(100 + task.id).padStart(3, "0")}`;
+    await pool.query("UPDATE tasks SET case_no = $1 WHERE id = $2", [caseNo, task.id]);
+    task.case_no = caseNo;
 
     let attRows = [];
     if (Array.isArray(attachments) && attachments.length > 0) {
