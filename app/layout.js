@@ -4,8 +4,17 @@ import TopBar from "@/components/TopBar";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Kontorbud - Byd ind på kontoropgaver",
+  metadataBase: new URL("https://kontorbud.dk"),
+  title: {
+    default: "Kontorbud - Byd ind på kontoropgaver",
+    template: "%s",
+  },
   description: "Opret kontoropgaver og modtag bud fra kvalificerede hjælpere.",
+  openGraph: {
+    siteName: "Kontorbud",
+    locale: "da_DK",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
