@@ -15,10 +15,6 @@ export default function HomePage() {
   const [heroPosition, setHeroPosition] = useState(50);
   const [heroZoom, setHeroZoom] = useState(100);
   const [heroLoaded, setHeroLoaded] = useState(false);
-  const [tasksImage, setTasksImage] = useState("https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70");
-  const [tasksPosition, setTasksPosition] = useState(50);
-  const [tasksZoom, setTasksZoom] = useState(100);
-  const [tasksImageLoaded, setTasksImageLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -27,14 +23,10 @@ export default function HomePage() {
         if (data.settings?.hero_image_url) setHeroImage(data.settings.hero_image_url);
         if (data.settings?.hero_image_url_position) setHeroPosition(parseFloat(data.settings.hero_image_url_position));
         if (data.settings?.hero_image_url_zoom) setHeroZoom(parseFloat(data.settings.hero_image_url_zoom));
-        if (data.settings?.tasks_image_url) setTasksImage(data.settings.tasks_image_url);
-        if (data.settings?.tasks_image_url_position) setTasksPosition(parseFloat(data.settings.tasks_image_url_position));
-        if (data.settings?.tasks_image_url_zoom) setTasksZoom(parseFloat(data.settings.tasks_image_url_zoom));
       })
       .catch(() => {})
       .finally(() => {
         setHeroLoaded(true);
-        setTasksImageLoaded(true);
       });
   }, []);
 
@@ -186,23 +178,6 @@ export default function HomePage() {
       </div>
 
       <SectionHead title="Seneste opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
-      <div style={{ width: "100%", height: 160, borderRadius: 20, overflow: "hidden", marginBottom: 20, background: "#F5F7FB" }}>
-        {tasksImageLoaded && (
-          <img
-            src={tasksImage}
-            alt="Kontoropgaver løst af hjælpere"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: `center ${tasksPosition}%`,
-              transform: `scale(${tasksZoom / 100})`,
-              transformOrigin: "center",
-              display: "block",
-            }}
-          />
-        )}
-      </div>
       {activeTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen opgaver oprettet endnu.</p>
       ) : (

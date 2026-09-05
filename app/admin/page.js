@@ -417,12 +417,6 @@ function ImagesTab() {
         defaultUrl="https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70"
         hint='Vises øverst i "Tryghed hele vejen"-boksen på "Hvordan fungerer det"-siden.'
       />
-      <ImageSetting
-        label='"Seneste opgaver"-billede'
-        settingKey="tasks_image_url"
-        defaultUrl="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70"
-        hint='Vises over "Seneste opgaver"-listen på forsiden.'
-      />
     </div>
   );
 }
