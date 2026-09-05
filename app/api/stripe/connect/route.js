@@ -58,6 +58,10 @@ export async function POST(request) {
     return NextResponse.json({ url: accountLink.url });
   } catch (err) {
     console.error("Stripe-fejl i app/api/stripe/connect/route.js:", err);
-    return NextResponse.json({ error: err.message || "Kunne ikke starte Stripe-forbindelsen." }, { status: 500 });
+    const message =
+      err.message?.includes("platform profile")
+        ? `Jeres Stripe-konto mangler at få udfyldt en platformsprofil, før Connect kan bruges i Live mode. ${err.message}`
+        : err.message || "Kunne ikke starte Stripe-forbindelsen.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

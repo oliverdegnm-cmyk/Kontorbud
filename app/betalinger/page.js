@@ -9,6 +9,25 @@ import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet } from "lucide-reac
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
+// Gør et evt. link inde i en fejlbesked fra Stripe klikbart, i stedet for at
+// vise det som rå, ikke-klikbar tekst.
+function LinkifiedText({ text }) {
+  const parts = text.split(/(https?:\/\/\S+)/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^https?:\/\//.test(part) ? (
+          <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: "#C0392B", textDecoration: "underline", fontWeight: 700 }}>
+            {part}
+          </a>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </>
+  );
+}
+
 function PaymentsPage() {
   const { name } = useName();
   const searchParams = useSearchParams();
@@ -167,7 +186,11 @@ function PaymentsPage() {
             </button>
           </div>
         )}
-        {stripeError && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{stripeError}</div>}
+        {stripeError && (
+          <div style={{ marginTop: 10, padding: "12px 14px", borderRadius: 10, background: "#FDECEC", fontSize: 12.5, color: "#C0392B", lineHeight: 1.6 }}>
+            <LinkifiedText text={stripeError} />
+          </div>
+        )}
       </div>
 
       {level && (

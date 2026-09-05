@@ -18,7 +18,18 @@ export async function GET() {
     if (!customerId) return NextResponse.json({ cards: [] });
 
     const stripe = getStripe();
-    const methods = await stripe.paymentMethods.list({ customer: customerId, type: "card" });
+
+    let methods;
+    try {
+      methods = await stripe.paymentMethods.list({ customer: customerId, type: "card" });
+    } catch (err) {
+      // Kunden findes ikke i den nuværende tilstand (test/live) - typisk en
+      // rest fra sandbox, før platformen skiftede til Live mode. Ryd op og
+      // vis blot en tom liste, i stedet for en fejl - et nyt kort tilføjet
+      // herfra opretter automatisk en frisk, gyldig kunde.
+      await pool.query("UPDATE profiles SET stripe_customer_id = NULL WHERE name = $1", [payload.name]);
+      return NextResponse.json({ cards: [] });
+    }
 
     return NextResponse.json({
       cards: methods.data.map((m) => ({
