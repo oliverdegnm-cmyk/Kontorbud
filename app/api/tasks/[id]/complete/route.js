@@ -38,6 +38,21 @@ export async function POST(request, { params }) {
         return NextResponse.json({ error: "Kunne ikke finde hjælperens Stripe-konto." }, { status: 400 });
       }
 
+      const stripe = getStripe();
+
+      // Bekræft kontoen faktisk findes i den tilstand (test/live), API-nøglen
+      // kører i, før vi forsøger en overførsel - ellers får brugeren en kryptisk
+      // "No such destination"-fejl fra Stripe, hvis kontoen blev forbundet, mens
+      // platformen kørte i en anden tilstand (f.eks. sandbox før skiftet til Live).
+      try {
+        await stripe.accounts.retrieve(stripeAccountId);
+      } catch (err) {
+        return NextResponse.json(
+          { error: `${bid.bidder_name} skal forbinde deres Stripe-konto igen, før udbetalingen kan gennemføres (den nuværende forbindelse er ikke længere gyldig).` },
+          { status: 400 }
+        );
+      }
+
       const { rows: earningsRows } = await pool.query(
         `SELECT COALESCE(SUM(b.amount_value), 0)::int AS earnings
          FROM tasks t JOIN bids b ON b.id = t.accepted_bid_id
@@ -54,7 +69,6 @@ export async function POST(request, { params }) {
       const rate = completionRate(completed, cancelled);
       const { level, net } = feeBreakdown(bid.amount_value, earningsRows[0].earnings, rate);
 
-      const stripe = getStripe();
       const paymentIntent = await stripe.paymentIntents.retrieve(task.stripe_payment_intent_id);
       const chargeId = paymentIntent.latest_charge;
 
