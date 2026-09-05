@@ -54,7 +54,7 @@ export default function TaskDetailPage() {
   useEffect(() => {
     const checkout = searchParams.get("checkout");
     if (checkout === "success") {
-      setCheckoutBanner("Betaling gennemført. Vi venter på bekræftelse fra Stripe — opdaterer om lidt…");
+      setCheckoutBanner("Betaling gennemført. Vi venter på bekræftelse fra Stripe - opdaterer om lidt…");
       let attempts = 0;
       const interval = setInterval(() => {
         attempts += 1;
@@ -255,7 +255,7 @@ export default function TaskDetailPage() {
           )}
           {!isCompleted && (
             <div style={{ fontSize: 13, color: "#146B4E", marginTop: 6 }}>
-              Aftal de sidste detaljer i beskederne nedenfor — al kontakt foregår her på siden.
+              Aftal de sidste detaljer i beskederne nedenfor - al kontakt foregår her på siden.
             </div>
           )}
           <MessageThread taskId={task.id} bidderName={acceptedBid.bidderName} currentName={name} />
@@ -272,7 +272,7 @@ export default function TaskDetailPage() {
           <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10 }}>Anmeldelser af denne opgave</div>
           {reviews.map((r) => (
             <div key={r.id} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 14, marginBottom: 8, fontSize: 13 }}>
-              <b>{r.reviewerName}</b> gav <b>{r.revieweeName}</b> {r.rating} ★{r.comment ? ` — ${r.comment}` : ""}
+              <b>{r.reviewerName}</b> gav <b>{r.revieweeName}</b> {r.rating} ★{r.comment ? ` - ${r.comment}` : ""}
             </div>
           ))}
         </div>
@@ -458,7 +458,7 @@ export default function TaskDetailPage() {
           ) : myLevel && !myLevel.stripePayoutsEnabled && task.postedBy !== name ? (
             <div>
               <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 14 }}>
-                Du skal forbinde Stripe, før du kan afgive bud — så er du sikker på at kunne modtage betaling, hvis du vinder.
+                Du skal forbinde Stripe, før du kan afgive bud - så er du sikker på at kunne modtage betaling, hvis du vinder.
               </p>
               <Link
                 href="/profil"

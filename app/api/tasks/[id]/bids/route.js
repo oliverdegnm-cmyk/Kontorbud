@@ -34,7 +34,7 @@ export async function POST(request, { params }) {
     const { rows: profileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [bidderName.trim()]);
     if (!profileRows[0]?.stripe_payouts_enabled) {
       return NextResponse.json(
-        { error: "Du skal forbinde Stripe under din profil, før du kan afgive bud — så er du sikker på at kunne modtage betaling, hvis du vinder." },
+        { error: "Du skal forbinde Stripe under din profil, før du kan afgive bud - så er du sikker på at kunne modtage betaling, hvis du vinder." },
         { status: 400 }
       );
     }

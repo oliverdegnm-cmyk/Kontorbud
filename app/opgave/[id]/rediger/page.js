@@ -78,7 +78,7 @@ export default function EditTaskPage() {
   if (notAllowed) {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>
-        Du kan ikke redigere denne opgave — enten er den ikke din, eller også er den ikke længere åben.{" "}
+        Du kan ikke redigere denne opgave - enten er den ikke din, eller også er den ikke længere åben.{" "}
         <Link href={`/opgave/${id}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
           Tilbage til opgaven
         </Link>

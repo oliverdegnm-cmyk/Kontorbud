@@ -134,7 +134,7 @@ export async function DELETE(request, { params }) {
     }
     const { rows: bidCountRows } = await pool.query("SELECT COUNT(*)::int AS count FROM bids WHERE task_id = $1", [id]);
     if (task.status !== "open" || bidCountRows[0].count > 0) {
-      return NextResponse.json({ error: "Opgaver med bud kan ikke slettes — annullér den i stedet." }, { status: 400 });
+      return NextResponse.json({ error: "Opgaver med bud kan ikke slettes - annullér den i stedet." }, { status: 400 });
     }
 
     await pool.query("DELETE FROM tasks WHERE id = $1", [id]);

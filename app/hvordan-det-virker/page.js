@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText, Users, CreditCard, CheckCircle2, UserPlus, Search, Trophy, Wallet, ShieldCheck, MessageCircle, Star } from "lucide-react";
+import { FileText, Users, CreditCard, CheckCircle2, UserPlus, Search, Trophy, Wallet, ShieldCheck, MessageCircle, Star, Headset } from "lucide-react";
 
 function StepCard({ icon: Icon, num, title, children }) {
   return (
@@ -44,6 +44,9 @@ export default function HowItWorksPage() {
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70");
   const [heroPosition, setHeroPosition] = useState(50);
   const [heroZoom, setHeroZoom] = useState(100);
+  const [trustImage, setTrustImage] = useState("https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70");
+  const [trustPosition, setTrustPosition] = useState(50);
+  const [trustZoom, setTrustZoom] = useState(100);
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -52,6 +55,9 @@ export default function HowItWorksPage() {
         if (data.settings?.how_it_works_image_url) setHeroImage(data.settings.how_it_works_image_url);
         if (data.settings?.how_it_works_image_url_position) setHeroPosition(parseFloat(data.settings.how_it_works_image_url_position));
         if (data.settings?.how_it_works_image_url_zoom) setHeroZoom(parseFloat(data.settings.how_it_works_image_url_zoom));
+        if (data.settings?.trust_image_url) setTrustImage(data.settings.trust_image_url);
+        if (data.settings?.trust_image_url_position) setTrustPosition(parseFloat(data.settings.trust_image_url_position));
+        if (data.settings?.trust_image_url_zoom) setTrustZoom(parseFloat(data.settings.trust_image_url_zoom));
       })
       .catch(() => {});
   }, []);
@@ -103,10 +109,10 @@ export default function HowItWorksPage() {
             Beskriv hvad du har brug for, sæt budget og frist. Vedhæft gerne filer, bydere skal kende til.
           </StepCard>
           <StepCard icon={Users} num="2" title="Modtag bud">
-            Se hjælpernes niveau, anmeldelser og pris — og vælg den, der passer bedst.
+            Se hjælpernes niveau, anmeldelser og pris - og vælg den, der passer bedst.
           </StepCard>
           <StepCard icon={CreditCard} num="3" title="Betal sikkert">
-            Betalingen holdes af platformen, indtil du er tilfreds — den går ikke direkte til hjælperen med det samme.
+            Betalingen holdes af platformen, indtil du er tilfreds - den går ikke direkte til hjælperen med det samme.
           </StepCard>
           <StepCard icon={CheckCircle2} num="4" title="Marker som udført">
             Frigiv betalingen, når opgaven er løst, og giv gerne en anmeldelse bagefter.
@@ -127,17 +133,32 @@ export default function HowItWorksPage() {
             Gennemse åbne opgaver efter kategori eller område, og send dit bud.
           </StepCard>
           <StepCard icon={Trophy} num="3" title="Bliv valgt">
-            Vinder du buddet, ved du med det samme — betalingen er allerede sikret hos platformen.
+            Vinder du buddet, ved du med det samme - betalingen er allerede sikret hos platformen.
           </StepCard>
           <StepCard icon={Wallet} num="4" title="Få udbetalt">
-            Pengene udbetales automatisk, når opgaven er markeret udført — minus et gebyr, der falder jo mere du bruger platformen.
+            Pengene udbetales automatisk, når opgaven er markeret udført - minus et gebyr, der falder jo mere du bruger platformen.
           </StepCard>
         </div>
       </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
+        <div style={{ width: "100%", height: 140, borderRadius: 14, overflow: "hidden", marginBottom: 24 }}>
+          <img
+            src={trustImage}
+            alt="Tryghed på Kontorbud"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: `center ${trustPosition}%`,
+              transform: `scale(${trustZoom / 100})`,
+              transformOrigin: "center",
+              display: "block",
+            }}
+          />
+        </div>
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
-        <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
+        <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>
           <div style={{ textAlign: "center" }}>
             <ShieldCheck size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Betaling holdes sikkert</div>
@@ -149,7 +170,7 @@ export default function HowItWorksPage() {
             <MessageCircle size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Al kontakt på siden</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
-              I skriver sammen direkte på opgaven — ingen grund til at bytte private numre.
+              I skriver sammen direkte på opgaven - ingen grund til at bytte private numre.
             </p>
           </div>
           <div style={{ textAlign: "center" }}>
@@ -157,6 +178,13 @@ export default function HowItWorksPage() {
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Anmeldelser begge veje</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Efter en opgave giver I hinanden stjerner, så tilliden bygges over tid.
+            </p>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <Headset size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Dansk kundeservice</div>
+            <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
+              Vi svarer hurtigt, og altid på dansk, hvis du har brug for hjælp.
             </p>
           </div>
         </div>

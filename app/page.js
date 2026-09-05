@@ -40,7 +40,7 @@ export default function HomePage() {
         <div style={{ width: "100%", height: 260, borderRadius: 28, overflow: "hidden" }}>
           <img
             src={heroImage}
-            alt="Overvældet af kontoropgaver — beder om hjælp"
+            alt="Overvældet af kontoropgaver - beder om hjælp"
             style={{
               width: "100%",
               height: "100%",
@@ -77,7 +77,7 @@ export default function HomePage() {
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
           <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
-            Få klaret dine kontoropgaver
+            Få bud på dine kontoropgaver
           </h1>
           <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
@@ -120,7 +120,7 @@ export default function HomePage() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
             <ShieldCheck size={15} />
-            {activeTasks.length} opgaver oprettet af rigtige brugere — gemt permanent i databasen.
+            {activeTasks.length} opgaver oprettet af rigtige brugere.
           </div>
         </div>
       </div>

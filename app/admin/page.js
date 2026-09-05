@@ -73,7 +73,7 @@ export default function AdminPage() {
         <ShieldCheck size={20} color="#2A55E5" />
         <h2 style={{ fontSize: 24, fontWeight: 800 }}>Admin</h2>
       </div>
-      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Overblik til kundeservice — alle opgaver og brugere, uanset status.</p>
+      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Overblik til kundeservice - alle opgaver og brugere, uanset status.</p>
 
       <div style={{ display: "flex", gap: 6, marginBottom: 22, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
         <button
@@ -352,7 +352,7 @@ function ImagesTab() {
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
         <ImageIcon size={16} color="#5B6478" />
-        <span style={{ fontSize: 13, color: "#5B6478" }}>Skift billederne på forsiden og "Hvordan fungerer det" — ændringer er synlige for alle med det samme.</span>
+        <span style={{ fontSize: 13, color: "#5B6478" }}>Skift billederne på forsiden og "Hvordan fungerer det" - ændringer er synlige for alle med det samme.</span>
       </div>
       <ImageSetting
         label="Forsidens hero-billede"
@@ -365,6 +365,12 @@ function ImagesTab() {
         settingKey="how_it_works_image_url"
         defaultUrl="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70"
         hint="Vises øverst på siden, der forklarer platformen."
+      />
+      <ImageSetting
+        label='"Tryghed hele vejen"-billede'
+        settingKey="trust_image_url"
+        defaultUrl="https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70"
+        hint='Vises øverst i "Tryghed hele vejen"-boksen på "Hvordan fungerer det"-siden.'
       />
     </div>
   );

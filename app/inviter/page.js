@@ -26,7 +26,7 @@ function InviterPage() {
     }
   }
 
-  const shareText = "Kom og prøv Kontorbud — Danmarks platform for kontoropgaver.";
+  const shareText = "Kom og prøv Kontorbud - Danmarks platform for kontoropgaver.";
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
   const mailUrl = `mailto:?subject=${encodeURIComponent("Prøv Kontorbud")}&body=${encodeURIComponent(`${shareText}\n\n${link}`)}`;
 

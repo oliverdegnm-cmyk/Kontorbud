@@ -132,7 +132,7 @@ function PaymentsPage() {
 
       {/* Udbetaling */}
       <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10, marginTop: 4 }}>
-        Udbetaling — når du vinder et bud
+        Udbetaling - når du vinder et bud
       </div>
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 20 }}>
         {stripePayoutsEnabled ? (
@@ -200,7 +200,7 @@ function PaymentsPage() {
 
       {/* Indbetaling */}
       <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10, marginTop: 28 }}>
-        Kort — når du betaler for en opgave
+        Kort - når du betaler for en opgave
       </div>
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22, marginBottom: 20 }}>
         {cards === null && !error && <p style={{ fontSize: 13.5, color: "#5B6478" }}>Henter…</p>}
@@ -260,14 +260,14 @@ function PaymentsPage() {
           <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Krypteret betaling</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe — de går aldrig gennem Kontorbuds egne servere.</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe - de går aldrig gennem Kontorbuds egne servere.</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 12 }}>
           <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Beløbet holdes, indtil du selv markerer opgaven som udført — det udbetales aldrig automatisk.</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Beløbet holdes, indtil du selv markerer opgaven som udført - det udbetales aldrig automatisk.</div>
           </div>
         </div>
       </div>

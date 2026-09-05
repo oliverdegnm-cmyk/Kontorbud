@@ -91,7 +91,7 @@ function ProfilePage() {
     <div style={{ marginTop: 24, maxWidth: 660 }}>
       <h2 style={{ fontSize: 24, marginBottom: 4 }}>Din profil</h2>
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>
-        Vises for andre, når de ser dine bud eller opgaver — ligesom en hjælperprofil på Handyhand.
+        Vises for andre, når de ser dine bud eller opgaver - ligesom en hjælperprofil på Handyhand.
       </p>
 
       {!emailVerified && <EmailVerifyBanner />}
@@ -101,7 +101,7 @@ function ProfilePage() {
         <textarea
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          placeholder="Kort om dig selv — baggrund, erfaring, hvad du er god til."
+          placeholder="Kort om dig selv - baggrund, erfaring, hvad du er god til."
           style={{ width: "100%", minHeight: 90, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", resize: "vertical" }}
         />
 
@@ -131,7 +131,7 @@ function ProfilePage() {
           placeholder="https://dinhjemmeside.dk"
           style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
         />
-        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Vises som et link på din offentlige profil — godt til at vise et portfolio.</div>
+        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Vises som et link på din offentlige profil - godt til at vise et portfolio.</div>
 
         <button
           onClick={save}

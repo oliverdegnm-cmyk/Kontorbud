@@ -1,9 +1,10 @@
 import "./globals.css";
 import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
+import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Kontorbud — Byd ind på kontoropgaver",
+  title: "Kontorbud - Byd ind på kontoropgaver",
   description: "Opret kontoropgaver og modtag bud fra kvalificerede hjælpere.",
 };
 
@@ -13,7 +14,10 @@ export default function RootLayout({ children }) {
       <body>
         <NameProvider>
           <TopBar />
-          <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>
+          <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 0" }}>{children}</main>
+          <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px" }}>
+            <Footer />
+          </div>
         </NameProvider>
       </body>
     </html>

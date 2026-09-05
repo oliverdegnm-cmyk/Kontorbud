@@ -55,7 +55,7 @@ function SettingsPage() {
   return (
     <div style={{ marginTop: 24, maxWidth: 620, marginBottom: 60 }}>
       <h2 style={{ fontSize: 24, marginBottom: 4 }}>Indstillinger</h2>
-      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 28 }}>Administrer din konto — kontaktoplysninger og notifikationer.</p>
+      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 28 }}>Administrer din konto - kontaktoplysninger og notifikationer.</p>
 
       {/* Email */}
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22, marginBottom: 20 }}>
