@@ -112,6 +112,7 @@ export async function POST(request) {
 
     return NextResponse.json({ task: mapTask(task, [], attRows) }, { status: 201 });
   } catch (err) {
+    console.error("Kunne ikke oprette opgave:", err);
     return NextResponse.json({ error: "Kunne ikke oprette opgaven." }, { status: 500 });
   }
 }

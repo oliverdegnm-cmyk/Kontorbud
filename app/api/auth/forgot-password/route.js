@@ -29,6 +29,7 @@ export async function POST(request) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    console.error("Fejl i forgot-password:", err);
     return NextResponse.json({ error: "Kunne ikke sende nulstillingsmail." }, { status: 500 });
   }
 }
