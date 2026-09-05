@@ -426,18 +426,6 @@ function ImagesTab() {
         defaultUrl="https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70"
         hint="Vises øverst på forsiden, bag det hvide kort."
       />
-      <ImageSetting
-        label='"Hvordan fungerer det"-billede'
-        settingKey="how_it_works_image_url"
-        defaultUrl="https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70"
-        hint="Vises øverst på siden, der forklarer platformen."
-      />
-      <ImageSetting
-        label='"Tryghed hele vejen"-billede'
-        settingKey="trust_image_url"
-        defaultUrl="https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70"
-        hint='Vises øverst i "Tryghed hele vejen"-boksen på "Hvordan fungerer det"-siden.'
-      />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FileText, Users, CreditCard, CheckCircle2, UserPlus, Search, Trophy, Wallet, ShieldCheck, MessageCircle, Star, Headset } from "lucide-react";
 
@@ -41,66 +40,22 @@ function StepCard({ icon: Icon, num, title, children }) {
 }
 
 export default function HowItWorksClient() {
-  const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&auto=format&fit=crop&q=70");
-  const [heroPosition, setHeroPosition] = useState(50);
-  const [heroZoom, setHeroZoom] = useState(100);
-  const [trustImage, setTrustImage] = useState("https://images.unsplash.com/photo-1560264280-88b68371db39?w=1400&auto=format&fit=crop&q=70");
-  const [trustPosition, setTrustPosition] = useState(50);
-  const [trustZoom, setTrustZoom] = useState(100);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/site-settings")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.settings?.how_it_works_image_url) setHeroImage(data.settings.how_it_works_image_url);
-        if (data.settings?.how_it_works_image_url_position) setHeroPosition(parseFloat(data.settings.how_it_works_image_url_position));
-        if (data.settings?.how_it_works_image_url_zoom) setHeroZoom(parseFloat(data.settings.how_it_works_image_url_zoom));
-        if (data.settings?.trust_image_url) setTrustImage(data.settings.trust_image_url);
-        if (data.settings?.trust_image_url_position) setTrustPosition(parseFloat(data.settings.trust_image_url_position));
-        if (data.settings?.trust_image_url_zoom) setTrustZoom(parseFloat(data.settings.trust_image_url_zoom));
-      })
-      .catch(() => {})
-      .finally(() => setImagesLoaded(true));
-  }, []);
-
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
-      <div style={{ position: "relative", marginBottom: 44 }}>
-        <div style={{ width: "100%", height: 320, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
-          {imagesLoaded && (
-            <img
-              src={heroImage}
-              alt="Samarbejde om en opgave"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: `center ${heroPosition}%`,
-                transform: `scale(${heroZoom / 100})`,
-                transformOrigin: "center",
-                display: "block",
-              }}
-            />
-          )}
-        </div>
-        <div
-          style={{
-            position: "relative",
-            background: "#fff",
-            borderRadius: 24,
-            padding: "36px 40px",
-            margin: "-56px 20px 0",
-            textAlign: "center",
-            boxShadow: "0 24px 48px -24px rgba(20,33,61,.25)",
-          }}
-        >
-          <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer Kontorbud</h1>
-          <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
-            Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
-          </p>
-          <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 10 }}>🇩🇰 Dansk platform, dansk kundeservice</div>
-        </div>
+      <div
+        style={{
+          background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
+          borderRadius: 28,
+          padding: "44px 40px",
+          marginBottom: 44,
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer Kontorbud</h1>
+        <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
+          Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
+        </p>
+        <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 10 }}>🇩🇰 Dansk platform, dansk kundeservice</div>
       </div>
 
       <div style={{ marginBottom: 52 }}>
@@ -146,23 +101,6 @@ export default function HowItWorksClient() {
       </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
-        <div style={{ width: "100%", height: 140, borderRadius: 14, overflow: "hidden", marginBottom: 24, background: "#fff" }}>
-          {imagesLoaded && (
-            <img
-              src={trustImage}
-              alt="Tryghed på Kontorbud"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: `center ${trustPosition}%`,
-                transform: `scale(${trustZoom / 100})`,
-                transformOrigin: "center",
-                display: "block",
-              }}
-            />
-          )}
-        </div>
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
         <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>
           <div style={{ textAlign: "center" }}>
