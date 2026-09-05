@@ -28,6 +28,7 @@ export async function GET() {
         paymentStatus: t.payment_status,
         postedBy: t.posted_by,
         bidCount: t.bid_count,
+        pendingBidId: t.pending_bid_id,
         createdAt: t.created_at,
       })),
     });

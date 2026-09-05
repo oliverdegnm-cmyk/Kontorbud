@@ -14,6 +14,7 @@ export async function POST(request) {
   try {
     event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
+    console.error("Stripe webhook - ugyldig signatur:", err.message);
     return NextResponse.json({ error: `Webhook signatur ugyldig: ${err.message}` }, { status: 400 });
   }
 
@@ -40,11 +41,14 @@ export async function POST(request) {
         if (bidRows[0]) {
           await notify(bidRows[0].bidder_name, "bid_accepted", taskId, `Dit bud på "${task.title}" er valgt, og betalingen holdes klar til udbetaling.`);
         }
+      } else {
+        console.error("Stripe webhook - opgave matchede ikke forventet tilstand:", { taskId, bidId, taskStatus: task?.status, pendingBidId: task?.pending_bid_id });
       }
     }
 
     return NextResponse.json({ received: true });
   } catch (err) {
+    console.error("Stripe webhook - fejl under behandling:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke behandle webhook." }, { status: 500 });
   }
 }

@@ -57,6 +57,18 @@ export default function AdminPage() {
     loadTasks();
   }
 
+  async function reconcilePayment(id, title) {
+    if (!confirm(`Slå op hos Stripe, om betalingen for "${title}" faktisk gik igennem, og ret opgaven hvis den gjorde?`)) return;
+    const res = await fetch(`/api/admin/tasks/${id}/reconcile-payment`, { method: "POST" });
+    const data = await res.json();
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+    alert("Opgaven er rettet - betalingen blev fundet hos Stripe og markeret som holdt.");
+    loadTasks();
+  }
+
   async function deleteUser(id, userName) {
     if (!confirm(`Slet kontoen for "${userName}" permanent? De kan ikke længere logge ind. Deres opgaver og bud bliver ikke slettet. Kan ikke fortrydes.`)) return;
     const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
@@ -150,6 +162,15 @@ export default function AdminPage() {
                 </div>
                 <Badge tone={t.status}>{t.status}</Badge>
                 {t.paymentStatus !== "unpaid" && <Badge tone="matched">{t.paymentStatus}</Badge>}
+                {t.status === "open" && t.pendingBidId && (
+                  <button
+                    onClick={() => reconcilePayment(t.id, t.title)}
+                    title="Denne opgave venter på en betaling, der måske gik igennem hos Stripe uden at nå frem hertil. Klik for at tjekke og reparere."
+                    style={{ fontSize: 11.5, fontWeight: 700, padding: "6px 12px", borderRadius: 999, border: "1.5px solid #F5D9AE", background: "#FFF1E0", color: "#B5610E", cursor: "pointer", whiteSpace: "nowrap" }}
+                  >
+                    ⚠ Tjek betaling
+                  </button>
+                )}
                 <button
                   onClick={() => deleteTask(t.id, t.title)}
                   title="Slet permanent"
