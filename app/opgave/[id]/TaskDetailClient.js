@@ -9,7 +9,7 @@ import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
 import { useName } from "@/lib/NameContext";
 import { feeBreakdown, formatKr, formatBudgetDisplay } from "@/lib/fees";
-import { statusInfo } from "@/lib/status";
+import { statusInfo, formatDeadlineDisplay } from "@/lib/status";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -375,19 +375,9 @@ export default function TaskDetailClient() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginTop: 20, paddingTop: 20, borderTop: "1px solid #E4E8F0" }}>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Oprettet af</div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <Link href={`/bruger/${encodeURIComponent(task.postedBy)}`} style={{ fontSize: 14.5, fontWeight: 700, color: "#2A55E5" }}>
-                  {task.postedBy}
-                </Link>
-                {task.posterVerified && (
-                  <span
-                    title="Identitet bekræftet via Stripe"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 700, color: "#1AA37A", background: "#E9F9F1", padding: "2px 7px", borderRadius: 999 }}
-                  >
-                    <ShieldCheck size={10} /> Verificeret
-                  </span>
-                )}
-              </div>
+              <Link href={`/bruger/${encodeURIComponent(task.postedBy)}`} style={{ fontSize: 14.5, fontWeight: 700, color: "#2A55E5" }}>
+                {task.postedBy}
+              </Link>
               {task.posterType === "business" && (
                 <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
                   {task.companyName ? `${task.companyName} · ` : ""}Virksomhed
@@ -397,7 +387,7 @@ export default function TaskDetailClient() {
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Frist</div>
               <div style={{ fontSize: 14.5, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, color: task.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
-                <Clock size={14} /> {task.deadline}
+                <Clock size={14} /> {formatDeadlineDisplay(task.deadline)}
               </div>
             </div>
           </div>

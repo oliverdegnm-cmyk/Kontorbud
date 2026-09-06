@@ -11,7 +11,7 @@ import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
-import { statusInfo, truncateText } from "@/lib/status";
+import { statusInfo, truncateText, formatDeadlineDisplay } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
@@ -217,7 +217,7 @@ export default function OpgaverPage() {
                       {t.category}
                       {" · "}
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
-                        <Clock size={12} /> {t.deadline}
+                        <Clock size={12} /> {formatDeadlineDisplay(t.deadline)}
                       </span>
                       {t.area ? ` · 📍 ${t.area}` : ""}
                     </div>
@@ -237,7 +237,6 @@ export default function OpgaverPage() {
                       >
                         {t.postedBy}
                       </Link>
-                      {t.posterVerified && <ShieldCheck size={12} color="#1AA37A" />}
                     </div>
                     <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
                       {t.posterReviewCount > 0 ? (
