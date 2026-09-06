@@ -196,6 +196,7 @@ export default function HomePage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
+                  flexWrap: "wrap",
                   gap: 16,
                   background: "#fff",
                   border: "1.5px solid #E4E8F0",
@@ -219,7 +220,7 @@ export default function HomePage() {
                 >
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ flex: 1, minWidth: 160 }}>
                   <div style={{ fontSize: 14, fontWeight: 700 }}>{t.title}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
@@ -234,30 +235,36 @@ export default function HomePage() {
                     </div>
                   )}
                 </div>
-                <div style={{ textAlign: "right", flex: "0 0 auto", minWidth: 150 }}>
-                  <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
-                    <Link
-                      href={`/bruger/${encodeURIComponent(t.postedBy)}`}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5" }}
-                    >
-                      {t.postedBy}
-                    </Link>
+                <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 16, flex: "0 0 auto" }}>
+                  <div style={{ textAlign: "right", width: 120 }}>
+                    <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                      <Link
+                        href={`/bruger/${encodeURIComponent(t.postedBy)}`}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 120 }}
+                      >
+                        {t.postedBy}
+                      </Link>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>
+                      {t.posterReviewCount > 0 ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
+                          <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
+                        </span>
+                      ) : (
+                        "ingen anmeldelser"
+                      )}
+                    </div>
                   </div>
-                  <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
-                    {t.posterReviewCount > 0 ? (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
-                        <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
-                      </span>
-                    ) : (
-                      "ingen anmeldelser endnu"
-                    )}
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <div style={{ width: 62, textAlign: "center" }}>
+                      <Badge tone={status.tone}>{status.label}</Badge>
+                    </div>
+                    <div style={{ fontSize: 13.5, fontWeight: 800, width: 78, textAlign: "right" }}>{formatBudgetDisplay(t.budget)}</div>
+                    <ChevronRight size={16} color="#5B6478" />
                   </div>
                 </div>
-                <Badge tone={status.tone}>{status.label}</Badge>
-                <div style={{ fontSize: 13.5, fontWeight: 800, minWidth: 70, textAlign: "right" }}>{formatBudgetDisplay(t.budget)}</div>
-                <ChevronRight size={16} color="#5B6478" />
               </div>
             );
           })}

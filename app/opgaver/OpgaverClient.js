@@ -170,7 +170,7 @@ export default function OpgaverPage() {
         </div>
       ) : (
         <div className="kb-grid-browse" style={{ display: "grid", gridTemplateColumns: showMap ? "1.1fr 0.9fr" : "1fr", gap: 20, alignItems: "start" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
             {list.map((t) => {
               const cat = CATS.find((c) => c.name === t.category);
               const status = statusInfo(t);
@@ -181,6 +181,7 @@ export default function OpgaverPage() {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    flexWrap: "wrap",
                     gap: 16,
                     background: "#fff",
                     border: "1.5px solid #E4E8F0",
@@ -204,8 +205,8 @@ export default function OpgaverPage() {
                   >
                     <CatIcon name={cat ? cat.icon : "FileText"} size={20} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                  <div style={{ flex: 1, minWidth: 180 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2, flexWrap: "wrap" }}>
                       <div style={{ fontSize: 14.5, fontWeight: 700 }}>{t.title}</div>
                       {t.posterType === "business" && (
                         <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478", flex: "0 0 auto" }}>
@@ -227,41 +228,45 @@ export default function OpgaverPage() {
                       </div>
                     )}
                   </div>
-                  <div style={{ textAlign: "right", flex: "0 0 auto", minWidth: 150 }}>
-                    <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
-                      <Link
-                        href={`/bruger/${encodeURIComponent(t.postedBy)}`}
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5" }}
-                      >
-                        {t.postedBy}
-                      </Link>
+                  <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
+                    <div style={{ textAlign: "right", width: 130 }}>
+                      <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                        <Link
+                          href={`/bruger/${encodeURIComponent(t.postedBy)}`}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 130 }}
+                        >
+                          {t.postedBy}
+                        </Link>
+                      </div>
+                      <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>
+                        {t.posterReviewCount > 0 ? (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
+                            <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
+                          </span>
+                        ) : (
+                          "ingen anmeldelser"
+                        )}
+                      </div>
                     </div>
-                    <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
-                      {t.posterReviewCount > 0 ? (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
-                          <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
-                        </span>
-                      ) : (
-                        "ingen anmeldelser endnu"
-                      )}
+                    <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                      <div style={{ width: 62, textAlign: "center" }}>
+                        <Badge tone={status.tone}>{status.label}</Badge>
+                      </div>
+                      <div style={{ textAlign: "right", width: 78 }}>
+                        <div style={{ fontSize: 14, fontWeight: 800 }}>{formatBudgetDisplay(t.budget)}</div>
+                        <div style={{ fontSize: 10.5, fontWeight: 600, color: "#5B6478" }}>Budget</div>
+                      </div>
+                      <ChevronRight size={18} color="#5B6478" />
                     </div>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
-                    <Badge tone={status.tone}>{status.label}</Badge>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 14, fontWeight: 800 }}>{formatBudgetDisplay(t.budget)}</div>
-                      <div style={{ fontSize: 10.5, fontWeight: 600, color: "#5B6478" }}>Budget</div>
-                    </div>
-                    <ChevronRight size={18} color="#5B6478" />
                   </div>
                 </div>
               );
             })}
           </div>
           {showMap && (
-            <div style={{ position: "sticky", top: 20 }}>
+            <div style={{ position: "sticky", top: 20, minWidth: 0 }}>
               <MapErrorBoundary>
                 <TaskMap tasks={list} />
               </MapErrorBoundary>

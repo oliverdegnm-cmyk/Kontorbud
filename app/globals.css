@@ -64,6 +64,25 @@ textarea {
   }
 }
 
+/* ---------- opgave-kort: fold "Oprettet af" + status/budget ned på en
+   ny linje på mobil, i stedet for at proppe alt ind i én lang r\u00e6kke ---------- */
+@media (max-width: 640px) {
+  .kb-task-secondary {
+    flex-basis: 100% !important;
+    justify-content: space-between !important;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f1f5;
+  }
+  .kb-task-secondary > div:first-child {
+    text-align: left !important;
+    width: auto !important;
+  }
+  .kb-task-secondary a {
+    max-width: none !important;
+  }
+}
+
 .kb-mobile-menu-btn {
   display: none;
 }
