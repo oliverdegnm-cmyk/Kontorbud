@@ -42,6 +42,7 @@ export default function OpgaverPage() {
     return f === "business" || f === "private" ? f : "all";
   });
   const [onlyWithLocation, setOnlyWithLocation] = useState(false);
+  const [statusFilter, setStatusFilter] = useState(() => (searchParams.get("status") === "closed" ? "closed" : "open"));
 
   useEffect(() => {
     fetch("/api/tasks")
@@ -62,7 +63,7 @@ export default function OpgaverPage() {
 
   const q = query.trim().toLowerCase();
   let list = tasks
-    .filter((t) => t.status !== "cancelled")
+    .filter((t) => (statusFilter === "open" ? t.status === "open" : t.status === "matched" || t.status === "completed"))
     .filter((t) => catFilter === "all" || t.category === catFilter)
     .filter((t) => posterFilter === "all" || t.posterType === posterFilter)
     .filter((t) => !onlyWithLocation || (t.lat && t.lng))
@@ -76,10 +77,34 @@ export default function OpgaverPage() {
 
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
-      <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>Åbne opgaver</h2>
+      <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>{statusFilter === "open" ? "Åbne opgaver" : "Lukkede & gennemførte opgaver"}</h2>
       <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 20 }}>
         {list.length} sager {catFilter === "all" ? "" : "i " + catFilter} · {withLocation} med placering på kortet
       </p>
+
+      <div style={{ display: "flex", gap: 4, marginBottom: 10, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
+        {[
+          { key: "open", label: "Åbne opgaver" },
+          { key: "closed", label: "Lukkede/gennemførte" },
+        ].map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setStatusFilter(f.key)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 8,
+              border: "none",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              background: statusFilter === f.key ? "#2A55E5" : "transparent",
+              color: statusFilter === f.key ? "#fff" : "#5B6478",
+            }}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
 
       <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
         {[
@@ -178,10 +203,11 @@ export default function OpgaverPage() {
                 <div
                   key={t.id}
                   onClick={() => router.push(`/opgave/${t.id}`)}
+                  className="kb-task-row"
                   style={{
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "42px 1fr 340px",
                     alignItems: "center",
-                    flexWrap: "wrap",
                     gap: 16,
                     background: "#fff",
                     border: "1.5px solid #E4E8F0",
@@ -205,7 +231,7 @@ export default function OpgaverPage() {
                   >
                     <CatIcon name={cat ? cat.icon : "FileText"} size={20} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 180 }}>
+                  <div style={{ minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2, flexWrap: "wrap" }}>
                       <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                       {t.posterType === "business" && (
@@ -228,7 +254,7 @@ export default function OpgaverPage() {
                       </div>
                     )}
                   </div>
-                  <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
+                  <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 18, minWidth: 0 }}>
                     <div style={{ textAlign: "right", width: 130 }}>
                       <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>

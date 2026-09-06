@@ -266,10 +266,11 @@ export default function HomePage() {
               <div
                 key={t.id}
                 onClick={() => router.push(`/opgave/${t.id}`)}
+                className="kb-task-row"
                 style={{
-                  display: "flex",
+                  display: "grid",
+                  gridTemplateColumns: "38px 1fr 320px",
                   alignItems: "center",
-                  flexWrap: "wrap",
                   gap: 16,
                   background: "#fff",
                   border: "1.5px solid #E4E8F0",
@@ -293,7 +294,7 @@ export default function HomePage() {
                 >
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
-                <div style={{ flex: 1, minWidth: 160 }}>
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
@@ -308,7 +309,7 @@ export default function HomePage() {
                     </div>
                   )}
                 </div>
-                <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 16, flex: "0 0 auto" }}>
+                <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
                   <div style={{ textAlign: "right", width: 120 }}>
                     <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>

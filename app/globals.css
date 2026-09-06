@@ -73,8 +73,11 @@ textarea {
   container-type: inline-size;
 }
 @container (max-width: 640px) {
+  .kb-task-row {
+    grid-template-columns: 42px 1fr !important;
+  }
   .kb-task-secondary {
-    flex-basis: 100% !important;
+    grid-column: 1 / -1 !important;
     justify-content: space-between !important;
     margin-top: 10px;
     padding-top: 10px;
