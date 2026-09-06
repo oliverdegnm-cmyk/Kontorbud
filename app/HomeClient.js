@@ -7,8 +7,8 @@ import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import { statusInfo } from "@/lib/status";
+import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
-import InstallAppBanner from "@/components/InstallAppBanner";
 
 export default function HomePage() {
   const [tasks, setTasks] = useState(null);
@@ -42,7 +42,6 @@ export default function HomePage() {
 
   return (
     <div>
-      <InstallAppBanner />
       <div style={{ position: "relative", marginTop: 6 }}>
         <div style={{ width: "100%", height: 340, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
           {heroLoaded && (
@@ -221,7 +220,7 @@ export default function HomePage() {
                   <div style={{ fontSize: 12, color: "#5B6478" }}>{t.category}</div>
                 </div>
                 <Badge tone={status.tone}>{status.label}</Badge>
-                <div style={{ fontSize: 13.5, fontWeight: 800, minWidth: 70, textAlign: "right" }}>{t.budget}</div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, minWidth: 70, textAlign: "right" }}>{formatBudgetDisplay(t.budget)}</div>
                 <ChevronRight size={16} color="#5B6478" />
               </Link>
             );

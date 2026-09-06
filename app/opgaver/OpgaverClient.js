@@ -10,6 +10,7 @@ import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
 import { statusInfo } from "@/lib/status";
+import { formatBudgetDisplay } from "@/lib/fees";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
   ssr: false,
@@ -216,7 +217,7 @@ export default function OpgaverPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
                     <Badge tone={status.tone}>{status.label}</Badge>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 14, fontWeight: 800 }}>{t.budget}</div>
+                      <div style={{ fontSize: 14, fontWeight: 800 }}>{formatBudgetDisplay(t.budget)}</div>
                       <div style={{ fontSize: 10.5, fontWeight: 600, color: "#5B6478" }}>Budget</div>
                     </div>
                     <ChevronRight size={18} color="#5B6478" />

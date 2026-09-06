@@ -94,7 +94,7 @@ export default function ProfileClient() {
         </div>
       )}
 
-      {profile && (profile.bio || profile.skills || profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) ? (
+      {profile && (profile.bio || profile.skills || profile.experience || profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) ? (
         <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 26, marginBottom: 22 }}>
           {profile.bio && (
             <>
@@ -112,6 +112,12 @@ export default function ProfileClient() {
                   </span>
                 ))}
               </div>
+            </>
+          )}
+          {profile.experience && (
+            <>
+              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Erfaring</div>
+              <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, whiteSpace: "pre-wrap", marginBottom: 18 }}>{profile.experience}</p>
             </>
           )}
           {(profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) && (

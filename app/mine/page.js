@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
 import Badge from "@/components/Badge";
-import { formatKr, LEVELS } from "@/lib/fees";
+import { formatKr, formatBudgetDisplay, LEVELS } from "@/lib/fees";
 import { statusInfo } from "@/lib/status";
 
 function MinePage() {
@@ -127,7 +127,7 @@ function MinePage() {
             <div>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{t.title}</div>
               <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
-                {t.caseNo} · Dit bud: {mine.amount}
+                {t.caseNo} · Dit bud: {formatBudgetDisplay(mine.amount)}
               </div>
             </div>
             <Badge tone={tone}>{label}</Badge>

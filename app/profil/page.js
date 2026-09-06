@@ -78,6 +78,7 @@ function ProfilePage() {
   const { name, emailVerified } = useName();
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
+  const [experience, setExperience] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [saved, setSaved] = useState(false);
@@ -103,6 +104,7 @@ function ProfilePage() {
         if (data.profile) {
           setBio(data.profile.bio || "");
           setSkills(data.profile.skills || "");
+          setExperience(data.profile.experience || "");
           setWebsiteUrl(data.profile.websiteUrl || "");
           setLinkedinUrl(data.profile.linkedinUrl || "");
           setCvUrl(data.profile.cvUrl || null);
@@ -122,7 +124,7 @@ function ProfilePage() {
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bio, skills, websiteUrl, linkedinUrl }),
+      body: JSON.stringify({ bio, skills, experience, websiteUrl, linkedinUrl }),
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -187,7 +189,7 @@ function ProfilePage() {
 
   if (!loaded) return <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>Henter profil…</div>;
 
-  const fields = [bio, skills, websiteUrl || linkedinUrl, cvUrl || portfolioUrl];
+  const fields = [bio, skills, experience, websiteUrl || linkedinUrl, cvUrl || portfolioUrl];
   const filledCount = fields.filter((f) => f && f.toString().trim()).length;
   const completeness = Math.round((filledCount / fields.length) * 100);
   const showLevel = level && level.level.label !== "Standard";
@@ -270,7 +272,7 @@ function ProfilePage() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Kort om dig selv - baggrund, personlighed, hvad du brænder for."
-          style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
+          style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
         />
 
         <label style={{ ...labelStyle, marginTop: 16 }}>Kompetencer</label>
@@ -281,10 +283,16 @@ function ProfilePage() {
           style={inputStyle}
         />
         <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Adskil gerne med komma.</div>
-      </SectionCard>
 
-      <SectionCard icon={Globe} title="Links">
-        <label style={labelStyle}>LinkedIn</label>
+        <label style={{ ...labelStyle, marginTop: 16 }}>Erfaring</label>
+        <textarea
+          value={experience}
+          onChange={(e) => setExperience(e.target.value)}
+          placeholder="Tidligere opgaver, uddannelse, konkrete resultater."
+          style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
+        />
+
+        <label style={{ ...labelStyle, marginTop: 16 }}>LinkedIn</label>
         <div style={{ position: "relative", marginBottom: 16 }}>
           <Linkedin size={15} color="#9AA2B1" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
           <input
@@ -320,7 +328,7 @@ function ProfilePage() {
         </div>
       )}
 
-      <SectionCard icon={Briefcase} title="Erfaring">
+      <SectionCard icon={Briefcase} title="Dokumenter">
         <div style={{ display: "flex", gap: 8, padding: "10px 14px", background: "#FFF1E0", borderRadius: 10, marginBottom: 18, fontSize: 12, color: "#B5610E", lineHeight: 1.55 }}>
           <AlertTriangle size={14} style={{ flex: "0 0 auto", marginTop: 1 }} />
           <span>

@@ -1,6 +1,7 @@
 import "./globals.css";
 import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
+import CookieBanner from "@/components/CookieBanner";
 
 export const metadata = {
   metadataBase: new URL("https://kontorbud.dk"),
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
         <NameProvider>
           <TopBar />
           <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>
+          <CookieBanner />
         </NameProvider>
       </body>
     </html>

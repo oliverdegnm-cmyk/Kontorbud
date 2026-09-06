@@ -8,7 +8,7 @@ import Badge from "@/components/Badge";
 import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
 import { useName } from "@/lib/NameContext";
-import { feeBreakdown, formatKr } from "@/lib/fees";
+import { feeBreakdown, formatKr, formatBudgetDisplay } from "@/lib/fees";
 import { statusInfo } from "@/lib/status";
 
 function initials(name) {
@@ -428,7 +428,7 @@ export default function TaskDetailClient() {
                       )}
                     </div>
                     <div style={{ fontWeight: 800, fontSize: 14.5, whiteSpace: "nowrap", color: b.bidderName === name ? "#2A55E5" : "#14213D" }}>
-                      {b.amount}
+                      {formatBudgetDisplay(b.amount)}
                     </div>
                   </div>
                 </div>
@@ -438,7 +438,7 @@ export default function TaskDetailClient() {
         </div>
 
         <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 22 }}>
-          <h3 style={{ fontSize: 15, marginBottom: 16 }}>Budget: {task.budget}</h3>
+          <h3 style={{ fontSize: 15, marginBottom: 16 }}>Budget: {formatBudgetDisplay(task.budget)}</h3>
           {task.status !== "open" ? (
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6 }}>
               Denne opgave modtager ikke flere bud.
