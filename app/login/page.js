@@ -1,23 +1,11 @@
-"use client";
+import LoginClient from "./LoginClient";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useName } from "@/lib/NameContext";
-import AuthForm from "@/components/AuthForm";
+export const metadata = {
+  title: "Log ind - Kontorbud",
+  description: "Log ind på Kontorbud, eller opret en gratis konto.",
+  alternates: { canonical: "https://kontorbud.dk/login" },
+};
 
-export default function LoginPage() {
-  const { name, ready } = useName();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (ready && name) router.push("/");
-  }, [ready, name, router]);
-
-  if (!ready || name) return null;
-
-  return (
-    <div style={{ marginTop: 24 }}>
-      <AuthForm />
-    </div>
-  );
+export default function Page() {
+  return <LoginClient />;
 }

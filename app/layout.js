@@ -35,9 +35,28 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: "Kontorbud",
+        url: "https://kontorbud.dk",
+        logo: "https://kontorbud.dk/icon-512.png",
+      },
+      {
+        "@type": "WebSite",
+        name: "Kontorbud",
+        url: "https://kontorbud.dk",
+        inLanguage: "da-DK",
+      },
+    ],
+  };
+
   return (
     <html lang="da">
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <NameProvider>
           <TopBar />
           <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>

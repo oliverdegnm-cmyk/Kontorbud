@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CATS } from "@/lib/categories";
+import { CATS, categoryBySlug } from "@/lib/categories";
 
-const POPULAR = ["Bogføring & regnskab", "Kundeservice & support", "Grafisk design", "AI-opgaver", "Hjemmeside & IT"];
+const POPULAR_SLUGS = ["bogforing-regnskab", "kundeservice-support", "grafisk-design", "ai-opgaver", "hjemmeside-it"];
 
 export default function Footer() {
   return (
@@ -30,11 +30,14 @@ export default function Footer() {
           <div style={{ fontSize: 12.5, fontWeight: 700, color: "#B7C0DA", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>
             Populære kategorier
           </div>
-          {POPULAR.map((name) => (
-            <FooterLink key={name} href={`/opret?category=${encodeURIComponent(name)}`}>
-              {name}
-            </FooterLink>
-          ))}
+          {POPULAR_SLUGS.map((slug) => {
+            const cat = categoryBySlug(slug);
+            return (
+              <FooterLink key={slug} href={`/kategori/${slug}`}>
+                {cat.name}
+              </FooterLink>
+            );
+          })}
           <FooterLink href="/opgaver">Alle kategorier</FooterLink>
         </div>
       </div>

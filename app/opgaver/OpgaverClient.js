@@ -30,7 +30,7 @@ export default function OpgaverPage() {
   const searchParams = useSearchParams();
   const [tasks, setTasks] = useState(null);
   const [error, setError] = useState("");
-  const [catFilter, setCatFilter] = useState("all");
+  const [catFilter, setCatFilter] = useState(() => searchParams.get("category") || "all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("newest");
   const [showMap, setShowMap] = useState(true);

@@ -13,9 +13,13 @@ export async function generateMetadata({ params }) {
       title: `${name} - Kontorbud`,
       description,
       alternates: { canonical: `https://kontorbud.dk/bruger/${encodeURIComponent(name)}` },
+      // Profiler kan indeholde personfølsomme dokumenter (CV, portfolio), som
+      // brugerne selv vælger at uploade - vi holder dem derfor ude af Googles
+      // søgeresultater, selvom siden stadig er tilgængelig for direkte besøgende.
+      robots: { index: false, follow: true },
     };
   } catch (err) {
-    return { title: `${name} - Kontorbud` };
+    return { title: `${name} - Kontorbud`, robots: { index: false, follow: true } };
   }
 }
 

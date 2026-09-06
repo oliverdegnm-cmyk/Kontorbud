@@ -1,10 +1,16 @@
 import { pool, ensureSchema } from "@/lib/db";
+import { CATS } from "@/lib/categories";
 
 export default async function sitemap() {
   const base = "https://kontorbud.dk";
 
   const staticRoutes = ["", "/opgaver", "/hvordan-det-virker", "/kontakt", "/opret", "/login"].map((path) => ({
     url: `${base}${path}`,
+    lastModified: new Date(),
+  }));
+
+  const categoryRoutes = CATS.map((c) => ({
+    url: `${base}/kategori/${c.slug}`,
     lastModified: new Date(),
   }));
 
@@ -22,5 +28,5 @@ export default async function sitemap() {
     // hvis databasen ikke kan nås under bygning, udelader vi bare opgaverne
   }
 
-  return [...staticRoutes, ...taskRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...taskRoutes];
 }

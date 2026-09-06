@@ -78,7 +78,8 @@ function ProfilePage() {
   const { name, emailVerified } = useName();
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
-  const [experience, setExperience] = useState("");
+  const [job, setJob] = useState("");
+  const [education, setEducation] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [saved, setSaved] = useState(false);
@@ -104,7 +105,8 @@ function ProfilePage() {
         if (data.profile) {
           setBio(data.profile.bio || "");
           setSkills(data.profile.skills || "");
-          setExperience(data.profile.experience || "");
+          setJob(data.profile.job || "");
+          setEducation(data.profile.education || "");
           setWebsiteUrl(data.profile.websiteUrl || "");
           setLinkedinUrl(data.profile.linkedinUrl || "");
           setCvUrl(data.profile.cvUrl || null);
@@ -124,7 +126,7 @@ function ProfilePage() {
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bio, skills, experience, websiteUrl, linkedinUrl }),
+      body: JSON.stringify({ bio, skills, job, education, websiteUrl, linkedinUrl }),
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -189,7 +191,7 @@ function ProfilePage() {
 
   if (!loaded) return <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>Henter profil…</div>;
 
-  const fields = [bio, skills, experience, websiteUrl || linkedinUrl, cvUrl || portfolioUrl];
+  const fields = [bio, skills, job || education, websiteUrl || linkedinUrl, cvUrl || portfolioUrl];
   const filledCount = fields.filter((f) => f && f.toString().trim()).length;
   const completeness = Math.round((filledCount / fields.length) * 100);
   const showLevel = level && level.level.label !== "Standard";
@@ -227,7 +229,12 @@ function ProfilePage() {
               </span>
             )}
           </div>
-          <p style={{ fontSize: 13, color: "#5B6478", margin: "3px 0 0" }}>Vises for andre, når de ser dine bud eller opgaver.</p>
+          <p style={{ fontSize: 13, color: "#5B6478", margin: "3px 0 0" }}>
+            Vises for andre, når de ser dine bud eller opgaver.{" "}
+            <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
+              Se din profil, som andre ser den →
+            </Link>
+          </p>
         </div>
       </div>
 
@@ -284,11 +291,19 @@ function ProfilePage() {
         />
         <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Adskil gerne med komma.</div>
 
-        <label style={{ ...labelStyle, marginTop: 16 }}>Erfaring</label>
+        <label style={{ ...labelStyle, marginTop: 16 }}>Job / erhvervserfaring</label>
         <textarea
-          value={experience}
-          onChange={(e) => setExperience(e.target.value)}
-          placeholder="Tidligere opgaver, uddannelse, konkrete resultater."
+          value={job}
+          onChange={(e) => setJob(e.target.value)}
+          placeholder="Tidligere og nuværende jobs, opgaver, konkrete resultater."
+          style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
+        />
+
+        <label style={{ ...labelStyle, marginTop: 16 }}>Uddannelse</label>
+        <textarea
+          value={education}
+          onChange={(e) => setEducation(e.target.value)}
+          placeholder="Uddannelser, kurser, certificeringer."
           style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
         />
 
