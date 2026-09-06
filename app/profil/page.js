@@ -6,7 +6,7 @@ import { upload } from "@vercel/blob/client";
 import { useName } from "@/lib/NameContext";
 import RequireAuth from "@/components/RequireAuth";
 import Stars from "@/components/Stars";
-import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight } from "lucide-react";
+import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight, Sparkles } from "lucide-react";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -168,6 +168,40 @@ function ProfilePage() {
 
   const handleCvChange = makeFileHandler({ setUploading: setCvUploading, setError: setCvError, setUrl: setCvUrl, setFilename: setCvFilename, field: "cv" });
   const handlePortfolioChange = makeFileHandler({ setUploading: setPortfolioUploading, setError: setPortfolioError, setUrl: setPortfolioUrl, setFilename: setPortfolioFilename, field: "portfolio" });
+
+  const [parsingCv, setParsingCv] = useState(false);
+  const [parseCvError, setParseCvError] = useState("");
+  const [parseCvDone, setParseCvDone] = useState(false);
+
+  async function autoFillFromCv() {
+    setParsingCv(true);
+    setParseCvError("");
+    setParseCvDone(false);
+    try {
+      const res = await fetch("/api/profiles/" + encodeURIComponent(name) + "/parse-cv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cvUrl }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setParseCvError(data.error);
+        setParsingCv(false);
+        return;
+      }
+      const e = data.extracted || {};
+      // Overskriver kun felter, der allerede er tomme, så vi ikke risikerer at
+      // slette noget, brugeren selv har skrevet.
+      if (e.bio && !bio.trim()) setBio(e.bio);
+      if (e.job && !job.trim()) setJob(e.job);
+      if (e.education && !education.trim()) setEducation(e.education);
+      if (e.skills && !skills.trim()) setSkills(e.skills);
+      setParseCvDone(true);
+    } catch (err) {
+      setParseCvError("Kunne ikke analysere CV'et. Prøv igen.");
+    }
+    setParsingCv(false);
+  }
 
   async function removeCv() {
     if (!confirm("Fjern CV'et fra din profil?")) return;
@@ -373,6 +407,37 @@ function ProfilePage() {
           onChange={handleCvChange}
           onRemove={removeCv}
         />
+        {cvUrl && (
+          <div style={{ marginTop: -10, marginBottom: 20 }}>
+            <button
+              onClick={autoFillFromCv}
+              disabled={parsingCv}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                fontSize: 12.5,
+                fontWeight: 700,
+                padding: "9px 16px",
+                borderRadius: 999,
+                border: "1.5px solid #DCE4FB",
+                background: "#EEF2FF",
+                color: "#1B3AA6",
+                cursor: parsingCv ? "default" : "pointer",
+                opacity: parsingCv ? 0.6 : 1,
+              }}
+            >
+              <Sparkles size={13} />
+              {parsingCv ? "Analyserer CV…" : "Udfyld profil automatisk fra CV"}
+            </button>
+            {parseCvDone && (
+              <div style={{ fontSize: 12, color: "#1AA37A", marginTop: 8, fontWeight: 600 }}>
+                ✓ Felterne ovenfor er udfyldt ud fra CV'et - tjek dem gerne igennem, og husk at gemme.
+              </div>
+            )}
+            {parseCvError && <div style={{ fontSize: 12, color: "#C0392B", marginTop: 8 }}>{parseCvError}</div>}
+          </div>
+        )}
         <FileSlot
           label="Portfolio"
           hint="Eksempler på tidligere arbejde, f.eks. et samlet PDF-udsnit af opgaver du har løst."

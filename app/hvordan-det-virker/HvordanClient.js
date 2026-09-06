@@ -142,7 +142,7 @@ export default function HowItWorksClient() {
           Opret en opgave
         </Link>
         <Link
-          href="/"
+          href="/opgaver"
           style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "13px 26px", borderRadius: 12, border: "1.5px solid #E4E8F0", color: "#14213D" }}
         >
           Se åbne opgaver

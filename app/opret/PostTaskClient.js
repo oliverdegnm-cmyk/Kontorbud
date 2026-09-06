@@ -21,7 +21,7 @@ function PostTaskPage() {
   const [area, setArea] = useState("");
   const [posterType, setPosterType] = useState("private");
   const [companyName, setCompanyName] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(searchParams.get("description") || "");
   const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState("");
   const [okId, setOkId] = useState("");

@@ -11,9 +11,16 @@ import Stars from "@/components/Stars";
 import { statusInfo, truncateText, formatDeadlineDisplay } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
+import TaskCarousel from "@/components/TaskCarousel";
 
 export default function HomePage() {
   const router = useRouter();
+  const [quickDescription, setQuickDescription] = useState("");
+
+  function goToCreateTask() {
+    const q = quickDescription.trim() ? `?description=${encodeURIComponent(quickDescription.trim())}` : "";
+    router.push(`/opret${q}`);
+  }
   const [tasks, setTasks] = useState(null);
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
   const [heroPosition, setHeroPosition] = useState(50);
@@ -42,6 +49,7 @@ export default function HomePage() {
   }, []);
 
   const activeTasks = (tasks || []).filter((t) => t.status !== "cancelled");
+  const inspirationTasks = (tasks || []).filter((t) => t.status === "completed" || t.status === "matched");
 
   return (
     <div>
@@ -148,7 +156,44 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Vælg en kategori for at starte en ny opgave i det felt." />
+      <SectionHead title="Hvad skal du have løst?" sub="Beskriv opgaven med dine egne ord, eller vælg en kategori nedenfor." />
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 28,
+          background: "#F5F7FB",
+          border: "1.5px solid #E4E8F0",
+          borderRadius: 16,
+          padding: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <input
+          value={quickDescription}
+          onChange={(e) => setQuickDescription(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && goToCreateTask()}
+          placeholder="f.eks. Jeg skal have lavet mit årsregnskab for 2026…"
+          style={{ flex: "1 1 240px", fontSize: 14.5, padding: "13px 16px", border: "1.5px solid #E4E8F0", borderRadius: 12, background: "#fff" }}
+        />
+        <button
+          onClick={goToCreateTask}
+          style={{
+            fontSize: 14.5,
+            fontWeight: 700,
+            padding: "13px 24px",
+            borderRadius: 12,
+            border: "none",
+            background: "#2A55E5",
+            color: "#fff",
+            cursor: "pointer",
+            flex: "0 0 auto",
+          }}
+        >
+          Opret opgave →
+        </button>
+      </div>
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: -18, marginBottom: 20 }}>...eller vælg en kategori direkte:</div>
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
           const count = activeTasks.filter((t) => t.category === c.name).length;
@@ -181,7 +226,7 @@ export default function HomePage() {
         })}
       </div>
 
-      <SectionHead title="Seneste opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
+      <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
       {activeTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen opgaver oprettet endnu.</p>
       ) : (
@@ -314,6 +359,13 @@ export default function HomePage() {
       >
         Se opgaver fra virksomheder →
       </Link>
+
+      {inspirationTasks.length > 0 && (
+        <>
+          <SectionHead title="Til inspiration" sub="Se, hvad andre allerede har fået løst - eller er i gang med lige nu." />
+          <TaskCarousel tasks={inspirationTasks} />
+        </>
+      )}
 
       <div
         style={{

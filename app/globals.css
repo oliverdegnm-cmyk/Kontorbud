@@ -83,6 +83,22 @@ textarea {
   }
 }
 
+/* ---------- inspirations-karrusel: glider automatisk hen over skærmen ---------- */
+@keyframes kb-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.kb-marquee-track {
+  animation: kb-marquee 32s linear infinite;
+}
+.kb-marquee-track:hover {
+  animation-play-state: paused;
+}
+
 .kb-mobile-menu-btn {
   display: none;
 }
