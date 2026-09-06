@@ -11,7 +11,7 @@ import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
-import { statusInfo, truncateText, formatDeadlineDisplay } from "@/lib/status";
+import { statusInfo, truncateText, formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
@@ -207,7 +207,7 @@ export default function OpgaverPage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 180 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: 14.5, fontWeight: 700 }}>{t.title}</div>
+                      <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                       {t.posterType === "business" && (
                         <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478", flex: "0 0 auto" }}>
                           Virksomhed

@@ -3,7 +3,7 @@ import { pool, ensureSchema } from "@/lib/db";
 import { categoryBySlug, CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import { formatBudgetDisplay } from "@/lib/fees";
-import { formatDeadlineDisplay } from "@/lib/status";
+import { formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
 import { ChevronRight } from "lucide-react";
 
 export async function generateStaticParams() {
@@ -107,7 +107,7 @@ export default async function CategoryPage({ params }) {
               style={{ display: "flex", alignItems: "center", gap: 16, background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "16px 18px" }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14.5, fontWeight: 700 }}>{t.title}</div>
+                <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                 <div style={{ fontSize: 12.5, color: "#5B6478" }}>
                   Frist: {formatDeadlineDisplay(t.deadline)}
                   {t.area ? ` · 📍 ${t.area}` : ""}

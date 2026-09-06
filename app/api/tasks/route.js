@@ -69,12 +69,19 @@ export async function GET() {
     const { rows: profileRows } = await pool.query("SELECT name, stripe_payouts_enabled FROM profiles");
     const verifiedNames = new Set(profileRows.filter((p) => p.stripe_payouts_enabled).map((p) => p.name));
 
-    const tasks = taskRows.map((t) => ({
-      ...mapTask(t, bidRows.filter((b) => b.task_id === t.id), attRows.filter((a) => a.task_id === t.id)),
-      posterRating: reviewsByName[t.posted_by]?.avgRating ?? 0,
-      posterReviewCount: reviewsByName[t.posted_by]?.reviewCount ?? 0,
-      posterVerified: verifiedNames.has(t.posted_by),
-    }));
+    const tasks = taskRows.map((t) => {
+      const taskBids = bidRows.filter((b) => b.task_id === t.id);
+      const acceptedBid = taskBids.find((b) => b.id === t.accepted_bid_id);
+      return {
+        ...mapTask(t, taskBids, attRows.filter((a) => a.task_id === t.id)),
+        posterRating: reviewsByName[t.posted_by]?.avgRating ?? 0,
+        posterReviewCount: reviewsByName[t.posted_by]?.reviewCount ?? 0,
+        posterVerified: verifiedNames.has(t.posted_by),
+        completedByName: acceptedBid?.bidder_name ?? null,
+        completedByRating: acceptedBid ? reviewsByName[acceptedBid.bidder_name]?.avgRating ?? 0 : 0,
+        completedByReviewCount: acceptedBid ? reviewsByName[acceptedBid.bidder_name]?.reviewCount ?? 0 : 0,
+      };
+    });
     return NextResponse.json({ tasks });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaver. Tjek at DATABASE_URL er sat korrekt." }, { status: 500 });

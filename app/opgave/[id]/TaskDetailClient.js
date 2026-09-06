@@ -9,7 +9,7 @@ import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
 import { useName } from "@/lib/NameContext";
 import { feeBreakdown, formatKr, formatBudgetDisplay } from "@/lib/fees";
-import { statusInfo, formatDeadlineDisplay } from "@/lib/status";
+import { statusInfo, formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -355,7 +355,7 @@ export default function TaskDetailClient() {
               </div>
             )}
           </div>
-          <h2 style={{ fontSize: 22, lineHeight: 1.25, marginBottom: 12 }}>{task.title}</h2>
+          <h2 style={{ fontSize: 22, lineHeight: 1.25, marginBottom: 12 }}>{capitalizeFirst(task.title)}</h2>
           <p style={{ fontSize: 14, color: "#5B6478", lineHeight: 1.7 }}>{task.description}</p>
           {task.attachments && task.attachments.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>

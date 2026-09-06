@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
-import { CATS } from "@/lib/categories";
+import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
-import { statusInfo, truncateText, formatDeadlineDisplay } from "@/lib/status";
+import { statusInfo, truncateText, formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
@@ -16,9 +16,11 @@ import TaskCarousel from "@/components/TaskCarousel";
 export default function HomePage() {
   const router = useRouter();
   const [quickDescription, setQuickDescription] = useState("");
+  const matchedCategory = matchCategoryFromText(quickDescription);
 
   function goToCreateTask() {
-    const q = quickDescription.trim() ? `?description=${encodeURIComponent(quickDescription.trim())}` : "";
+    const cat = matchedCategory || matchCategoryFromText(quickDescription);
+    const q = cat ? `?category=${encodeURIComponent(cat.name)}` : "";
     router.push(`/opret${q}`);
   }
   const [tasks, setTasks] = useState(null);
@@ -49,6 +51,7 @@ export default function HomePage() {
   }, []);
 
   const activeTasks = (tasks || []).filter((t) => t.status !== "cancelled");
+  const openTasks = (tasks || []).filter((t) => t.status === "open");
   const inspirationTasks = (tasks || []).filter((t) => t.status === "completed" || t.status === "matched");
 
   return (
@@ -173,7 +176,7 @@ export default function HomePage() {
           value={quickDescription}
           onChange={(e) => setQuickDescription(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && goToCreateTask()}
-          placeholder="f.eks. Jeg skal have lavet mit årsregnskab for 2026…"
+          placeholder="Søg efter en kategori, f.eks. 'regnskab' eller 'oversættelse'…"
           style={{ flex: "1 1 240px", fontSize: 14.5, padding: "13px 16px", border: "1.5px solid #E4E8F0", borderRadius: 12, background: "#fff" }}
         />
         <button
@@ -193,7 +196,9 @@ export default function HomePage() {
           Opret opgave →
         </button>
       </div>
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: -18, marginBottom: 20 }}>...eller vælg en kategori direkte:</div>
+      <div style={{ fontSize: 12.5, color: matchedCategory ? "#1AA37A" : "#9AA2B1", marginTop: -18, marginBottom: 20, fontWeight: matchedCategory ? 700 : 400 }}>
+        {matchedCategory ? `✓ Fundet: ${matchedCategory.name}` : "...eller vælg en kategori direkte:"}
+      </div>
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
           const count = activeTasks.filter((t) => t.category === c.name).length;
@@ -227,11 +232,11 @@ export default function HomePage() {
       </div>
 
       <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
-      {activeTasks.length === 0 ? (
-        <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen opgaver oprettet endnu.</p>
+      {openTasks.length === 0 ? (
+        <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-          {activeTasks.slice(0, 5).map((t) => {
+          {openTasks.slice(0, 5).map((t) => {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
             return (
@@ -266,7 +271,7 @@ export default function HomePage() {
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
                 <div style={{ flex: 1, minWidth: 160 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700 }}>{t.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
