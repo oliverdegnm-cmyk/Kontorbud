@@ -255,9 +255,9 @@ export default function OpgaverPage() {
                     )}
                   </div>
                   <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 18, minWidth: 0 }}>
-                    <div style={{ textAlign: "right", width: 130 }}>
+                    <div style={{ textAlign: "left", width: 130 }}>
                       <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 5 }}>
                         <Link
                           href={`/bruger/${encodeURIComponent(t.postedBy)}`}
                           onClick={(e) => e.stopPropagation()}
@@ -268,7 +268,7 @@ export default function OpgaverPage() {
                       </div>
                       <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>
                         {t.posterReviewCount > 0 ? (
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-start" }}>
                             <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
                           </span>
                         ) : (

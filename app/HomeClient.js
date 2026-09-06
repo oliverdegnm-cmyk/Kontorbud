@@ -171,18 +171,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "26px 32px", margin: "40px 0", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-        <div style={{ width: 46, height: 46, borderRadius: 12, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
-          <ShieldCheck size={22} color="#2A55E5" />
-        </div>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Betaling håndteres af Stripe</div>
-          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
-            Stripe bruges af millioner af virksomheder verden over og opfylder de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og pengene holdes sikkert, indtil du selv frigiver dem.
-          </p>
-        </div>
-      </div>
-
       <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
       <div
         style={{
@@ -222,46 +210,27 @@ export default function HomePage() {
           {matchingWithAi ? "Finder bedste kategori…" : "Opret opgave →"}
         </button>
       </div>
-      <div style={{ fontSize: 12.5, color: matchedCategory ? "#1AA37A" : "#9AA2B1", marginTop: -18, marginBottom: 20, fontWeight: matchedCategory ? 700 : 400 }}>
-        {matchedCategory ? `✓ Fundet: ${matchedCategory.name}` : "...eller vælg en kategori direkte:"}
-      </div>
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-        {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
-          const count = activeTasks.filter((t) => t.category === c.name).length;
-          return (
-            <Link
-              key={c.name}
-              href={`/opret?category=${encodeURIComponent(c.name)}`}
-              style={{ cursor: "pointer", textAlign: "center", display: "block" }}
-            >
-              <div
-                style={{
-                  width: 62,
-                  height: 62,
-                  borderRadius: "50%",
-                  background: "#F5F7FB",
-                  border: "2px solid transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 10px",
-                  color: "#2A55E5",
-                }}
-              >
-                <CatIcon name={c.icon} size={24} />
-              </div>
-              <div style={{ fontSize: 12.5, fontWeight: 700, lineHeight: 1.3, color: "#14213D" }}>{c.name}</div>
-              <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 2 }}>{count} opgaver</div>
-            </Link>
-          );
-        })}
+      {matchedCategory && (
+        <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
+      )}
+
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "26px 32px", marginBottom: 40, display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+        <div style={{ width: 46, height: 46, borderRadius: 12, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+          <ShieldCheck size={22} color="#2A55E5" />
+        </div>
+        <div style={{ flex: 1, minWidth: 240 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Betaling håndteres af Stripe</div>
+          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
+            Stripe bruges af millioner af virksomheder verden over og opfylder de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og pengene holdes sikkert, indtil du selv frigiver dem.
+          </p>
+        </div>
       </div>
 
       <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
-        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
           {openTasks.slice(0, 5).map((t) => {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
@@ -278,7 +247,7 @@ export default function HomePage() {
                   background: "#fff",
                   border: "1.5px solid #E4E8F0",
                   borderRadius: 16,
-                  padding: "14px 18px",
+                  padding: "18px 20px",
                   cursor: "pointer",
                 }}
               >
@@ -313,9 +282,9 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
-                  <div style={{ textAlign: "right", width: 120 }}>
+                  <div style={{ textAlign: "left", width: 120 }}>
                     <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 5 }}>
                       <Link
                         href={`/bruger/${encodeURIComponent(t.postedBy)}`}
                         onClick={(e) => e.stopPropagation()}
@@ -326,7 +295,7 @@ export default function HomePage() {
                     </div>
                     <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>
                       {t.posterReviewCount > 0 ? (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-start" }}>
                           <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
                         </span>
                       ) : (
@@ -391,6 +360,35 @@ export default function HomePage() {
       >
         Se opgaver fra virksomheder →
       </Link>
+
+      <SectionHead title="Browse efter kategori" sub="Se åbne opgaver inden for et bestemt felt." />
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 40 }}>
+        {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
+          const count = openTasks.filter((t) => t.category === c.name).length;
+          return (
+            <Link key={c.slug} href={`/kategori/${c.slug}`} style={{ cursor: "pointer", textAlign: "center", display: "block" }}>
+              <div
+                style={{
+                  width: 62,
+                  height: 62,
+                  borderRadius: "50%",
+                  background: "#F5F7FB",
+                  border: "2px solid transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 10px",
+                  color: "#2A55E5",
+                }}
+              >
+                <CatIcon name={c.icon} size={24} />
+              </div>
+              <div style={{ fontSize: 12.5, fontWeight: 700, lineHeight: 1.3, color: "#14213D" }}>{c.name}</div>
+              <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 2 }}>{count} åbne</div>
+            </Link>
+          );
+        })}
+      </div>
 
       {inspirationTasks.length > 0 && (
         <>
