@@ -11,8 +11,8 @@ function PostTaskPage() {
   const router = useRouter();
   const { name } = useName();
 
-  const [title, setTitle] = useState("");
   const searchParams = useSearchParams();
+  const [title, setTitle] = useState(searchParams.get("title") || "");
   const categoryFromUrl = searchParams.get("category");
   const [category, setCategory] = useState(CATS.some((c) => c.name === categoryFromUrl) ? categoryFromUrl : CATS[0].name);
   const [budget, setBudget] = useState("");

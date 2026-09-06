@@ -20,10 +20,13 @@ export default function HomePage() {
   const matchedCategory = matchCategoryFromText(quickDescription);
 
   async function goToCreateTask() {
+    const title = quickDescription.trim();
+    const titleParam = title ? `title=${encodeURIComponent(title)}` : "";
+
     const localMatch = matchCategoryFromText(quickDescription);
-    if (localMatch || !quickDescription.trim()) {
-      const q = localMatch ? `?category=${encodeURIComponent(localMatch.name)}` : "";
-      router.push(`/opret${q}`);
+    if (localMatch || !title) {
+      const params = [titleParam, localMatch ? `category=${encodeURIComponent(localMatch.name)}` : ""].filter(Boolean).join("&");
+      router.push(`/opret${params ? "?" + params : ""}`);
       return;
     }
 
@@ -37,10 +40,10 @@ export default function HomePage() {
         body: JSON.stringify({ text: quickDescription }),
       });
       const data = await res.json();
-      const q = data.category ? `?category=${encodeURIComponent(data.category)}` : "";
-      router.push(`/opret${q}`);
+      const params = [titleParam, data.category ? `category=${encodeURIComponent(data.category)}` : ""].filter(Boolean).join("&");
+      router.push(`/opret${params ? "?" + params : ""}`);
     } catch (err) {
-      router.push("/opret");
+      router.push(`/opret${titleParam ? "?" + titleParam : ""}`);
     }
     setMatchingWithAi(false);
   }
@@ -180,7 +183,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Beskriv opgaven med dine egne ord, eller vælg en kategori nedenfor." />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
       <div
         style={{
           display: "flex",
@@ -197,7 +200,7 @@ export default function HomePage() {
           value={quickDescription}
           onChange={(e) => setQuickDescription(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && goToCreateTask()}
-          placeholder="Søg efter en kategori, f.eks. 'regnskab' eller 'oversættelse'…"
+          placeholder="f.eks. Hjælp til mit årsregnskab…"
           style={{ flex: "1 1 240px", fontSize: 14.5, padding: "13px 16px", border: "1.5px solid #E4E8F0", borderRadius: 12, background: "#fff" }}
         />
         <button
