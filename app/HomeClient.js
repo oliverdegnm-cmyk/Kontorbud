@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
-import { statusInfo } from "@/lib/status";
+import { statusInfo, truncateText } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 
@@ -222,11 +222,31 @@ export default function HomePage() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 700 }}>{t.title}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
-                    {t.category} · af{" "}
-                    <Link href={`/bruger/${encodeURIComponent(t.postedBy)}`} onClick={(e) => e.stopPropagation()} style={{ color: "#2A55E5", fontWeight: 600 }}>
+                    {t.category}
+                    {" · "}
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
+                      <Clock size={11} /> {t.deadline}
+                    </span>
+                  </div>
+                  {t.description && (
+                    <div style={{ fontSize: 12, color: "#9AA2B1", marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {truncateText(t.description, 80)}
+                    </div>
+                  )}
+                </div>
+                <div style={{ textAlign: "right", flex: "0 0 auto", minWidth: 150 }}>
+                  <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                    <Link
+                      href={`/bruger/${encodeURIComponent(t.postedBy)}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5" }}
+                    >
                       {t.postedBy}
                     </Link>
-                    {" · "}
+                    {t.posterVerified && <ShieldCheck size={12} color="#1AA37A" />}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
                     {t.posterReviewCount > 0 ? (
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
                         <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})

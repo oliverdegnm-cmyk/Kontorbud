@@ -5,13 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, Search, Clock, ShieldCheck } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
-import { statusInfo } from "@/lib/status";
+import { statusInfo, truncateText } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
@@ -214,15 +214,34 @@ export default function OpgaverPage() {
                       )}
                     </div>
                     <div style={{ fontSize: 12.5, color: "#5B6478" }}>
-                      {t.category} · Frist: {t.deadline}
+                      {t.category}
+                      {" · "}
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
+                        <Clock size={12} /> {t.deadline}
+                      </span>
                       {t.area ? ` · 📍 ${t.area}` : ""}
-                      {" · af "}
-                      <Link href={`/bruger/${encodeURIComponent(t.postedBy)}`} onClick={(e) => e.stopPropagation()} style={{ color: "#2A55E5", fontWeight: 600 }}>
+                    </div>
+                    {t.description && (
+                      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {truncateText(t.description, 120)}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ textAlign: "right", flex: "0 0 auto", minWidth: 150 }}>
+                    <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 5 }}>
+                      <Link
+                        href={`/bruger/${encodeURIComponent(t.postedBy)}`}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5" }}
+                      >
                         {t.postedBy}
                       </Link>
-                      {" · "}
+                      {t.posterVerified && <ShieldCheck size={12} color="#1AA37A" />}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
                       {t.posterReviewCount > 0 ? (
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3, justifyContent: "flex-end" }}>
                           <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
                         </span>
                       ) : (

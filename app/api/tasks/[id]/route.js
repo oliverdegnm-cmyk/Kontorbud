@@ -46,7 +46,8 @@ export async function GET(request, { params }) {
     }
     const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
-    return NextResponse.json({ task: mapFullTask(taskRows[0], bidRows, attRows) });
+    const { rows: posterProfileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [taskRows[0].posted_by]);
+    return NextResponse.json({ task: { ...mapFullTask(taskRows[0], bidRows, attRows), posterVerified: !!posterProfileRows[0]?.stripe_payouts_enabled } });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaven." }, { status: 500 });
   }

@@ -16,7 +16,8 @@ function PostTaskPage() {
   const categoryFromUrl = searchParams.get("category");
   const [category, setCategory] = useState(CATS.some((c) => c.name === categoryFromUrl) ? categoryFromUrl : CATS[0].name);
   const [budget, setBudget] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [deadlineType, setDeadlineType] = useState("days"); // "days" | "flexible"
+  const [deadlineDays, setDeadlineDays] = useState("7");
   const [area, setArea] = useState("");
   const [posterType, setPosterType] = useState("private");
   const [companyName, setCompanyName] = useState("");
@@ -31,6 +32,7 @@ function PostTaskPage() {
       return;
     }
     setError("");
+    const deadline = deadlineType === "flexible" ? "Fleksibel" : `${deadlineDays || "7"} dage`;
     try {
       const res = await fetch("/api/tasks", {
         method: "POST",
@@ -136,12 +138,55 @@ function PostTaskPage() {
           </div>
           <div>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Frist</label>
-            <input
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              placeholder="f.eks. 5 dage"
-              style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
-            />
+            <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "days" ? 8 : 0 }}>
+              <button
+                type="button"
+                onClick={() => setDeadlineType("days")}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: deadlineType === "days" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "days" ? "#EEF2FF" : "#fff",
+                  color: deadlineType === "days" ? "#1B3AA6" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Bestemt antal dage
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeadlineType("flexible")}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: deadlineType === "flexible" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "flexible" ? "#EEF2FF" : "#fff",
+                  color: deadlineType === "flexible" ? "#1B3AA6" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Fleksibel
+              </button>
+            </div>
+            {deadlineType === "days" && (
+              <input
+                type="number"
+                min="1"
+                value={deadlineDays}
+                onChange={(e) => setDeadlineDays(e.target.value)}
+                placeholder="f.eks. 7"
+                style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
+              />
+            )}
+            {deadlineType === "flexible" && (
+              <div style={{ fontSize: 11.5, color: "#9AA2B1" }}>Ingen fast deadline - I aftaler tidsplanen indbyrdes.</div>
+            )}
           </div>
           <div>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Område (valgfrit)</label>

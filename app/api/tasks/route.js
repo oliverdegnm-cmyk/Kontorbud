@@ -66,10 +66,14 @@ export async function GET() {
       reviewsByName[r.reviewee_name] = { avgRating: r.avg_rating, reviewCount: r.count };
     });
 
+    const { rows: profileRows } = await pool.query("SELECT name, stripe_payouts_enabled FROM profiles");
+    const verifiedNames = new Set(profileRows.filter((p) => p.stripe_payouts_enabled).map((p) => p.name));
+
     const tasks = taskRows.map((t) => ({
       ...mapTask(t, bidRows.filter((b) => b.task_id === t.id), attRows.filter((a) => a.task_id === t.id)),
       posterRating: reviewsByName[t.posted_by]?.avgRating ?? 0,
       posterReviewCount: reviewsByName[t.posted_by]?.reviewCount ?? 0,
+      posterVerified: verifiedNames.has(t.posted_by),
     }));
     return NextResponse.json({ tasks });
   } catch (err) {
