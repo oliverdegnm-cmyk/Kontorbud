@@ -65,8 +65,14 @@ textarea {
 }
 
 /* ---------- opgave-kort: fold "Oprettet af" + status/budget ned på en
-   ny linje på mobil, i stedet for at proppe alt ind i én lang r\u00e6kke ---------- */
-@media (max-width: 640px) {
+   ny linje, når PLADSEN er trang - uanset om det skyldes en lille skærm
+   eller at kortet ved siden af opgaverne optager plads på en stor skærm.
+   Derfor bruges en container-query (baseret på selve søjlens bredde) i
+   stedet for en media-query (baseret på hele vinduets bredde). ---------- */
+.kb-task-list-container {
+  container-type: inline-size;
+}
+@container (max-width: 640px) {
   .kb-task-secondary {
     flex-basis: 100% !important;
     justify-content: space-between !important;

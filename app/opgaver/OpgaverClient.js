@@ -170,7 +170,7 @@ export default function OpgaverPage() {
         </div>
       ) : (
         <div className="kb-grid-browse" style={{ display: "grid", gridTemplateColumns: showMap ? "1.1fr 0.9fr" : "1fr", gap: 20, alignItems: "start" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+          <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
             {list.map((t) => {
               const cat = CATS.find((c) => c.name === t.category);
               const status = statusInfo(t);

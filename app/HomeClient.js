@@ -16,12 +16,33 @@ import TaskCarousel from "@/components/TaskCarousel";
 export default function HomePage() {
   const router = useRouter();
   const [quickDescription, setQuickDescription] = useState("");
+  const [matchingWithAi, setMatchingWithAi] = useState(false);
   const matchedCategory = matchCategoryFromText(quickDescription);
 
-  function goToCreateTask() {
-    const cat = matchedCategory || matchCategoryFromText(quickDescription);
-    const q = cat ? `?category=${encodeURIComponent(cat.name)}` : "";
-    router.push(`/opret${q}`);
+  async function goToCreateTask() {
+    const localMatch = matchCategoryFromText(quickDescription);
+    if (localMatch || !quickDescription.trim()) {
+      const q = localMatch ? `?category=${encodeURIComponent(localMatch.name)}` : "";
+      router.push(`/opret${q}`);
+      return;
+    }
+
+    // Ordlisten fandt intet - spørger AI'en som sikkerhedsnet, før vi giver op
+    // og lader brugeren vælge kategori selv på opret-siden.
+    setMatchingWithAi(true);
+    try {
+      const res = await fetch("/api/match-category", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: quickDescription }),
+      });
+      const data = await res.json();
+      const q = data.category ? `?category=${encodeURIComponent(data.category)}` : "";
+      router.push(`/opret${q}`);
+    } catch (err) {
+      router.push("/opret");
+    }
+    setMatchingWithAi(false);
   }
   const [tasks, setTasks] = useState(null);
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
@@ -181,6 +202,7 @@ export default function HomePage() {
         />
         <button
           onClick={goToCreateTask}
+          disabled={matchingWithAi}
           style={{
             fontSize: 14.5,
             fontWeight: 700,
@@ -189,11 +211,12 @@ export default function HomePage() {
             border: "none",
             background: "#2A55E5",
             color: "#fff",
-            cursor: "pointer",
+            cursor: matchingWithAi ? "default" : "pointer",
+            opacity: matchingWithAi ? 0.7 : 1,
             flex: "0 0 auto",
           }}
         >
-          Opret opgave →
+          {matchingWithAi ? "Finder bedste kategori…" : "Opret opgave →"}
         </button>
       </div>
       <div style={{ fontSize: 12.5, color: matchedCategory ? "#1AA37A" : "#9AA2B1", marginTop: -18, marginBottom: 20, fontWeight: matchedCategory ? 700 : 400 }}>
@@ -235,7 +258,7 @@ export default function HomePage() {
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
           {openTasks.slice(0, 5).map((t) => {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
