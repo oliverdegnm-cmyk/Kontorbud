@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { upload } from "@vercel/blob/client";
 import { useName } from "@/lib/NameContext";
 import RequireAuth from "@/components/RequireAuth";
 import Stars from "@/components/Stars";
-import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2 } from "lucide-react";
+import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight } from "lucide-react";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -28,11 +29,55 @@ function SectionCard({ icon: Icon, title, children }) {
 const inputStyle = { width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" };
 const labelStyle = { display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 };
 
+function FileSlot({ label, hint, fileUrl, filename, uploading, error, onChange, onRemove }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <label style={labelStyle}>{label}</label>
+      {hint && <p style={{ fontSize: 11.5, color: "#9AA2B1", margin: "0 0 8px" }}>{hint}</p>}
+      {fileUrl ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#F5F7FB", borderRadius: 12 }}>
+          <FileText size={18} color="#2A55E5" />
+          <a href={fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}>
+            {filename || "Dokument.pdf"}
+          </a>
+          <button
+            onClick={onRemove}
+            title="Fjern dokument"
+            style={{ width: 30, height: 30, borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+          >
+            <X size={13} />
+          </button>
+        </div>
+      ) : (
+        <label
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            fontSize: 13,
+            fontWeight: 700,
+            padding: "10px 18px",
+            borderRadius: 10,
+            border: "1.5px solid #E4E8F0",
+            color: "#14213D",
+            cursor: uploading ? "default" : "pointer",
+            opacity: uploading ? 0.6 : 1,
+          }}
+        >
+          <Upload size={14} />
+          {uploading ? "Uploader…" : "Upload PDF"}
+          <input type="file" accept="application/pdf" onChange={onChange} disabled={uploading} style={{ display: "none" }} />
+        </label>
+      )}
+      {error && <div style={{ marginTop: 8, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
+    </div>
+  );
+}
+
 function ProfilePage() {
   const { name, emailVerified } = useName();
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
-  const [portfolio, setPortfolio] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [saved, setSaved] = useState(false);
@@ -42,6 +87,11 @@ function ProfilePage() {
   const [cvFilename, setCvFilename] = useState(null);
   const [cvUploading, setCvUploading] = useState(false);
   const [cvError, setCvError] = useState("");
+
+  const [portfolioUrl, setPortfolioUrl] = useState(null);
+  const [portfolioFilename, setPortfolioFilename] = useState(null);
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
+  const [portfolioError, setPortfolioError] = useState("");
 
   const [level, setLevel] = useState(null);
 
@@ -53,11 +103,12 @@ function ProfilePage() {
         if (data.profile) {
           setBio(data.profile.bio || "");
           setSkills(data.profile.skills || "");
-          setPortfolio(data.profile.portfolio || "");
           setWebsiteUrl(data.profile.websiteUrl || "");
           setLinkedinUrl(data.profile.linkedinUrl || "");
           setCvUrl(data.profile.cvUrl || null);
           setCvFilename(data.profile.cvFilename || null);
+          setPortfolioUrl(data.profile.portfolioUrl || null);
+          setPortfolioFilename(data.profile.portfolioFilename || null);
         }
         setLoaded(true);
       });
@@ -71,44 +122,49 @@ function ProfilePage() {
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bio, skills, portfolio, websiteUrl, linkedinUrl }),
+      body: JSON.stringify({ bio, skills, websiteUrl, linkedinUrl }),
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   }
 
-  async function handleCvChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.type !== "application/pdf") {
-      setCvError("Kun PDF-filer er understøttet.");
+  function makeFileHandler({ setUploading, setError, setUrl, setFilename, field }) {
+    return async function handleChange(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (file.type !== "application/pdf") {
+        setError("Kun PDF-filer er understøttet.");
+        e.target.value = "";
+        return;
+      }
+      setUploading(true);
+      setError("");
+      try {
+        const blob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: JSON.stringify({ purpose: "cv" }),
+        });
+        await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(field === "cv" ? { cvUrl: blob.url, cvFilename: file.name } : { portfolioUrl: blob.url, portfolioFilename: file.name }),
+        });
+        setUrl(blob.url);
+        setFilename(file.name);
+      } catch (err) {
+        setError(err?.message || "Kunne ikke uploade filen. Prøv igen.");
+      }
+      setUploading(false);
       e.target.value = "";
-      return;
-    }
-    setCvUploading(true);
-    setCvError("");
-    try {
-      const blob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
-        clientPayload: JSON.stringify({ purpose: "cv" }),
-      });
-      await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cvUrl: blob.url, cvFilename: file.name }),
-      });
-      setCvUrl(blob.url);
-      setCvFilename(file.name);
-    } catch (err) {
-      setCvError(err?.message || "Kunne ikke uploade filen. Prøv igen.");
-    }
-    setCvUploading(false);
-    e.target.value = "";
+    };
   }
 
+  const handleCvChange = makeFileHandler({ setUploading: setCvUploading, setError: setCvError, setUrl: setCvUrl, setFilename: setCvFilename, field: "cv" });
+  const handlePortfolioChange = makeFileHandler({ setUploading: setPortfolioUploading, setError: setPortfolioError, setUrl: setPortfolioUrl, setFilename: setPortfolioFilename, field: "portfolio" });
+
   async function removeCv() {
-    if (!confirm("Fjern det vedhæftede dokument fra din profil?")) return;
+    if (!confirm("Fjern CV'et fra din profil?")) return;
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -118,12 +174,23 @@ function ProfilePage() {
     setCvFilename(null);
   }
 
+  async function removePortfolio() {
+    if (!confirm("Fjern portfolioet fra din profil?")) return;
+    await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ portfolioUrl: null, portfolioFilename: null }),
+    });
+    setPortfolioUrl(null);
+    setPortfolioFilename(null);
+  }
+
   if (!loaded) return <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>Henter profil…</div>;
 
-  // Hvor meget af profilen er udfyldt, til fremdrifts-påmindelsen nedenfor.
-  const fields = [bio, skills, portfolio, websiteUrl || linkedinUrl, cvUrl];
+  const fields = [bio, skills, websiteUrl || linkedinUrl, cvUrl || portfolioUrl];
   const filledCount = fields.filter((f) => f && f.toString().trim()).length;
   const completeness = Math.round((filledCount / fields.length) * 100);
+  const showLevel = level && level.level.label !== "Standard";
 
   return (
     <div style={{ marginTop: 24, maxWidth: 680, marginBottom: 60 }}>
@@ -179,20 +246,21 @@ function ProfilePage() {
       {/* Stats */}
       {level && (
         <div style={{ display: "flex", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "18px 8px", marginBottom: 20 }}>
-          <StatBlock label="Niveau" value={level.level.label} border />
+          {showLevel && <StatBlock label="Niveau" value={level.level.label} border />}
           <StatBlock label="Udførelsesrate" value={`${level.completionRate}%`} border />
-          <StatBlock
-            label="Anmeldelser"
-            value={
-              level.reviewCount > 0 ? (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+          <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ flex: 1, textAlign: "center", cursor: "pointer" }}>
+            <div style={{ fontSize: 16, fontWeight: 800, display: "inline-flex", alignItems: "center", gap: 4 }}>
+              {level.reviewCount > 0 ? (
+                <>
                   <Stars value={level.avgRating} /> ({level.reviewCount})
-                </span>
+                </>
               ) : (
                 "Ingen endnu"
-              )
-            }
-          />
+              )}
+              <ChevronRight size={13} color="#9AA2B1" />
+            </div>
+            <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>Anmeldelser</div>
+          </Link>
         </div>
       )}
 
@@ -201,7 +269,7 @@ function ProfilePage() {
         <textarea
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          placeholder="Kort om dig selv - baggrund, erfaring, hvad du er god til."
+          placeholder="Kort om dig selv - baggrund, personlighed, hvad du brænder for."
           style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
         />
 
@@ -213,16 +281,6 @@ function ProfilePage() {
           style={inputStyle}
         />
         <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Adskil gerne med komma.</div>
-      </SectionCard>
-
-      <SectionCard icon={Briefcase} title="Erfaring">
-        <label style={labelStyle}>Portfolio / CV (tekst)</label>
-        <textarea
-          value={portfolio}
-          onChange={(e) => setPortfolio(e.target.value)}
-          placeholder="Tidligere opgaver, uddannelse, konkrete resultater."
-          style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
-        />
       </SectionCard>
 
       <SectionCard icon={Globe} title="Links">
@@ -247,7 +305,7 @@ function ProfilePage() {
             style={{ ...inputStyle, paddingLeft: 38 }}
           />
         </div>
-        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Vises som klikbare links på din offentlige profil - godt til at vise et portfolio.</div>
+        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Vises som klikbare links på din offentlige profil.</div>
       </SectionCard>
 
       <button
@@ -262,47 +320,33 @@ function ProfilePage() {
         </div>
       )}
 
-      <SectionCard icon={FileText} title="Vedhæftet dokument (PDF)">
-        <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 14 }}>
-          Upload et CV eller andet materiale, andre kan se og downloade fra din profil. Kun PDF accepteres, af hensyn til sikkerhed - maks. 10 MB.
-        </p>
+      <SectionCard icon={Briefcase} title="Erfaring">
+        <div style={{ display: "flex", gap: 8, padding: "10px 14px", background: "#FFF1E0", borderRadius: 10, marginBottom: 18, fontSize: 12, color: "#B5610E", lineHeight: 1.55 }}>
+          <AlertTriangle size={14} style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <span>
+            Dokumenterne er synlige for alle besøgende. Undgå CPR-nummer, fødselsdato og fuld adresse - kun rigtige PDF-filer accepteres (maks. 10 MB), af hensyn til sikkerheden.
+          </span>
+        </div>
 
-        {cvUrl ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#F5F7FB", borderRadius: 12 }}>
-            <FileText size={18} color="#2A55E5" />
-            <a href={cvUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}>
-              {cvFilename || "Dokument.pdf"}
-            </a>
-            <button
-              onClick={removeCv}
-              title="Fjern dokument"
-              style={{ width: 30, height: 30, borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-            >
-              <X size={13} />
-            </button>
-          </div>
-        ) : (
-          <label
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 13,
-              fontWeight: 700,
-              padding: "10px 18px",
-              borderRadius: 10,
-              border: "1.5px solid #E4E8F0",
-              color: "#14213D",
-              cursor: cvUploading ? "default" : "pointer",
-              opacity: cvUploading ? 0.6 : 1,
-            }}
-          >
-            <Upload size={14} />
-            {cvUploading ? "Uploader…" : "Upload PDF"}
-            <input type="file" accept="application/pdf" onChange={handleCvChange} disabled={cvUploading} style={{ display: "none" }} />
-          </label>
-        )}
-        {cvError && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{cvError}</div>}
+        <FileSlot
+          label="CV"
+          fileUrl={cvUrl}
+          filename={cvFilename}
+          uploading={cvUploading}
+          error={cvError}
+          onChange={handleCvChange}
+          onRemove={removeCv}
+        />
+        <FileSlot
+          label="Portfolio"
+          hint="Eksempler på tidligere arbejde, f.eks. et samlet PDF-udsnit af opgaver du har løst."
+          fileUrl={portfolioUrl}
+          filename={portfolioFilename}
+          uploading={portfolioUploading}
+          error={portfolioError}
+          onChange={handlePortfolioChange}
+          onRemove={removePortfolio}
+        />
       </SectionCard>
     </div>
   );

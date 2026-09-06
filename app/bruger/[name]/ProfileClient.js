@@ -94,7 +94,7 @@ export default function ProfileClient() {
         </div>
       )}
 
-      {profile && (profile.bio || profile.skills || profile.portfolio || profile.websiteUrl || profile.linkedinUrl || profile.cvUrl) ? (
+      {profile && (profile.bio || profile.skills || profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) ? (
         <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 26, marginBottom: 22 }}>
           {profile.bio && (
             <>
@@ -114,13 +114,7 @@ export default function ProfileClient() {
               </div>
             </>
           )}
-          {profile.portfolio && (
-            <>
-              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Portfolio / CV</div>
-              <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, whiteSpace: "pre-wrap", marginBottom: (profile.websiteUrl || profile.linkedinUrl || profile.cvUrl) ? 18 : 0 }}>{profile.portfolio}</p>
-            </>
-          )}
-          {(profile.websiteUrl || profile.linkedinUrl || profile.cvUrl) && (
+          {(profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {profile.linkedinUrl && (
                 <a
@@ -149,7 +143,17 @@ export default function ProfileClient() {
                   rel="noopener noreferrer"
                   style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
                 >
-                  📄 {profile.cvFilename || "Se dokument"}
+                  📄 {profile.cvFilename || "CV"}
+                </a>
+              )}
+              {profile.portfolioUrl && (
+                <a
+                  href={profile.portfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
+                >
+                  📁 {profile.portfolioFilename || "Portfolio"}
                 </a>
               )}
             </div>
