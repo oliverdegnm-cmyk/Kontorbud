@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
+import Stars from "@/components/Stars";
 import { statusInfo } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 
 export default function HomePage() {
+  const router = useRouter();
   const [tasks, setTasks] = useState(null);
   const [heroImage, setHeroImage] = useState("https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70");
   const [heroPosition, setHeroPosition] = useState(50);
@@ -187,9 +190,9 @@ export default function HomePage() {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
             return (
-              <Link
+              <div
                 key={t.id}
-                href={`/opgave/${t.id}`}
+                onClick={() => router.push(`/opgave/${t.id}`)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -198,6 +201,7 @@ export default function HomePage() {
                   border: "1.5px solid #E4E8F0",
                   borderRadius: 16,
                   padding: "14px 18px",
+                  cursor: "pointer",
                 }}
               >
                 <div
@@ -217,12 +221,25 @@ export default function HomePage() {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 14, fontWeight: 700 }}>{t.title}</div>
-                  <div style={{ fontSize: 12, color: "#5B6478" }}>{t.category}</div>
+                  <div style={{ fontSize: 12, color: "#5B6478" }}>
+                    {t.category} · af{" "}
+                    <Link href={`/bruger/${encodeURIComponent(t.postedBy)}`} onClick={(e) => e.stopPropagation()} style={{ color: "#2A55E5", fontWeight: 600 }}>
+                      {t.postedBy}
+                    </Link>
+                    {" · "}
+                    {t.posterReviewCount > 0 ? (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
+                        <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
+                      </span>
+                    ) : (
+                      "ingen anmeldelser endnu"
+                    )}
+                  </div>
                 </div>
                 <Badge tone={status.tone}>{status.label}</Badge>
                 <div style={{ fontSize: 13.5, fontWeight: 800, minWidth: 70, textAlign: "right" }}>{formatBudgetDisplay(t.budget)}</div>
                 <ChevronRight size={16} color="#5B6478" />
-              </Link>
+              </div>
             );
           })}
         </div>

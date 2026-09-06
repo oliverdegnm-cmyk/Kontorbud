@@ -81,6 +81,7 @@ function ProfilePage() {
   const [job, setJob] = useState("");
   const [education, setEducation] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [videoCallUrl, setVideoCallUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [saved, setSaved] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -108,6 +109,7 @@ function ProfilePage() {
           setJob(data.profile.job || "");
           setEducation(data.profile.education || "");
           setWebsiteUrl(data.profile.websiteUrl || "");
+          setVideoCallUrl(data.profile.videoCallUrl || "");
           setLinkedinUrl(data.profile.linkedinUrl || "");
           setCvUrl(data.profile.cvUrl || null);
           setCvFilename(data.profile.cvFilename || null);
@@ -126,7 +128,7 @@ function ProfilePage() {
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bio, skills, job, education, websiteUrl, linkedinUrl }),
+      body: JSON.stringify({ bio, skills, job, education, websiteUrl, linkedinUrl, videoCallUrl }),
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -329,6 +331,17 @@ function ProfilePage() {
           />
         </div>
         <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Vises som klikbare links på din offentlige profil.</div>
+
+        <label style={{ ...labelStyle, marginTop: 16 }}>Videoopkald-link</label>
+        <input
+          value={videoCallUrl}
+          onChange={(e) => setVideoCallUrl(e.target.value)}
+          placeholder="https://meet.google.com/... eller dit Zoom/Teams-link"
+          style={inputStyle}
+        />
+        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>
+          Indsæt dit eget faste møde-link (Zoom, Teams, Google Meet). Vises kun for modparten, når I har en aktiv opgave sammen.
+        </div>
       </SectionCard>
 
       <button

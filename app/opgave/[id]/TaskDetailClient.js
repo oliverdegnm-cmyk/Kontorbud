@@ -32,6 +32,7 @@ export default function TaskDetailClient() {
   const [openThread, setOpenThread] = useState(null);
   const [myLevel, setMyLevel] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [counterpartyVideoUrl, setCounterpartyVideoUrl] = useState(null);
 
   function load() {
     fetch(`/api/tasks/${id}`)
@@ -75,6 +76,22 @@ export default function TaskDetailClient() {
       .then((data) => !data.error && setMyLevel(data))
       .catch(() => {});
   }, [name]);
+
+  useEffect(() => {
+    if (!task || !name) return;
+    const matched = task.status === "matched" || task.status === "completed";
+    if (!matched) return;
+    const accepted = task.bids.find((b) => b.id === task.acceptedBidId);
+    if (!accepted) return;
+    const isOwnerNow = task.postedBy === name;
+    const isBidderNow = accepted.bidderName === name;
+    if (!isOwnerNow && !isBidderNow) return;
+    const counterpartyName = isOwnerNow ? accepted.bidderName : task.postedBy;
+    fetch(`/api/profiles/${encodeURIComponent(counterpartyName)}`)
+      .then((r) => r.json())
+      .then((data) => setCounterpartyVideoUrl(data.profile?.videoCallUrl || null))
+      .catch(() => {});
+  }, [task, name]);
 
   async function submitBid() {
     if (!amount.trim()) {
@@ -257,6 +274,28 @@ export default function TaskDetailClient() {
             <div style={{ fontSize: 13, color: "#146B4E", marginTop: 6 }}>
               Aftal de sidste detaljer i beskederne nedenfor - al kontakt foregår her på siden.
             </div>
+          )}
+          {counterpartyVideoUrl && (
+            <a
+              href={counterpartyVideoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                fontSize: 13,
+                fontWeight: 700,
+                padding: "10px 18px",
+                borderRadius: 10,
+                border: "1.5px solid #E4E8F0",
+                color: "#14213D",
+                marginTop: 10,
+                marginBottom: 6,
+              }}
+            >
+              📹 Book videoopkald med {isOwner ? acceptedBid.bidderName : task.postedBy}
+            </a>
           )}
           <MessageThread taskId={task.id} bidderName={acceptedBid.bidderName} currentName={name} />
 

@@ -54,9 +54,23 @@ export async function GET() {
 
     const { rows: bidRows } = await pool.query("SELECT * FROM bids ORDER BY created_at ASC");
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments ORDER BY created_at ASC");
-    const tasks = taskRows.map((t) =>
-      mapTask(t, bidRows.filter((b) => b.task_id === t.id), attRows.filter((a) => a.task_id === t.id))
+
+    // Hentes samlet i ét opslag (i stedet for ét kald pr. opgave), så
+    // opgavestillerens stjerner/anmeldelser kan vises direkte på listerne.
+    const { rows: reviewRows } = await pool.query(
+      `SELECT reviewee_name, COALESCE(AVG(rating), 0)::float AS avg_rating, COUNT(*)::int AS count
+       FROM reviews GROUP BY reviewee_name`
     );
+    const reviewsByName = {};
+    reviewRows.forEach((r) => {
+      reviewsByName[r.reviewee_name] = { avgRating: r.avg_rating, reviewCount: r.count };
+    });
+
+    const tasks = taskRows.map((t) => ({
+      ...mapTask(t, bidRows.filter((b) => b.task_id === t.id), attRows.filter((a) => a.task_id === t.id)),
+      posterRating: reviewsByName[t.posted_by]?.avgRating ?? 0,
+      posterReviewCount: reviewsByName[t.posted_by]?.reviewCount ?? 0,
+    }));
     return NextResponse.json({ tasks });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaver. Tjek at DATABASE_URL er sat korrekt." }, { status: 500 });

@@ -2,12 +2,14 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronRight, Search } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
+import Stars from "@/components/Stars";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
 import { statusInfo } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
@@ -27,6 +29,7 @@ function budgetNumber(budget) {
 }
 
 export default function OpgaverPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [tasks, setTasks] = useState(null);
   const [error, setError] = useState("");
@@ -172,9 +175,9 @@ export default function OpgaverPage() {
               const cat = CATS.find((c) => c.name === t.category);
               const status = statusInfo(t);
               return (
-                <Link
+                <div
                   key={t.id}
-                  href={`/opgave/${t.id}`}
+                  onClick={() => router.push(`/opgave/${t.id}`)}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -183,6 +186,7 @@ export default function OpgaverPage() {
                     border: "1.5px solid #E4E8F0",
                     borderRadius: 16,
                     padding: "16px 18px",
+                    cursor: "pointer",
                   }}
                 >
                   <div
@@ -212,6 +216,18 @@ export default function OpgaverPage() {
                     <div style={{ fontSize: 12.5, color: "#5B6478" }}>
                       {t.category} · Frist: {t.deadline}
                       {t.area ? ` · 📍 ${t.area}` : ""}
+                      {" · af "}
+                      <Link href={`/bruger/${encodeURIComponent(t.postedBy)}`} onClick={(e) => e.stopPropagation()} style={{ color: "#2A55E5", fontWeight: 600 }}>
+                        {t.postedBy}
+                      </Link>
+                      {" · "}
+                      {t.posterReviewCount > 0 ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>
+                          <Stars value={t.posterRating} size={11} /> ({t.posterReviewCount})
+                        </span>
+                      ) : (
+                        "ingen anmeldelser endnu"
+                      )}
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 18, flex: "0 0 auto" }}>
@@ -222,7 +238,7 @@ export default function OpgaverPage() {
                     </div>
                     <ChevronRight size={18} color="#5B6478" />
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
