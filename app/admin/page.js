@@ -252,7 +252,11 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
     setError("");
     setSaved(false);
     try {
-      const blob = await upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" });
+      const blob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ purpose: "image" }),
+      });
       const res = await fetch("/api/admin/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

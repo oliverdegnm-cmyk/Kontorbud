@@ -16,6 +16,7 @@ export async function GET(request, { params }) {
             portfolio: p.portfolio,
             avatarUrl: p.avatar_url,
             websiteUrl: p.website_url,
+            linkedinUrl: p.linkedin_url,
             cvUrl: p.cv_url,
             cvFilename: p.cv_filename,
             stripeConnected: !!p.stripe_account_id,
@@ -28,6 +29,7 @@ export async function GET(request, { params }) {
             portfolio: "",
             avatarUrl: null,
             websiteUrl: null,
+            linkedinUrl: null,
             cvUrl: null,
             cvFilename: null,
             stripeConnected: false,
@@ -44,7 +46,7 @@ export async function POST(request, { params }) {
     await ensureSchema();
     const name = decodeURIComponent(params.name);
     const body = await request.json();
-    const { bio, skills, portfolio, avatarUrl, websiteUrl, cvUrl, cvFilename } = body;
+    const { bio, skills, portfolio, avatarUrl, websiteUrl, linkedinUrl, cvUrl, cvFilename } = body;
 
     if (avatarUrl !== undefined) {
       await pool.query(
@@ -65,10 +67,10 @@ export async function POST(request, { params }) {
     }
 
     await pool.query(
-      `INSERT INTO profiles (name, bio, skills, portfolio, website_url, updated_at)
-       VALUES ($1, $2, $3, $4, $5, now())
-       ON CONFLICT (name) DO UPDATE SET bio = $2, skills = $3, portfolio = $4, website_url = $5, updated_at = now()`,
-      [name, bio?.trim() || "", skills?.trim() || "", portfolio?.trim() || "", websiteUrl?.trim() || null]
+      `INSERT INTO profiles (name, bio, skills, portfolio, website_url, linkedin_url, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, now())
+       ON CONFLICT (name) DO UPDATE SET bio = $2, skills = $3, portfolio = $4, website_url = $5, linkedin_url = $6, updated_at = now()`,
+      [name, bio?.trim() || "", skills?.trim() || "", portfolio?.trim() || "", websiteUrl?.trim() || null, linkedinUrl?.trim() || null]
     );
 
     return NextResponse.json({ ok: true });

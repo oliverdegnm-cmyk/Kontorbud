@@ -18,6 +18,7 @@ export default function FileUploader({ files, setFiles, compact }) {
         const blob = await upload(file.name, file, {
           access: "public",
           handleUploadUrl: "/api/upload",
+          clientPayload: JSON.stringify({ purpose: "attachment" }),
         });
         setFiles((prev) => [...prev, { url: blob.url, filename: file.name }]);
       }

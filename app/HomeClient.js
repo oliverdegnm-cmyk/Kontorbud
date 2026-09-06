@@ -8,6 +8,7 @@ import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import { statusInfo } from "@/lib/status";
 import Footer from "@/components/Footer";
+import InstallAppBanner from "@/components/InstallAppBanner";
 
 export default function HomePage() {
   const [tasks, setTasks] = useState(null);
@@ -41,6 +42,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <InstallAppBanner />
       <div style={{ position: "relative", marginTop: 6 }}>
         <div style={{ width: "100%", height: 340, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
           {heroLoaded && (
