@@ -36,6 +36,19 @@ export async function GET(request, { params }) {
       await pool.query("UPDATE profiles SET stripe_payouts_enabled = $1 WHERE name = $2", [payoutsEnabled, name]);
     }
 
+    // Nu hvor kontoen har fulde rettigheder efter onboarding, sikrer vi den
+    // hurtigst mulige udbetalingsindstilling er sat korrekt - dette kan fejle
+    // stille, hvis den allerede er sat, eller kontoen stadig mangler noget.
+    if (payoutsEnabled) {
+      try {
+        await stripe.accounts.update(profile.stripe_account_id, {
+          settings: { payouts: { schedule: { interval: "daily", delay_days: "minimum" } } },
+        });
+      } catch (err) {
+        // ikke kritisk
+      }
+    }
+
     return NextResponse.json({ connected: true, payoutsEnabled });
   } catch (err) {
     console.error("Stripe-fejl i app/api/stripe/status/[name]/route.js:", err);

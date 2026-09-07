@@ -39,6 +39,14 @@ export async function POST(request) {
         },
         business_type: "individual",
         metadata: { kontorbud_name: name.trim() },
+        // Udbetales dagligt, med den lavest tilladte forsinkelse for danske
+        // konti - så pengene rammer hjælperens bankkonto hurtigst muligt,
+        // efter opgaven er markeret udført.
+        settings: {
+          payouts: {
+            schedule: { interval: "daily", delay_days: "minimum" },
+          },
+        },
       });
       accountId = account.id;
       await pool.query(
@@ -46,6 +54,17 @@ export async function POST(request) {
          ON CONFLICT (name) DO UPDATE SET stripe_account_id = $2`,
         [name.trim(), accountId]
       );
+    } else {
+      // Sikrer også allerede eksisterende konti får den hurtigste
+      // udbetalingsindstilling, hvis de blev oprettet før denne ændring.
+      try {
+        await stripe.accounts.update(accountId, {
+          settings: { payouts: { schedule: { interval: "daily", delay_days: "minimum" } } },
+        });
+      } catch (err) {
+        // Kontoen er muligvis ikke færdig med onboarding endnu - ikke kritisk,
+        // det forsøges igen, næste gang personen besøger Betalinger.
+      }
     }
 
     const accountLink = await stripe.accountLinks.create({
