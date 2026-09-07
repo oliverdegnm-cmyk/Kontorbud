@@ -195,7 +195,7 @@ export default function OpgaverPage() {
         </div>
       ) : (
         <div className="kb-grid-browse" style={{ display: "grid", gridTemplateColumns: showMap ? "1.1fr 0.9fr" : "1fr", gap: 20, alignItems: "start" }}>
-          <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+          <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
             {list.map((t) => {
               const cat = CATS.find((c) => c.name === t.category);
               const status = statusInfo(t);
@@ -212,7 +212,7 @@ export default function OpgaverPage() {
                     background: "#fff",
                     border: "1.5px solid #E4E8F0",
                     borderRadius: 16,
-                    padding: "16px 18px",
+                    padding: "22px 24px",
                     cursor: "pointer",
                   }}
                 >
@@ -232,7 +232,7 @@ export default function OpgaverPage() {
                     <CatIcon name={cat ? cat.icon : "FileText"} size={20} />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
                       <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                       {t.posterType === "business" && (
                         <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#F5F7FB", color: "#5B6478", flex: "0 0 auto" }}>
@@ -249,7 +249,7 @@ export default function OpgaverPage() {
                       {t.area ? ` · 📍 ${t.area}` : ""}
                     </div>
                     {t.description && (
-                      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {truncateText(t.description, 120)}
                       </div>
                     )}

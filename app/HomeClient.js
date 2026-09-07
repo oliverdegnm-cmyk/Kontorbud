@@ -260,7 +260,7 @@ export default function HomePage() {
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
-        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
+        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 20 }}>
           {openTasks.slice(0, 5).map((t) => {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
@@ -277,7 +277,7 @@ export default function HomePage() {
                   background: "#fff",
                   border: "1.5px solid #E4E8F0",
                   borderRadius: 16,
-                  padding: "18px 20px",
+                  padding: "22px 24px",
                   cursor: "pointer",
                 }}
               >
@@ -297,7 +297,7 @@ export default function HomePage() {
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{capitalizeFirst(t.title)}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
@@ -306,7 +306,7 @@ export default function HomePage() {
                     </span>
                   </div>
                   {t.description && (
-                    <div style={{ fontSize: 12, color: "#9AA2B1", marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <div style={{ fontSize: 12, color: "#9AA2B1", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {truncateText(t.description, 80)}
                     </div>
                   )}
