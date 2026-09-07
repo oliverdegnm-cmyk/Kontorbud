@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
   if (!cat) return { title: "Kategori - Kontorbud" };
   return {
     title: `${cat.name} - find hjælpere på Kontorbud`,
-    description: `Se åbne opgaver inden for ${cat.name.toLowerCase()}, eller opret din egen opgave og få bud fra dygtige danske hjælpere.`,
+    description: cat.intro || `Se åbne opgaver inden for ${cat.name.toLowerCase()}, eller opret din egen opgave og få bud fra dygtige danske hjælpere.`,
     alternates: { canonical: `https://kontorbud.dk/kategori/${cat.slug}` },
   };
 }
@@ -67,9 +67,22 @@ export default async function CategoryPage({ params }) {
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0 }}>{cat.name}</h1>
       </div>
-      <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, maxWidth: 600, marginBottom: 28 }}>
-        Find hjælp til {cat.name.toLowerCase()} fra dygtige danske hjælpere, eller byd selv på opgaver inden for feltet. Betaling holdes sikkert af platformen, indtil opgaven er udført til din tilfredshed.
+      <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, maxWidth: 640, marginBottom: 28 }}>
+        {cat.intro || `Find hjælp til ${cat.name.toLowerCase()} fra dygtige danske hjælpere, eller byd selv på opgaver inden for feltet.`}
       </p>
+
+      {cat.examples && cat.examples.length > 0 && (
+        <div style={{ background: "#F5F7FB", borderRadius: 16, padding: "20px 24px", marginBottom: 28, maxWidth: 640 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12 }}>Typiske opgaver i {cat.name.toLowerCase()}</div>
+          <ul style={{ margin: 0, paddingLeft: 20 }}>
+            {cat.examples.map((ex, i) => (
+              <li key={i} style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.9 }}>
+                {ex}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap" }}>
         <Link
@@ -85,6 +98,9 @@ export default async function CategoryPage({ params }) {
           Se alle med filtre og kort →
         </Link>
       </div>
+      <p style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: -20, marginBottom: 32 }}>
+        Betaling holdes sikkert af platformen, indtil opgaven er udført til din tilfredshed.
+      </p>
 
       <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 16 }}>
         {tasks.length > 0 ? `Åbne opgaver i ${cat.name}` : `Ingen åbne opgaver i ${cat.name} lige nu`}

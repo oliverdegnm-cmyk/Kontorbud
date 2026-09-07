@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
@@ -81,19 +82,19 @@ export default function HomePage() {
   return (
     <div>
       <div style={{ position: "relative", marginTop: 6 }}>
-        <div style={{ width: "100%", height: 340, borderRadius: 28, overflow: "hidden", background: "#F5F7FB" }}>
+        <div style={{ width: "100%", height: 340, borderRadius: 28, overflow: "hidden", background: "#F5F7FB", position: "relative" }}>
           {heroLoaded && (
-            <img
+            <Image
               src={heroImage}
               alt="Overvældet af kontoropgaver - beder om hjælp"
+              fill
+              priority
+              sizes="(max-width: 760px) 100vw, 1080px"
               style={{
-                width: "100%",
-                height: "100%",
                 objectFit: "cover",
                 objectPosition: `center ${heroPosition}%`,
                 transform: `scale(${heroZoom / 100})`,
                 transformOrigin: "center",
-                display: "block",
               }}
             />
           )}
