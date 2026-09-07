@@ -9,10 +9,13 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { name, email, password, ref } = body;
+    const { name, email, password, ref, goal, marketingConsent, acceptedTerms } = body;
 
     if (!name?.trim() || !email?.trim() || !password || password.length < 6) {
       return NextResponse.json({ error: "Udfyld navn, email og en adgangskode på mindst 6 tegn." }, { status: 400 });
+    }
+    if (!acceptedTerms) {
+      return NextResponse.json({ error: "Du skal acceptere vilkår og betingelser for at oprette en konto." }, { status: 400 });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
@@ -38,8 +41,8 @@ export async function POST(request) {
     }
 
     const { rows } = await pool.query(
-      "INSERT INTO users (name, email, password_hash, verification_token, verification_sent_at, referred_by) VALUES ($1, $2, $3, $4, now(), $5) RETURNING id, name, email",
-      [trimmedName, normalizedEmail, passwordHash, verificationToken, referredBy]
+      "INSERT INTO users (name, email, password_hash, verification_token, verification_sent_at, referred_by, goal, marketing_consent) VALUES ($1, $2, $3, $4, now(), $5, $6, $7) RETURNING id, name, email",
+      [trimmedName, normalizedEmail, passwordHash, verificationToken, referredBy, goal || null, !!marketingConsent]
     );
     const user = rows[0];
 
@@ -55,7 +58,22 @@ export async function POST(request) {
       maxAge: 60 * 60 * 24 * 30,
     });
 
-    return NextResponse.json({ user: { id: user.id, name: user.name, email: user.email } }, { status: 201 });
+    return NextResponse.json(
+      {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          emailVerified: false,
+          isAdmin: false,
+          phone: null,
+          emailNotifications: true,
+          smsNotifications: false,
+          avatarUrl: null,
+        },
+      },
+      { status: 201 }
+    );
   } catch (err) {
     console.error("Signup-fejl:", err);
     return NextResponse.json({ error: err.message || "Kunne ikke oprette konto." }, { status: 500 });
