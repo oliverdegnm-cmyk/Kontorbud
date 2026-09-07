@@ -11,6 +11,7 @@
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
     "@googlemaps/markerclusterer": "^2.5.3",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^0.27.1",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
