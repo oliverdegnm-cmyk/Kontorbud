@@ -227,12 +227,12 @@ export default function HomePage() {
         <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
       )}
 
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 16 }}>...eller lad dig inspirere af en kategori:</div>
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 16 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 40 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
           const count = openTasks.filter((t) => t.category === c.name).length;
           return (
-            <Link key={c.slug} href={`/opret?category=${encodeURIComponent(c.name)}`} style={{ cursor: "pointer", textAlign: "center", display: "block" }}>
+            <Link key={c.slug} href={`/kategori/${c.slug}`} style={{ cursor: "pointer", textAlign: "center", display: "block" }}>
               <div
                 style={{
                   width: 62,

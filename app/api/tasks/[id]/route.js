@@ -14,6 +14,7 @@ function mapFullTask(t, bidRows, attRows) {
     postedBy: t.posted_by,
     posterType: t.poster_type,
     companyName: t.company_name,
+    cvrNumber: t.cvr_number,
     status: t.status,
     acceptedBidId: t.accepted_bid_id,
     acceptedAt: t.accepted_at,

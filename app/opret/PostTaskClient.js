@@ -21,10 +21,37 @@ function PostTaskPage() {
   const [area, setArea] = useState("");
   const [posterType, setPosterType] = useState("private");
   const [companyName, setCompanyName] = useState("");
+  const [cvrNumber, setCvrNumber] = useState("");
+  const [cvrStatus, setCvrStatus] = useState(null); // null | "loading" | "found" | "error"
+  const [cvrError, setCvrError] = useState("");
   const [description, setDescription] = useState(searchParams.get("description") || "");
   const [attachments, setAttachments] = useState([]);
   const [error, setError] = useState("");
   const [okId, setOkId] = useState("");
+
+  async function lookupCvr(value) {
+    const digitsOnly = value.replace(/\D/g, "");
+    if (digitsOnly.length !== 8) {
+      setCvrStatus(null);
+      return;
+    }
+    setCvrStatus("loading");
+    setCvrError("");
+    try {
+      const res = await fetch(`/api/cvr-lookup?cvr=${digitsOnly}`);
+      const data = await res.json();
+      if (data.error) {
+        setCvrStatus("error");
+        setCvrError(data.error);
+        return;
+      }
+      setCvrStatus("found");
+      if (!companyName.trim()) setCompanyName(data.name);
+    } catch (err) {
+      setCvrStatus("error");
+      setCvrError("Kunne ikke slå CVR-nummeret op. Prøv igen.");
+    }
+  }
 
   async function submit() {
     if (!title.trim() || !description.trim()) {
@@ -37,7 +64,7 @@ function PostTaskPage() {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments, posterType, companyName }),
+        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments, posterType, companyName, cvrNumber }),
       });
       const data = await res.json();
       if (data.error) {
@@ -97,12 +124,34 @@ function PostTaskPage() {
             </button>
           </div>
           {posterType === "business" && (
-            <input
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              placeholder="Virksomhedens navn"
-              style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginTop: 10 }}
-            />
+            <div style={{ marginTop: 10 }}>
+              <div style={{ position: "relative" }}>
+                <input
+                  value={cvrNumber}
+                  onChange={(e) => {
+                    setCvrNumber(e.target.value);
+                    lookupCvr(e.target.value);
+                  }}
+                  placeholder="CVR-nummer (8 cifre)"
+                  maxLength={8}
+                  style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
+                />
+                {cvrStatus === "loading" && (
+                  <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11.5, color: "#9AA2B1" }}>Slår op…</span>
+                )}
+              </div>
+              {cvrStatus === "found" && (
+                <div style={{ fontSize: 12, color: "#1AA37A", marginTop: 6, fontWeight: 600 }}>✓ Fundet: {companyName}</div>
+              )}
+              {cvrStatus === "error" && <div style={{ fontSize: 12, color: "#C0392B", marginTop: 6 }}>{cvrError}</div>}
+
+              <input
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="Virksomhedens navn"
+                style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginTop: 10 }}
+              />
+            </div>
           )}
         </div>
         <div className="kb-grid-form" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>

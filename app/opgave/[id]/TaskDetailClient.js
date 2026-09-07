@@ -381,6 +381,7 @@ export default function TaskDetailClient() {
               {task.posterType === "business" && (
                 <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
                   {task.companyName ? `${task.companyName} · ` : ""}Virksomhed
+                  {task.cvrNumber ? ` · CVR ${task.cvrNumber}` : ""}
                 </div>
               )}
             </div>
