@@ -21,6 +21,7 @@ export default function Footer() {
           <FooterLink href="/opgaver">Opgaver</FooterLink>
           <FooterLink href="/opret">Opret opgave</FooterLink>
           <FooterLink href="/hvordan-det-virker">Hvordan fungerer det?</FooterLink>
+          <FooterLink href="/blog">Blog</FooterLink>
           <FooterLink href="/kontakt">Kontakt</FooterLink>
           <FooterLink href="/vilkaar">Vilkår og betingelser</FooterLink>
           <FooterLink href="/privatliv">Privatlivspolitik</FooterLink>
