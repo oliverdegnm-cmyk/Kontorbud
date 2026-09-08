@@ -17,6 +17,42 @@ function SettingsPage() {
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState(false);
 
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwErr, setPwErr] = useState("");
+
+  async function savePassword() {
+    setPwErr("");
+    setPwMsg("");
+    if (newPassword.length < 6) {
+      setPwErr("Den nye adgangskode skal være mindst 6 tegn.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwErr("De to nye adgangskoder er ikke ens.");
+      return;
+    }
+    setPwSaving(true);
+    const res = await fetch("/api/auth/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    const data = await res.json();
+    setPwSaving(false);
+    if (data.error) {
+      setPwErr(data.error);
+      return;
+    }
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setPwMsg("✓ Adgangskode skiftet.");
+  }
+
   async function saveEmail() {
     if (!newEmail.trim() || newEmail.trim().toLowerCase() === email) return;
     setEmailSaving(true);
@@ -130,6 +166,43 @@ function SettingsPage() {
           {settingsSaving ? "Gemmer…" : "Gem indstillinger"}
         </button>
         {settingsMsg && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 600, color: "#1AA37A" }}>✓ Gemt.</div>}
+      </div>
+
+      <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: 24, marginTop: 18 }}>
+        <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 4 }}>Skift adgangskode</div>
+        <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 16 }}>Bekræft din nuværende adgangskode for at vælge en ny.</p>
+
+        <input
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          type="password"
+          placeholder="Nuværende adgangskode"
+          style={{ width: "100%", fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 10 }}
+        />
+        <input
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          type="password"
+          placeholder="Ny adgangskode (mindst 6 tegn)"
+          style={{ width: "100%", fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 10 }}
+        />
+        <input
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          type="password"
+          placeholder="Gentag ny adgangskode"
+          style={{ width: "100%", fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 16 }}
+        />
+
+        <button
+          onClick={savePassword}
+          disabled={pwSaving}
+          style={{ fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: pwSaving ? 0.6 : 1 }}
+        >
+          {pwSaving ? "Skifter…" : "Skift adgangskode"}
+        </button>
+        {pwMsg && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 600, color: "#1AA37A" }}>{pwMsg}</div>}
+        {pwErr && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 600, color: "#C0392B" }}>{pwErr}</div>}
       </div>
     </div>
   );

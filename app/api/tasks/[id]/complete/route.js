@@ -81,10 +81,18 @@ export async function POST(request, { params }) {
         metadata: { task_id: String(id), level: level.key, fee_percent: String(level.feePercent) },
       });
 
-      await pool.query("UPDATE tasks SET payment_status = 'released' WHERE id = $1", [id]);
+      // Opdateres i samme forespørgsel som statusskiftet til "completed" (se
+      // nedenfor bliver slået sammen i én transaktion), så der aldrig er et
+      // vindue, hvor overførslen er gennemført, men opgaven stadig ser
+      // "tildelt" ud - det ville ellers kunne udløse et dobbelt klik og en
+      // ny, uønsket overførsel.
+      await pool.query(
+        "UPDATE tasks SET payment_status = 'released', status = 'completed', completed_at = now() WHERE id = $1",
+        [id]
+      );
+    } else {
+      await pool.query("UPDATE tasks SET status = 'completed', completed_at = now() WHERE id = $1", [id]);
     }
-
-    await pool.query("UPDATE tasks SET status = 'completed', completed_at = now() WHERE id = $1", [id]);
 
     await notify(bid.bidder_name, "task_completed", id, `"${task.title}" er markeret som udført, og betalingen er frigivet. Giv gerne en anmeldelse.`);
 

@@ -15,7 +15,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Mangler modtager eller besked." }, { status: 400 });
     }
 
-    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://kontorbud.vercel.app";
+    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "https://kontorbud.dk";
     await notify(recipientName, "admin_message", null, `Besked fra Kontorbud support: ${message.trim()}`, origin);
 
     return NextResponse.json({ ok: true });

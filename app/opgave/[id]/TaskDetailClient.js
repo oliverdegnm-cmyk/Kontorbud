@@ -9,7 +9,7 @@ import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
 import { useName } from "@/lib/NameContext";
 import { feeBreakdown, formatKr, formatBudgetDisplay } from "@/lib/fees";
-import { statusInfo, formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
+import { statusInfo, getDeadlineLabel, capitalizeFirst } from "@/lib/status";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -164,6 +164,21 @@ export default function TaskDetailClient() {
     load();
   }
 
+  async function withdrawFromTask() {
+    const reason = prompt("Vil du kort skrive hvorfor du trækker dig? (valgfrit - opgavestilleren ser beskeden)");
+    if (reason === null) return; // brugeren fortrød i selve prompten
+    if (!confirm("Sikker på du vil trække dig fra opgaven? Betalingen refunderes til opgavestilleren, og opgaven bliver åben for nye bud igen.")) return;
+    setActionError("");
+    const res = await fetch(`/api/tasks/${id}/withdraw`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requesterName: name, reason }),
+    });
+    const data = await res.json();
+    if (data.error) return setActionError(data.error);
+    load();
+  }
+
   async function deleteTask() {
     if (!confirm("Slet denne opgave permanent? Det kan ikke fortrydes.")) return;
     setActionError("");
@@ -253,6 +268,15 @@ export default function TaskDetailClient() {
                   Annullér
                 </button>
               </div>
+            )}
+            {isAcceptedBidder && isMatched && (
+              <button
+                onClick={withdrawFromTask}
+                title="Fortryd, hvis opgaven viste sig at være større end forventet - betalingen refunderes, og opgaven bliver åben for andre igen."
+                style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+              >
+                Træk dig fra opgaven
+              </button>
             )}
           </div>
           {isAcceptedBidder && myFee && (
@@ -387,8 +411,8 @@ export default function TaskDetailClient() {
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Frist</div>
-              <div style={{ fontSize: 14.5, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, color: task.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
-                <Clock size={14} /> {formatDeadlineDisplay(task.deadline)}
+              <div style={{ fontSize: 14.5, fontWeight: 700, display: "flex", alignItems: "center", gap: 6, color: task.deadline === "Fleksibel" ? "#1AA37A" : getDeadlineLabel(task).urgent ? "#C0392B" : "#14213D" }}>
+                <Clock size={14} /> {getDeadlineLabel(task).text}
               </div>
             </div>
           </div>

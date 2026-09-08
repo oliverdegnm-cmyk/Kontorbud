@@ -10,6 +10,7 @@ function mapTask(row, bids, attachments) {
     category: row.category,
     budget: row.budget,
     deadline: row.deadline,
+    deadlineDate: row.deadline_date,
     description: row.description,
     postedBy: row.posted_by,
     posterType: row.poster_type,
@@ -93,7 +94,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { title, category, budget, deadline, description, postedBy, area, attachments, posterType, companyName, cvrNumber } = body;
+    const { title, category, budget, deadline, deadlineDate, description, postedBy, area, attachments, posterType, companyName, cvrNumber } = body;
 
     if (!title?.trim() || !description?.trim() || !postedBy?.trim()) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
@@ -105,14 +106,15 @@ export async function POST(request) {
     const coords = await geocodeArea(area);
 
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, description, posted_by, area, lat, lng, poster_type, company_name, cvr_number)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, deadline_date, description, posted_by, area, lat, lng, poster_type, company_name, cvr_number)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
       [
         "midlertidig",
         title.trim(),
         category || "Andet",
         budget?.trim() || "Ikke angivet",
-        deadline?.trim() || "Ikke angivet",
+        deadlineDate ? null : deadline?.trim() || "Fleksibel",
+        deadlineDate || null,
         description.trim(),
         postedBy.trim(),
         area?.trim() || null,

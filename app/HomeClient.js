@@ -9,7 +9,7 @@ import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
-import { statusInfo, truncateText, formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
+import { statusInfo, truncateText, getDeadlineLabel, capitalizeFirst } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
@@ -299,8 +299,8 @@ export default function HomePage() {
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : "#14213D" }}>
-                      <Clock size={11} /> {formatDeadlineDisplay(t.deadline)}
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : getDeadlineLabel(t).urgent ? "#C0392B" : "#14213D" }}>
+                      <Clock size={11} /> {getDeadlineLabel(t).text}
                     </span>
                   </div>
                   {t.description && (

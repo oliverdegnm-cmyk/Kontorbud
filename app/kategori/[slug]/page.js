@@ -3,7 +3,7 @@ import { pool, ensureSchema } from "@/lib/db";
 import { categoryBySlug, CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import { formatBudgetDisplay } from "@/lib/fees";
-import { formatDeadlineDisplay, capitalizeFirst } from "@/lib/status";
+import { getDeadlineLabel, capitalizeFirst } from "@/lib/status";
 import { ChevronRight } from "lucide-react";
 
 export async function generateStaticParams() {
@@ -34,7 +34,7 @@ export default async function CategoryPage({ params }) {
   try {
     await ensureSchema();
     const { rows } = await pool.query(
-      "SELECT id, title, budget, deadline, area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY created_at DESC LIMIT 20",
+      "SELECT id, title, budget, deadline, deadline_date AS \"deadlineDate\", area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY created_at DESC LIMIT 20",
       [cat.name]
     );
     tasks = rows;
@@ -125,7 +125,7 @@ export default async function CategoryPage({ params }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
                 <div style={{ fontSize: 12.5, color: "#5B6478" }}>
-                  Frist: {formatDeadlineDisplay(t.deadline)}
+                  Frist: {getDeadlineLabel(t).text}
                   {t.area ? ` · 📍 ${t.area}` : ""}
                 </div>
               </div>

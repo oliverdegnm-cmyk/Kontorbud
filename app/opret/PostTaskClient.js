@@ -1,9 +1,9 @@
 "use client";
 
 import RequireAuth from "@/components/RequireAuth";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CATS } from "@/lib/categories";
+import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
 import FileUploader from "@/components/FileUploader";
 
@@ -15,9 +15,56 @@ function PostTaskPage() {
   const [title, setTitle] = useState(searchParams.get("title") || "");
   const categoryFromUrl = searchParams.get("category");
   const [category, setCategory] = useState(CATS.some((c) => c.name === categoryFromUrl) ? categoryFromUrl : CATS[0].name);
+  const [categoryTouched, setCategoryTouched] = useState(!!categoryFromUrl);
+  const [categorySuggested, setCategorySuggested] = useState(false);
+  const aiTimeout = useRef(null);
+
+  function handleTitleChange(value) {
+    setTitle(value);
+    if (categoryTouched) return;
+
+    const localMatch = matchCategoryFromText(value);
+    if (localMatch) {
+      setCategory(localMatch.name);
+      setCategorySuggested(true);
+      return;
+    }
+
+    // Ordlisten fandt intet - spørger AI'en efter en kort pause i skrivningen,
+    // i stedet for ved hvert eneste tastetryk.
+    clearTimeout(aiTimeout.current);
+    if (value.trim().length < 6) return;
+    aiTimeout.current = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/match-category", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: value }),
+        });
+        const data = await res.json();
+        if (data.category && !categoryTouched) {
+          setCategory(data.category);
+          setCategorySuggested(true);
+        }
+      } catch (err) {
+        // stille fejl - brugeren kan stadig vælge kategori selv
+      }
+    }, 900);
+  }
+
+  function handleCategoryChange(value) {
+    setCategory(value);
+    setCategoryTouched(true);
+    setCategorySuggested(false);
+  }
+
   const [budget, setBudget] = useState("");
-  const [deadlineType, setDeadlineType] = useState("days"); // "days" | "flexible"
-  const [deadlineDays, setDeadlineDays] = useState("7");
+  const [deadlineType, setDeadlineType] = useState("date"); // "date" | "flexible"
+  const [deadlineDate, setDeadlineDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString().slice(0, 10);
+  });
   const [area, setArea] = useState("");
   const [posterType, setPosterType] = useState("private");
   const [companyName, setCompanyName] = useState("");
@@ -59,12 +106,25 @@ function PostTaskPage() {
       return;
     }
     setError("");
-    const deadline = deadlineType === "flexible" ? "Fleksibel" : `${deadlineDays || "7"} dage`;
+    const isFlexible = deadlineType === "flexible";
     try {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, budget, deadline, description, postedBy: name, area, attachments, posterType, companyName, cvrNumber }),
+        body: JSON.stringify({
+          title,
+          category,
+          budget,
+          deadline: isFlexible ? "Fleksibel" : null,
+          deadlineDate: isFlexible ? null : deadlineDate,
+          description,
+          postedBy: name,
+          area,
+          attachments,
+          posterType,
+          companyName,
+          cvrNumber,
+        }),
       });
       const data = await res.json();
       if (data.error) {
@@ -159,16 +219,18 @@ function PostTaskPage() {
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Titel</label>
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => handleTitleChange(e.target.value)}
               placeholder="f.eks. Bogfør kvartalsregnskab for Q3"
               style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
             />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Kategori</label>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>
+              Kategori {categorySuggested && <span style={{ color: "#1AA37A", fontWeight: 700 }}>· foreslået ud fra titlen</span>}
+            </label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => handleCategoryChange(e.target.value)}
               style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
             >
               {CATS.map((c) => (
@@ -187,23 +249,23 @@ function PostTaskPage() {
           </div>
           <div>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Frist</label>
-            <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "days" ? 8 : 0 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "date" ? 8 : 0 }}>
               <button
                 type="button"
-                onClick={() => setDeadlineType("days")}
+                onClick={() => setDeadlineType("date")}
                 style={{
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: deadlineType === "days" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: deadlineType === "days" ? "#EEF2FF" : "#fff",
-                  color: deadlineType === "days" ? "#1B3AA6" : "#5B6478",
+                  border: deadlineType === "date" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "date" ? "#EEF2FF" : "#fff",
+                  color: deadlineType === "date" ? "#1B3AA6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                Bestemt antal dage
+                Vælg dato
               </button>
               <button
                 type="button"
@@ -223,13 +285,12 @@ function PostTaskPage() {
                 Fleksibel
               </button>
             </div>
-            {deadlineType === "days" && (
+            {deadlineType === "date" && (
               <input
-                type="number"
-                min="1"
-                value={deadlineDays}
-                onChange={(e) => setDeadlineDays(e.target.value)}
-                placeholder="f.eks. 7"
+                type="date"
+                min={new Date().toISOString().slice(0, 10)}
+                value={deadlineDate}
+                onChange={(e) => setDeadlineDate(e.target.value)}
                 style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
               />
             )}

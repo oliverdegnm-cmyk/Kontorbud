@@ -10,6 +10,7 @@ function mapFullTask(t, bidRows, attRows) {
     category: t.category,
     budget: t.budget,
     deadline: t.deadline,
+    deadlineDate: t.deadline_date,
     description: t.description,
     postedBy: t.posted_by,
     posterType: t.poster_type,
