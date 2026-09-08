@@ -230,7 +230,6 @@ export default function HomePage() {
       <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 16 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 40 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
-          const count = openTasks.filter((t) => t.category === c.name).length;
           return (
             <Link key={c.slug} href={`/kategori/${c.slug}`} style={{ cursor: "pointer", textAlign: "center", display: "block" }}>
               <div
@@ -250,7 +249,6 @@ export default function HomePage() {
                 <CatIcon name={c.icon} size={24} />
               </div>
               <div style={{ fontSize: 12.5, fontWeight: 700, lineHeight: 1.3, color: "#14213D" }}>{c.name}</div>
-              <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 2 }}>{count} åbne</div>
             </Link>
           );
         })}

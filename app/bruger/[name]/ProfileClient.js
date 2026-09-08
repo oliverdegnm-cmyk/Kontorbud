@@ -2,12 +2,32 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck, FileText, Linkedin, Globe, Briefcase, GraduationCap, User } from "lucide-react";
 import Stars from "@/components/Stars";
-import { formatKr } from "@/lib/fees";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+}
+
+const LEVEL_STYLES = {
+  platin: { bg: "#EEF1F5", color: "#4B5768", ring: "#C7CDD6" },
+  guld: { bg: "#FFF6E0", color: "#9A6B00", ring: "#F0D488" },
+  solv: { bg: "#F2F4F7", color: "#5B6478", ring: "#D8DEE7" },
+  standard: null, // vises ikke - ingen opnået status endnu
+};
+
+function SectionCard({ icon: Icon, title, children }) {
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: 24, marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+          <Icon size={14} />
+        </div>
+        <div style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.03em", color: "#5B6478" }}>{title}</div>
+      </div>
+      {children}
+    </div>
+  );
 }
 
 export default function ProfileClient() {
@@ -31,8 +51,12 @@ export default function ProfileClient() {
       .then((data) => setReviews(data.reviews || []));
   }, [decoded]);
 
+  const levelStyle = level ? LEVEL_STYLES[level.level.key] : null;
+  const hasAboutContent = profile && (profile.bio || profile.skills || profile.job || profile.education);
+  const hasLinksOrDocs = profile && (profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl);
+
   return (
-    <div style={{ marginTop: 24, maxWidth: 660 }}>
+    <div style={{ marginTop: 24, maxWidth: 660, marginBottom: 60 }}>
       <div
         onClick={() => router.back()}
         style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13.5, fontWeight: 700, color: "#5B6478", cursor: "pointer", marginBottom: 18 }}
@@ -40,26 +64,33 @@ export default function ProfileClient() {
         <ArrowLeft size={14} /> Tilbage
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            background: "#EEF2FF",
-            color: "#1B3AA6",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 800,
-            fontSize: 18,
-          }}
-        >
-          {initials(decoded)}
-        </div>
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ fontSize: 20, fontWeight: 800 }}>{decoded}</div>
+      {/* Header-kort med gradient, gør profilen hurtigere at genkende og skabe tillid til på et øjekast */}
+      <div style={{ borderRadius: 22, overflow: "hidden", border: "1.5px solid #E4E8F0", marginBottom: 16 }}>
+        <div style={{ height: 64, background: "linear-gradient(120deg, #2A55E5, #6D8CF0)" }} />
+        <div style={{ background: "#fff", padding: "0 24px 24px" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginTop: -32, marginBottom: 14 }}>
+            <div
+              style={{
+                width: 76,
+                height: 76,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #2A55E5, #6D8CF0)",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: 24,
+                border: "4px solid #fff",
+                flex: "0 0 auto",
+              }}
+            >
+              {initials(decoded)}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
+            <div style={{ fontSize: 21, fontWeight: 800 }}>{decoded}</div>
             {profile && profile.stripePayoutsEnabled && (
               <span
                 title="Identitet bekræftet via Stripe"
@@ -68,114 +99,149 @@ export default function ProfileClient() {
                 <ShieldCheck size={12} /> Verificeret
               </span>
             )}
+            {levelStyle && (
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: levelStyle.color,
+                  background: levelStyle.bg,
+                  border: `1px solid ${levelStyle.ring}`,
+                  padding: "3px 10px",
+                  borderRadius: 999,
+                }}
+              >
+                {level.level.label}
+              </span>
+            )}
           </div>
-          {level && level.reviewCount > 0 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#5B6478", marginTop: 3 }}>
-              <Stars value={level.avgRating} /> {level.avgRating.toFixed(1)} ({level.reviewCount} anmeldelser)
+
+          {level && level.reviewCount > 0 ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13.5, color: "#5B6478" }}>
+              <Stars value={level.avgRating} /> <b style={{ color: "#14213D" }}>{level.avgRating.toFixed(1)}</b> ({level.reviewCount} anmeldelser)
             </div>
+          ) : (
+            <div style={{ fontSize: 13, color: "#9AA2B1" }}>Ingen anmeldelser endnu</div>
           )}
         </div>
       </div>
 
+      {/* Statistik-r\u00e6kke - det f\u00f8rste, en virksomhed typisk kigger p\u00e5 for hurtigt at vurdere n\u00e5r p\u00e5lidelig nogen er */}
       {level && (
-        <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 22, display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Niveau</div>
-            <div style={{ fontSize: 16, fontWeight: 800 }}>{level.level.label}</div>
+        <div style={{ display: "flex", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "16px 8px", marginBottom: 16 }}>
+          <div style={{ flex: 1, textAlign: "center", borderRight: "1px solid #F0F1F5" }}>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>{level.completionRate}%</div>
+            <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>Udførelsesrate</div>
           </div>
-          <div>
-            <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Udførelsesrate</div>
-            <div style={{ fontSize: 16, fontWeight: 800 }}>{level.completionRate}%</div>
+          <div style={{ flex: 1, textAlign: "center", borderRight: "1px solid #F0F1F5" }}>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>{level.completedCount}</div>
+            <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>Fuldførte opgaver</div>
           </div>
-          <div>
-            <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Fuldførte opgaver</div>
-            <div style={{ fontSize: 16, fontWeight: 800 }}>{level.completedCount}</div>
+          <div style={{ flex: 1, textAlign: "center" }}>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>{level.reviewCount}</div>
+            <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>Anmeldelser</div>
           </div>
         </div>
       )}
 
-      {profile && (profile.bio || profile.skills || profile.job || profile.education || profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) ? (
-        <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 26, marginBottom: 22 }}>
-          {profile.bio && (
-            <>
-              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Om</div>
-              <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, marginBottom: 18 }}>{profile.bio}</p>
-            </>
-          )}
-          {profile.skills && (
-            <>
-              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Kompetencer</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
-                {profile.skills.split(",").map((s) => s.trim()).filter(Boolean).map((s, i) => (
-                  <span key={i} style={{ fontSize: 12.5, fontWeight: 600, padding: "6px 12px", borderRadius: 999, background: "#EEF2FF", color: "#1B3AA6" }}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
-          {profile.job && (
-            <>
-              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Job / erhvervserfaring</div>
-              <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, whiteSpace: "pre-wrap", marginBottom: 18 }}>{profile.job}</p>
-            </>
-          )}
-          {profile.education && (
-            <>
-              <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>Uddannelse</div>
-              <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, whiteSpace: "pre-wrap", marginBottom: 18 }}>{profile.education}</p>
-            </>
-          )}
-          {(profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl) && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {profile.linkedinUrl && (
-                <a
-                  href={profile.linkedinUrl.startsWith("http") ? profile.linkedinUrl : `https://${profile.linkedinUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
-                >
-                  💼 LinkedIn
-                </a>
-              )}
-              {profile.websiteUrl && (
-                <a
-                  href={profile.websiteUrl.startsWith("http") ? profile.websiteUrl : `https://${profile.websiteUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
-                >
-                  🌐 Besøg hjemmeside
-                </a>
-              )}
-              {profile.cvUrl && (
-                <a
-                  href={profile.cvUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
-                >
-                  📄 {profile.cvFilename || "CV"}
-                </a>
-              )}
-              {profile.portfolioUrl && (
-                <a
-                  href={profile.portfolioUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "1.5px solid #E4E8F0", color: "#2A55E5" }}
-                >
-                  📁 {profile.portfolioFilename || "Portfolio"}
-                </a>
-              )}
-            </div>
-          )}
+      {/* Kompetencer flyttet helt op - det hurtigste en virksomhed scanner efter */}
+      {profile?.skills && (
+        <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "18px 20px", marginBottom: 16 }}>
+          <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", marginBottom: 10 }}>Kompetencer</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {profile.skills.split(",").map((s) => s.trim()).filter(Boolean).map((s, i) => (
+              <span key={i} style={{ fontSize: 12.5, fontWeight: 700, padding: "6px 13px", borderRadius: 999, background: "#EEF2FF", color: "#1B3AA6" }}>
+                {s}
+              </span>
+            ))}
+          </div>
         </div>
-      ) : (
-        profile && <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 22 }}>{decoded} har ikke udfyldt en profil endnu.</p>
       )}
 
-      <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12 }}>Anmeldelser</div>
+      {hasLinksOrDocs && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
+          {profile.cvUrl && (
+            <a
+              href={profile.cvUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, padding: "11px 18px", borderRadius: 12, background: "#14213D", color: "#fff" }}
+            >
+              <FileText size={15} /> Se CV
+            </a>
+          )}
+          {profile.portfolioUrl && (
+            <a
+              href={profile.portfolioUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, padding: "11px 18px", borderRadius: 12, border: "1.5px solid #E4E8F0", color: "#14213D" }}
+            >
+              <FileText size={15} /> Se portfolio
+            </a>
+          )}
+          {profile.linkedinUrl && (
+            <a
+              href={profile.linkedinUrl.startsWith("http") ? profile.linkedinUrl : `https://${profile.linkedinUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, padding: "11px 18px", borderRadius: 12, border: "1.5px solid #E4E8F0", color: "#14213D" }}
+            >
+              <Linkedin size={15} /> LinkedIn
+            </a>
+          )}
+          {profile.websiteUrl && (
+            <a
+              href={profile.websiteUrl.startsWith("http") ? profile.websiteUrl : `https://${profile.websiteUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, padding: "11px 18px", borderRadius: 12, border: "1.5px solid #E4E8F0", color: "#14213D" }}
+            >
+              <Globe size={15} /> Hjemmeside
+            </a>
+          )}
+        </div>
+      )}
+
+      {profile?.bio && (
+        <SectionCard icon={User} title="Om">
+          <p style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: 0 }}>{profile.bio}</p>
+        </SectionCard>
+      )}
+
+      {profile?.job && (
+        <SectionCard icon={Briefcase} title="Job / erhvervserfaring">
+          {profile.job
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .map((line, i) => (
+              <p key={i} style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: "0 0 12px" }}>
+                {line}
+              </p>
+            ))}
+        </SectionCard>
+      )}
+
+      {profile?.education && (
+        <SectionCard icon={GraduationCap} title="Uddannelse">
+          {profile.education
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .map((line, i) => (
+              <p key={i} style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: "0 0 12px" }}>
+                {line}
+              </p>
+            ))}
+        </SectionCard>
+      )}
+
+      {!hasAboutContent && !hasLinksOrDocs && (
+        <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 16 }}>{decoded} har ikke udfyldt en profil endnu.</p>
+      )}
+
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12, marginTop: 8 }}>Anmeldelser</div>
       {reviews === null && <p style={{ fontSize: 13.5, color: "#5B6478" }}>Henter…</p>}
       {reviews && reviews.length === 0 && <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen anmeldelser endnu.</p>}
       {reviews &&
