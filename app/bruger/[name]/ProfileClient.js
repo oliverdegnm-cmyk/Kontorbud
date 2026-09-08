@@ -9,6 +9,61 @@ function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 }
 
+// Genkender formatet "2021-2022: Titel hos Firma - beskrivelse" og viser det
+// som en overskuelig tidslinje. Linjer der ikke matcher det format, vises
+// stadig pænt som almindelig tekst i stedet for at fejle.
+function ExperienceTimeline({ text }) {
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+
+  return (
+    <div>
+      {lines.map((line, i) => {
+        const match = line.match(/^(\d{4}\s*-\s*\d{4}|\d{4}\s*-\s*(nu|i dag))\s*:\s*(.+)/i);
+        const isLast = i === lines.length - 1;
+
+        if (match) {
+          const years = match[1];
+          const rest = match[3];
+          const dashIndex = rest.indexOf(" - ");
+          const titlePart = dashIndex > -1 ? rest.slice(0, dashIndex) : rest;
+          const description = dashIndex > -1 ? rest.slice(dashIndex + 3) : null;
+
+          return (
+            <div key={i} style={{ display: "flex", gap: 14, marginBottom: isLast ? 0 : 20 }}>
+              <div style={{ flex: "0 0 auto", width: 84, paddingTop: 1 }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#2A55E5",
+                    background: "#EEF2FF",
+                    padding: "4px 9px",
+                    borderRadius: 8,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {years}
+                </span>
+              </div>
+              <div style={{ flex: 1, minWidth: 0, borderLeft: "2px solid #EEF2FF", paddingLeft: 14 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#14213D", marginBottom: description ? 4 : 0 }}>{titlePart}</div>
+                {description && <div style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.55 }}>{description}</div>}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <p key={i} style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: isLast ? 0 : "0 0 12px" }}>
+            {line}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 const LEVEL_STYLES = {
   platin: { bg: "#EEF1F5", color: "#4B5768", ring: "#C7CDD6" },
   guld: { bg: "#FFF6E0", color: "#9A6B00", ring: "#F0D488" },
@@ -211,29 +266,13 @@ export default function ProfileClient() {
 
       {profile?.job && (
         <SectionCard icon={Briefcase} title="Job / erhvervserfaring">
-          {profile.job
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean)
-            .map((line, i) => (
-              <p key={i} style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: "0 0 12px" }}>
-                {line}
-              </p>
-            ))}
+          <ExperienceTimeline text={profile.job} />
         </SectionCard>
       )}
 
       {profile?.education && (
         <SectionCard icon={GraduationCap} title="Uddannelse">
-          {profile.education
-            .split("\n")
-            .map((line) => line.trim())
-            .filter(Boolean)
-            .map((line, i) => (
-              <p key={i} style={{ fontSize: 14, color: "#14213D", lineHeight: 1.65, margin: "0 0 12px" }}>
-                {line}
-              </p>
-            ))}
+          <ExperienceTimeline text={profile.education} />
         </SectionCard>
       )}
 
