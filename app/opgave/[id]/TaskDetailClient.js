@@ -35,7 +35,8 @@ export default function TaskDetailClient() {
   const [counterpartyVideoUrl, setCounterpartyVideoUrl] = useState(null);
 
   function load() {
-    fetch(`/api/tasks/${id}`)
+    const qs = name ? `?viewerName=${encodeURIComponent(name)}` : "";
+    fetch(`/api/tasks/${id}${qs}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.error) setNotFound(true);
@@ -50,7 +51,7 @@ export default function TaskDetailClient() {
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, name]);
 
   useEffect(() => {
     const checkout = searchParams.get("checkout");
@@ -352,6 +353,11 @@ export default function TaskDetailClient() {
                 📍 {task.area}
               </span>
             )}
+            {task.locationType === "remote" && (
+              <span style={{ fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 999, background: "#EEF2FF", color: "#1B3AA6" }}>
+                🖥️ Eksternt
+              </span>
+            )}
             <Badge tone={status.tone}>{status.label}</Badge>
             {isOwner && task.status === "open" && (
               <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
@@ -415,6 +421,16 @@ export default function TaskDetailClient() {
                 <Clock size={14} /> {getDeadlineLabel(task).text}
               </div>
             </div>
+            {task.locationType === "in_person" && (
+              <div>
+                <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Adresse</div>
+                {task.address ? (
+                  <div style={{ fontSize: 14.5, fontWeight: 700 }}>{task.address}</div>
+                ) : (
+                  <div style={{ fontSize: 13, color: "#9AA2B1", fontStyle: "italic" }}>Vises til den valgte hjælper</div>
+                )}
+              </div>
+            )}
           </div>
 
           <div style={{ marginTop: 30 }}>

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { geocodeArea } from "@/lib/geocode";
 
-function mapFullTask(t, bidRows, attRows) {
+function mapFullTask(t, bidRows, attRows, revealAddress) {
   return {
     id: t.id,
     caseNo: t.case_no,
@@ -23,6 +23,11 @@ function mapFullTask(t, bidRows, attRows) {
     cancelledAt: t.cancelled_at,
     paymentStatus: t.payment_status,
     area: t.area,
+    locationType: t.location_type,
+    // Den præcise adresse er kun med i svaret, hvis den, der spørger, enten er
+    // opgavestilleren selv, eller den hjælper, hvis bud er blevet valgt -
+    // ikke til almindelige besøgende eller andre bydere.
+    address: revealAddress ? t.address : null,
     lat: t.lat,
     lng: t.lng,
     attachments: (attRows || []).map((a) => ({ id: a.id, url: a.url, filename: a.filename })),
@@ -42,14 +47,22 @@ export async function GET(request, { params }) {
   try {
     await ensureSchema();
     const id = Number(params.id);
+    const { searchParams } = new URL(request.url);
+    const viewerName = searchParams.get("viewerName");
+
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
+    const task = taskRows[0];
     const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
     const { rows: posterProfileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [taskRows[0].posted_by]);
-    return NextResponse.json({ task: { ...mapFullTask(taskRows[0], bidRows, attRows), posterVerified: !!posterProfileRows[0]?.stripe_payouts_enabled } });
+
+    const acceptedBid = bidRows.find((b) => b.id === task.accepted_bid_id);
+    const revealAddress = !!viewerName && (viewerName === task.posted_by || (acceptedBid && viewerName === acceptedBid.bidder_name));
+
+    return NextResponse.json({ task: { ...mapFullTask(task, bidRows, attRows, revealAddress), posterVerified: !!posterProfileRows[0]?.stripe_payouts_enabled } });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke hente opgaven." }, { status: 500 });
   }
@@ -113,7 +126,7 @@ export async function PATCH(request, { params }) {
 
     const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
-    return NextResponse.json({ task: mapFullTask(rows[0], bidRows, attRows) });
+    return NextResponse.json({ task: mapFullTask(rows[0], bidRows, attRows, true) });
   } catch (err) {
     return NextResponse.json({ error: "Kunne ikke opdatere opgaven." }, { status: 500 });
   }

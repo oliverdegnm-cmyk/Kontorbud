@@ -23,6 +23,7 @@ function mapTask(row, bids, attachments) {
     cancelledAt: row.cancelled_at,
     paymentStatus: row.payment_status,
     area: row.area,
+    locationType: row.location_type,
     lat: row.lat,
     lng: row.lng,
     createdAt: row.created_at,
@@ -94,7 +95,7 @@ export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { title, category, budget, deadline, deadlineDate, description, postedBy, area, attachments, posterType, companyName, cvrNumber } = body;
+    const { title, category, budget, deadline, deadlineDate, description, postedBy, area, locationType, address, attachments, posterType, companyName, cvrNumber } = body;
 
     if (!title?.trim() || !description?.trim() || !postedBy?.trim()) {
       return NextResponse.json({ error: "Titel, beskrivelse og navn er påkrævet." }, { status: 400 });
@@ -103,11 +104,11 @@ export async function POST(request) {
     // Sagsnummeret bygges på opgavens egen unikke id (som Postgres selv sikrer
     // aldrig genbruges, heller ikke efter sletninger) - IKKE en optælling af
     // antal opgaver, som gav kollisioner, når ældre opgaver blev slettet.
-    const coords = await geocodeArea(area);
+    const coords = locationType === "in_person" ? await geocodeArea(area) : null;
 
     const { rows } = await pool.query(
-      `INSERT INTO tasks (case_no, title, category, budget, deadline, deadline_date, description, posted_by, area, lat, lng, poster_type, company_name, cvr_number)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
+      `INSERT INTO tasks (case_no, title, category, budget, deadline, deadline_date, description, posted_by, area, lat, lng, poster_type, company_name, cvr_number, location_type, address)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
       [
         "midlertidig",
         title.trim(),
@@ -117,12 +118,14 @@ export async function POST(request) {
         deadlineDate || null,
         description.trim(),
         postedBy.trim(),
-        area?.trim() || null,
+        locationType === "in_person" ? area?.trim() || null : null,
         coords?.lat ?? null,
         coords?.lng ?? null,
         posterType === "business" ? "business" : "private",
         posterType === "business" ? companyName?.trim() || null : null,
         posterType === "business" ? cvrNumber?.replace(/\D/g, "") || null : null,
+        locationType === "in_person" ? "in_person" : "remote",
+        locationType === "in_person" ? address?.trim() || null : null,
       ]
     );
     const task = rows[0];

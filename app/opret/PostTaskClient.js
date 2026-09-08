@@ -66,6 +66,8 @@ function PostTaskPage() {
     return d.toISOString().slice(0, 10);
   });
   const [area, setArea] = useState("");
+  const [locationType, setLocationType] = useState("remote"); // "remote" | "in_person"
+  const [address, setAddress] = useState("");
   const [posterType, setPosterType] = useState("private");
   const [companyName, setCompanyName] = useState("");
   const [cvrNumber, setCvrNumber] = useState("");
@@ -119,7 +121,9 @@ function PostTaskPage() {
           deadlineDate: isFlexible ? null : deadlineDate,
           description,
           postedBy: name,
-          area,
+          area: locationType === "in_person" ? area : "",
+          locationType,
+          address: locationType === "in_person" ? address : "",
           attachments,
           posterType,
           companyName,
@@ -248,7 +252,7 @@ function PostTaskPage() {
             />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Frist</label>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Frist for udarbejdelse</label>
             <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "date" ? 8 : 0 }}>
               <button
                 type="button"
@@ -295,17 +299,69 @@ function PostTaskPage() {
               />
             )}
             {deadlineType === "flexible" && (
-              <div style={{ fontSize: 11.5, color: "#9AA2B1" }}>Ingen fast deadline - I aftaler tidsplanen indbyrdes.</div>
+              <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 10 }}>Ingen fast deadline - I aftaler tidsplanen indbyrdes.</div>
             )}
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Område (valgfrit)</label>
-            <input
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-              placeholder="f.eks. København eller Kan løses eksternt"
-              style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
-            />
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Område</label>
+            <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+              <button
+                type="button"
+                onClick={() => setLocationType("remote")}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: locationType === "remote" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: locationType === "remote" ? "#EEF2FF" : "#fff",
+                  color: locationType === "remote" ? "#1B3AA6" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Eksternt
+              </button>
+              <button
+                type="button"
+                onClick={() => setLocationType("in_person")}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: locationType === "in_person" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: locationType === "in_person" ? "#EEF2FF" : "#fff",
+                  color: locationType === "in_person" ? "#1B3AA6" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Personligt fremmøde
+              </button>
+            </div>
+            {locationType === "remote" && (
+              <div style={{ fontSize: 11.5, color: "#9AA2B1" }}>Opgaven kan løses uden fysisk fremmøde.</div>
+            )}
+            {locationType === "in_person" && (
+              <>
+                <input
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  placeholder="By/område, f.eks. Aarhus"
+                  style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 8 }}
+                />
+                <input
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Præcis adresse, f.eks. Frodesvej 12, 8000 Aarhus"
+                  style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
+                />
+                <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>
+                  Den præcise adresse vises kun til den hjælper, hvis bud du vælger - ikke offentligt.
+                </div>
+              </>
+            )}
           </div>
           <div style={{ gridColumn: "1 / -1" }}>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Beskrivelse</label>
