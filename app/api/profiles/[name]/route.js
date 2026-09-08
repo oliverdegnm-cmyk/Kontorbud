@@ -15,6 +15,7 @@ export async function GET(request, { params }) {
             skills: p.skills,
             job: p.portfolio,
             education: p.education,
+            certifications: p.certifications,
             avatarUrl: p.avatar_url,
             websiteUrl: p.website_url,
             linkedinUrl: p.linkedin_url,
@@ -32,6 +33,7 @@ export async function GET(request, { params }) {
             skills: "",
             job: "",
             education: "",
+            certifications: "",
             avatarUrl: null,
             websiteUrl: null,
             linkedinUrl: null,
@@ -54,7 +56,7 @@ export async function POST(request, { params }) {
     await ensureSchema();
     const name = decodeURIComponent(params.name);
     const body = await request.json();
-    const { bio, skills, job, education, avatarUrl, websiteUrl, linkedinUrl, videoCallUrl, cvUrl, cvFilename, portfolioUrl, portfolioFilename } = body;
+    const { bio, skills, job, education, certifications, avatarUrl, websiteUrl, linkedinUrl, videoCallUrl, cvUrl, cvFilename, portfolioUrl, portfolioFilename } = body;
 
     if (avatarUrl !== undefined) {
       await pool.query(
@@ -84,10 +86,10 @@ export async function POST(request, { params }) {
     }
 
     await pool.query(
-      `INSERT INTO profiles (name, bio, skills, portfolio, education, website_url, linkedin_url, video_call_url, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())
-       ON CONFLICT (name) DO UPDATE SET bio = $2, skills = $3, portfolio = $4, education = $5, website_url = $6, linkedin_url = $7, video_call_url = $8, updated_at = now()`,
-      [name, bio?.trim() || "", skills?.trim() || "", job?.trim() || "", education?.trim() || "", websiteUrl?.trim() || null, linkedinUrl?.trim() || null, videoCallUrl?.trim() || null]
+      `INSERT INTO profiles (name, bio, skills, portfolio, education, certifications, website_url, linkedin_url, video_call_url, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now())
+       ON CONFLICT (name) DO UPDATE SET bio = $2, skills = $3, portfolio = $4, education = $5, certifications = $6, website_url = $7, linkedin_url = $8, video_call_url = $9, updated_at = now()`,
+      [name, bio?.trim() || "", skills?.trim() || "", job?.trim() || "", education?.trim() || "", certifications?.trim() || "", websiteUrl?.trim() || null, linkedinUrl?.trim() || null, videoCallUrl?.trim() || null]
     );
 
     return NextResponse.json({ ok: true });

@@ -80,6 +80,7 @@ function ProfilePage() {
   const [skills, setSkills] = useState("");
   const [job, setJob] = useState("");
   const [education, setEducation] = useState("");
+  const [certifications, setCertifications] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [videoCallUrl, setVideoCallUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
@@ -108,6 +109,7 @@ function ProfilePage() {
           setSkills(data.profile.skills || "");
           setJob(data.profile.job || "");
           setEducation(data.profile.education || "");
+          setCertifications(data.profile.certifications || "");
           setWebsiteUrl(data.profile.websiteUrl || "");
           setVideoCallUrl(data.profile.videoCallUrl || "");
           setLinkedinUrl(data.profile.linkedinUrl || "");
@@ -128,7 +130,7 @@ function ProfilePage() {
     await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bio, skills, job, education, websiteUrl, linkedinUrl, videoCallUrl }),
+      body: JSON.stringify({ bio, skills, job, education, certifications, websiteUrl, linkedinUrl, videoCallUrl }),
     });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -195,6 +197,7 @@ function ProfilePage() {
       if (e.bio && !bio.trim()) setBio(e.bio);
       if (e.job && !job.trim()) setJob(e.job);
       if (e.education && !education.trim()) setEducation(e.education);
+      if (e.certifications && !certifications.trim()) setCertifications(e.certifications);
       if (e.skills && !skills.trim()) setSkills(e.skills);
       setParseCvDone(true);
     } catch (err) {
@@ -339,7 +342,15 @@ function ProfilePage() {
         <textarea
           value={education}
           onChange={(e) => setEducation(e.target.value)}
-          placeholder="Uddannelser, kurser, certificeringer."
+          placeholder="Uddannelser fra universitet/skole."
+          style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
+        />
+
+        <label style={{ ...labelStyle, marginTop: 16 }}>Kurser / certificeringer</label>
+        <textarea
+          value={certifications}
+          onChange={(e) => setCertifications(e.target.value)}
+          placeholder="f.eks. 2024: Onlinekursus i forhandling, Wharton, University of Pennsylvania"
           style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
         />
 

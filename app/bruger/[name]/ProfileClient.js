@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ShieldCheck, FileText, Linkedin, Globe, Briefcase, GraduationCap, User } from "lucide-react";
+import { ArrowLeft, ShieldCheck, FileText, Linkedin, Globe, Briefcase, GraduationCap, Award, User } from "lucide-react";
 import Stars from "@/components/Stars";
 
 function initials(name) {
@@ -18,12 +18,12 @@ function ExperienceTimeline({ text }) {
   return (
     <div>
       {lines.map((line, i) => {
-        const match = line.match(/^(\d{4}\s*-\s*\d{4}|\d{4}\s*-\s*(nu|i dag))\s*:\s*(.+)/i);
+        const match = line.match(/^(\d{4}(?:\s*-\s*(?:\d{4}|nu|i dag))?)\s*:\s*(.+)/i);
         const isLast = i === lines.length - 1;
 
         if (match) {
           const years = match[1];
-          const rest = match[3];
+          const rest = match[2];
           const dashIndex = rest.indexOf(" - ");
           const titlePart = dashIndex > -1 ? rest.slice(0, dashIndex) : rest;
           const description = dashIndex > -1 ? rest.slice(dashIndex + 3) : null;
@@ -107,7 +107,7 @@ export default function ProfileClient() {
   }, [decoded]);
 
   const levelStyle = level ? LEVEL_STYLES[level.level.key] : null;
-  const hasAboutContent = profile && (profile.bio || profile.skills || profile.job || profile.education);
+  const hasAboutContent = profile && (profile.bio || profile.skills || profile.job || profile.education || profile.certifications);
   const hasLinksOrDocs = profile && (profile.websiteUrl || profile.linkedinUrl || profile.cvUrl || profile.portfolioUrl);
 
   return (
@@ -273,6 +273,12 @@ export default function ProfileClient() {
       {profile?.education && (
         <SectionCard icon={GraduationCap} title="Uddannelse">
           <ExperienceTimeline text={profile.education} />
+        </SectionCard>
+      )}
+
+      {profile?.certifications && (
+        <SectionCard icon={Award} title="Kurser / certificeringer">
+          <ExperienceTimeline text={profile.certifications} />
         </SectionCard>
       )}
 
