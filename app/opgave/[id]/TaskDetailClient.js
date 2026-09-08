@@ -36,16 +36,24 @@ export default function TaskDetailClient() {
 
   function load() {
     const qs = name ? `?viewerName=${encodeURIComponent(name)}` : "";
-    fetch(`/api/tasks/${id}${qs}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) setNotFound(true);
-        else setTask(data.task);
-      })
-      .catch(() => setNotFound(true));
     fetch(`/api/tasks/${id}/reviews`)
       .then((r) => r.json())
       .then((data) => setReviews(data.reviews || []));
+
+    return fetch(`/api/tasks/${id}${qs}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) {
+          setNotFound(true);
+          return null;
+        }
+        setTask(data.task);
+        return data.task;
+      })
+      .catch(() => {
+        setNotFound(true);
+        return null;
+      });
   }
 
   useEffect(() => {
@@ -56,16 +64,27 @@ export default function TaskDetailClient() {
   useEffect(() => {
     const checkout = searchParams.get("checkout");
     if (checkout === "success") {
-      setCheckoutBanner("Betaling gennemført. Vi venter på bekræftelse fra Stripe - opdaterer om lidt…");
+      setCheckoutBanner({ type: "waiting", text: "Betaling gennemført. Vi venter på bekræftelse fra Stripe - opdaterer om lidt…" });
       let attempts = 0;
-      const interval = setInterval(() => {
+      const interval = setInterval(async () => {
         attempts += 1;
-        load();
-        if (attempts >= 6) clearInterval(interval);
+        const updated = await load();
+        if (updated && (updated.status === "matched" || updated.status === "completed")) {
+          setCheckoutBanner({ type: "success", text: "✓ Betalingen er bekræftet, og opgaven er tildelt." });
+          clearInterval(interval);
+          return;
+        }
+        if (attempts >= 6) {
+          setCheckoutBanner({
+            type: "warning",
+            text: "Betalingen er gennemført, men bekræftelsen trækker ud. Prøv at genindlæse siden om et øjeblik - kontakt os, hvis det fortsætter.",
+          });
+          clearInterval(interval);
+        }
       }, 2000);
       return () => clearInterval(interval);
     } else if (checkout === "cancelled") {
-      setCheckoutBanner("Betalingen blev annulleret. Buddet er ikke valgt.");
+      setCheckoutBanner({ type: "warning", text: "Betalingen blev annulleret. Buddet er ikke valgt." });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -237,8 +256,18 @@ export default function TaskDetailClient() {
       )}
 
       {checkoutBanner && (
-        <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#EEF2FF", color: "#1B3AA6" }}>
-          {checkoutBanner}
+        <div
+          style={{
+            marginBottom: 16,
+            padding: "11px 14px",
+            borderRadius: 10,
+            fontSize: 12.5,
+            fontWeight: 700,
+            background: checkoutBanner.type === "success" ? "#E9F9F1" : checkoutBanner.type === "warning" ? "#FFF1E0" : "#EEF2FF",
+            color: checkoutBanner.type === "success" ? "#1AA37A" : checkoutBanner.type === "warning" ? "#B5610E" : "#1B3AA6",
+          }}
+        >
+          {checkoutBanner.text}
         </div>
       )}
 
