@@ -6,7 +6,7 @@ import { upload } from "@vercel/blob/client";
 import { useName } from "@/lib/NameContext";
 import RequireAuth from "@/components/RequireAuth";
 import Stars from "@/components/Stars";
-import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight, Sparkles } from "lucide-react";
+import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight, Sparkles, Award } from "lucide-react";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -346,14 +346,6 @@ function ProfilePage() {
           style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
         />
 
-        <label style={{ ...labelStyle, marginTop: 16 }}>Kurser / certificeringer</label>
-        <textarea
-          value={certifications}
-          onChange={(e) => setCertifications(e.target.value)}
-          placeholder="f.eks. 2024: Onlinekursus i forhandling, Wharton, University of Pennsylvania"
-          style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
-        />
-
         <label style={{ ...labelStyle, marginTop: 16 }}>LinkedIn</label>
         <div style={{ position: "relative", marginBottom: 16 }}>
           <Linkedin size={15} color="#9AA2B1" style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }} />
@@ -387,6 +379,16 @@ function ProfilePage() {
         <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>
           Indsæt dit eget faste møde-link (Zoom, Teams, Google Meet). Vises kun for modparten, når I har en aktiv opgave sammen.
         </div>
+      </SectionCard>
+
+      <SectionCard icon={Award} title="Kurser / certificeringer">
+        <textarea
+          value={certifications}
+          onChange={(e) => setCertifications(e.target.value)}
+          placeholder="f.eks. 2024: Onlinekursus i forhandling, Wharton, University of Pennsylvania"
+          style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
+        />
+        <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 6 }}>Sæt gerne hvert kursus på sin egen linje.</div>
       </SectionCard>
 
       <button
