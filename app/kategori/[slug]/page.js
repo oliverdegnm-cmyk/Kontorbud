@@ -95,7 +95,7 @@ export default async function CategoryPage({ params }) {
           href={`/opgaver?category=${encodeURIComponent(cat.name)}`}
           style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 22px", borderRadius: 999, border: "1.5px solid #E4E8F0", color: "#14213D" }}
         >
-          Se alle med filtre og kort →
+          Se alle opgaver →
         </Link>
       </div>
       <p style={{ fontSize: 12.5, color: "#9AA2B1", marginTop: -20, marginBottom: 32 }}>
