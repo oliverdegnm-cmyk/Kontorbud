@@ -227,31 +227,31 @@ export default function HomePage() {
         <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
       )}
 
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 16 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 40 }}>
-        {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => {
-          return (
-            <Link key={c.slug} href={`/kategori/${c.slug}`} style={{ cursor: "pointer", textAlign: "center", display: "block" }}>
-              <div
-                style={{
-                  width: 62,
-                  height: 62,
-                  borderRadius: "50%",
-                  background: "#F5F7FB",
-                  border: "2px solid transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 10px",
-                  color: "#2A55E5",
-                }}
-              >
-                <CatIcon name={c.icon} size={24} />
-              </div>
-              <div style={{ fontSize: 12.5, fontWeight: 700, lineHeight: 1.3, color: "#14213D" }}>{c.name}</div>
-            </Link>
-          );
-        })}
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 14 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 48 }}>
+        {CATS.filter((c) => c.name !== "Journalføring & arkivering").map((c) => (
+          <Link
+            key={c.slug}
+            href={`/kategori/${c.slug}`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 7,
+              padding: "9px 16px 9px 12px",
+              borderRadius: 999,
+              background: "#F5F7FB",
+              border: "1.5px solid #E4E8F0",
+              color: "#14213D",
+              fontSize: 12.5,
+              fontWeight: 700,
+            }}
+          >
+            <span style={{ display: "flex", color: "#2A55E5" }}>
+              <CatIcon name={c.icon} size={15} />
+            </span>
+            {c.name}
+          </Link>
+        ))}
       </div>
 
       <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
