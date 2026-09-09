@@ -173,19 +173,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "26px 32px", margin: "40px 0", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-        <div style={{ width: 46, height: 46, borderRadius: 12, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
-          <ShieldCheck size={22} color="#2A55E5" />
-        </div>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Betaling håndteres af Stripe</div>
-          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
-            Stripe bruges af millioner af virksomheder verden over og opfylder de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og pengene holdes sikkert, indtil du selv frigiver dem.
-          </p>
-        </div>
-      </div>
-
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." large />
       <div
         style={{
           display: "flex",
@@ -465,6 +453,18 @@ export default function HomePage() {
         </Link>
       </div>
 
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "26px 32px", margin: "20px 0 0", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+        <div style={{ width: 46, height: 46, borderRadius: 12, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+          <ShieldCheck size={22} color="#2A55E5" />
+        </div>
+        <div style={{ flex: 1, minWidth: 240 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Betaling håndteres af Stripe</div>
+          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
+            Stripe bruges af millioner af virksomheder verden over og opfylder de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og pengene holdes sikkert, indtil du selv frigiver dem.
+          </p>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
@@ -479,11 +479,11 @@ function TrustBadge({ icon: Icon, text }) {
   );
 }
 
-function SectionHead({ title, sub }) {
+function SectionHead({ title, sub, large }) {
   return (
     <div style={{ margin: "40px 0 16px" }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>{title}</h2>
-      {sub && <p style={{ fontSize: 13, color: "#5B6478", marginTop: 4 }}>{sub}</p>}
+      <h2 style={{ fontSize: large ? 26 : 20, fontWeight: 800, margin: 0 }}>{title}</h2>
+      {sub && <p style={{ fontSize: large ? 14.5 : 13, color: "#5B6478", marginTop: 6 }}>{sub}</p>}
     </div>
   );
 }
