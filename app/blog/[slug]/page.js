@@ -2,6 +2,7 @@ import Link from "next/link";
 import { POSTS, getPostBySlug } from "@/lib/blogPosts";
 import { categoryBySlug } from "@/lib/categories";
 import { ChevronRight, Calendar } from "lucide-react";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export async function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -63,8 +64,8 @@ export default function BlogPostPage({ params }) {
 
   return (
     <div style={{ marginTop: 24, marginBottom: 60, maxWidth: 680 }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />
 
       <div style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 16 }}>
         <Link href="/">Kontorbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}

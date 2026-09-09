@@ -5,6 +5,7 @@ import { CatIcon } from "@/lib/icons";
 import { formatBudgetDisplay } from "@/lib/fees";
 import { getDeadlineLabel, capitalizeFirst } from "@/lib/status";
 import { ChevronRight } from "lucide-react";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export async function generateStaticParams() {
   return CATS.map((c) => ({ slug: c.slug }));
@@ -54,7 +55,7 @@ export default async function CategoryPage({ params }) {
 
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />
 
       <div style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 16 }}>
         <Link href="/">Kontorbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}

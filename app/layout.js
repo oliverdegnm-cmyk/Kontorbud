@@ -3,6 +3,7 @@ import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
 import CookieBanner from "@/components/CookieBanner";
 import { Analytics } from "@vercel/analytics/react";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export const metadata = {
   metadataBase: new URL("https://kontorbud.dk"),
@@ -57,7 +58,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="da">
       <body>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }} />
         <NameProvider>
           <TopBar />
           <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>

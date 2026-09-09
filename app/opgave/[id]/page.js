@@ -1,5 +1,6 @@
 import { pool } from "@/lib/db";
 import TaskDetailClient from "./TaskDetailClient";
+import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export async function generateMetadata({ params }) {
   try {
@@ -40,7 +41,7 @@ export default async function Page({ params }) {
 
   return (
     <>
-      {breadcrumb && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />}
+      {breadcrumb && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />}
       <TaskDetailClient />
     </>
   );
