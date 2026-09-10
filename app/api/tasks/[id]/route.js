@@ -73,7 +73,7 @@ export async function PATCH(request, { params }) {
     await ensureSchema();
     const id = Number(params.id);
     const body = await request.json();
-    const { requesterName, title, category, budget, deadline, description, area, newAttachments, posterType, companyName } = body;
+    const { requesterName, title, category, budget, deadline, deadlineDate, description, area, locationType, address, newAttachments, posterType, companyName } = body;
 
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
@@ -91,25 +91,30 @@ export async function PATCH(request, { params }) {
       return NextResponse.json({ error: "Titel og beskrivelse er påkrævet." }, { status: 400 });
     }
 
+    const isInPerson = locationType === "in_person";
     let coords = { lat: task.lat, lng: task.lng };
-    if ((area?.trim() || null) !== task.area) {
+    if (isInPerson && (area?.trim() || null) !== task.area) {
       coords = (await geocodeArea(area)) || { lat: null, lng: null };
     }
+    if (!isInPerson) coords = { lat: null, lng: null };
 
     const { rows } = await pool.query(
-      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, description = $5, area = $6, lat = $7, lng = $8, poster_type = $9, company_name = $10
-       WHERE id = $11 RETURNING *`,
+      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, deadline_date = $5, description = $6, area = $7, lat = $8, lng = $9, poster_type = $10, company_name = $11, location_type = $12, address = $13
+       WHERE id = $14 RETURNING *`,
       [
         title.trim(),
         category || task.category,
         budget?.trim() || "Ikke angivet",
-        deadline?.trim() || "Ikke angivet",
+        deadlineDate ? null : deadline?.trim() || "Fleksibel",
+        deadlineDate || null,
         description.trim(),
-        area?.trim() || null,
+        isInPerson ? area?.trim() || null : null,
         coords.lat,
         coords.lng,
         posterType === "business" ? "business" : "private",
         posterType === "business" ? companyName?.trim() || null : null,
+        isInPerson ? "in_person" : "remote",
+        isInPerson ? address?.trim() || null : null,
         id,
       ]
     );
