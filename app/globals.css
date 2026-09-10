@@ -46,6 +46,10 @@ textarea {
   .kb-grid-steps4 {
     grid-template-columns: repeat(3, 1fr) !important;
   }
+  .kb-cat-chips {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
   .kb-hide-mobile {
     display: none !important;
   }

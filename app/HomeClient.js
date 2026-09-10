@@ -233,7 +233,7 @@ export default function HomePage() {
       )}
 
       <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 14 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8, marginBottom: 12 }}>
+      <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8, marginBottom: 12 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : 8)
           .map((c) => (
@@ -499,10 +499,7 @@ export default function HomePage() {
       </div>
 
       <div style={{ textAlign: "center", margin: "56px 0 32px", padding: "0 20px" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 10 }}>Klar til at starte?</h2>
-        <p style={{ fontSize: 14, color: "#5B6478", maxWidth: 440, margin: "0 auto 22px", lineHeight: 1.6 }}>
-          Det er gratis at oprette en opgave, og du forpligter dig først, når du accepterer et bud.
-        </p>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 22 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
           <Link
             href="/opret"
