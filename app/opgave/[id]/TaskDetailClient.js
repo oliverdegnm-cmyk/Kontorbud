@@ -346,11 +346,33 @@ export default function TaskDetailClient() {
                 color: "#14213D",
                 marginTop: 10,
                 marginBottom: 6,
+                marginRight: 8,
               }}
             >
               📹 Book videoopkald med {isOwner ? acceptedBid.bidderName : task.postedBy}
             </a>
           )}
+          <a
+            href="https://meet.google.com/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 13,
+              fontWeight: 700,
+              padding: "10px 18px",
+              borderRadius: 10,
+              border: "1.5px solid #E4E8F0",
+              color: "#14213D",
+              marginTop: 10,
+              marginBottom: 6,
+            }}
+            title="Åbner et nyt, gratis Google Meet-møde med det samme - del bare linket fra din browser med den anden part."
+          >
+            🎥 Start et videoopkald nu (Google Meet)
+          </a>
           <MessageThread taskId={task.id} bidderName={acceptedBid.bidderName} currentName={name} />
 
           {canReview && <ReviewForm taskId={task.id} currentName={name} onSubmitted={load} />}
@@ -621,6 +643,15 @@ export default function TaskDetailClient() {
             </>
           )}
         </div>
+      </div>
+
+      <div style={{ marginTop: 32, textAlign: "center" }}>
+        <Link
+          href={`/kontakt?type=report&message=${encodeURIComponent(`Vedr. opgave "${task.title}" (sag ${task.caseNo || task.id}): `)}`}
+          style={{ fontSize: 12.5, color: "#9AA2B1", textDecoration: "underline" }}
+        >
+          Føler du dig snydt, eller virker noget mistænkeligt? Kontakt kundeservice
+        </Link>
       </div>
     </div>
   );

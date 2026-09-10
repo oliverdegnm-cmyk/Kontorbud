@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
-import { Mail, CheckCircle2 } from "lucide-react";
+import { Mail, CheckCircle2, ShieldAlert } from "lucide-react";
 
 export default function ContactClient() {
   const { name, email: accountEmail } = useName();
+  const searchParams = useSearchParams();
+  const isReport = searchParams.get("type") === "report";
   const [contactName, setContactName] = useState(name || "");
   const [contactEmail, setContactEmail] = useState(accountEmail || "");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(searchParams.get("message") || "");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -37,9 +40,14 @@ export default function ContactClient() {
   return (
     <div style={{ marginTop: 24, maxWidth: 560, marginBottom: 60 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-        <Mail size={20} color="#2A55E5" />
-        <h2 style={{ fontSize: 24, fontWeight: 800 }}>Kontakt kundeservice</h2>
+        {isReport ? <ShieldAlert size={20} color="#C0392B" /> : <Mail size={20} color="#2A55E5" />}
+        <h2 style={{ fontSize: 24, fontWeight: 800 }}>{isReport ? "Rapportér mistænkelig aktivitet" : "Kontakt kundeservice"}</h2>
       </div>
+      {isReport && (
+        <div style={{ background: "#FDECEC", border: "1.5px solid #F5C6C6", borderRadius: 12, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#8A2E2E", lineHeight: 1.55 }}>
+          Føler du dig snydt, eller virker noget mistænkeligt ved en opgave eller en bruger? Beskriv det herunder - vi tager alle henvendelser om mistanke om svindel alvorligt og kigger på dem hurtigst muligt.
+        </div>
+      )}
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 6 }}>
         Har du et spørgsmål, et problem med en opgave, eller brug for hjælp til noget andet? Skriv til os herunder.
       </p>
