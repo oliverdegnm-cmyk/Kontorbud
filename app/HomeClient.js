@@ -233,7 +233,7 @@ export default function HomePage() {
       )}
 
       <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 14 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8, marginBottom: 12 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : 8)
           .map((c) => (
@@ -241,22 +241,23 @@ export default function HomePage() {
               key={c.slug}
               href={`/kategori/${c.slug}`}
               style={{
-                display: "inline-flex",
+                display: "flex",
                 alignItems: "center",
-                gap: 7,
-                padding: "9px 16px 9px 12px",
-                borderRadius: 999,
+                gap: 10,
+                padding: "10px 16px 10px 12px",
+                borderRadius: 16,
                 background: "#F5F7FB",
                 border: "1.5px solid #E4E8F0",
                 color: "#14213D",
-                fontSize: 12.5,
-                fontWeight: 700,
               }}
             >
-              <span style={{ display: "flex", color: "#2A55E5" }}>
-                <CatIcon name={c.icon} size={15} />
+              <span style={{ display: "flex", color: "#2A55E5", flex: "0 0 auto" }}>
+                <CatIcon name={c.icon} size={16} />
               </span>
-              {c.name}
+              <span>
+                <span style={{ display: "block", fontSize: 12.5, fontWeight: 700, lineHeight: 1.3 }}>{c.name}</span>
+                {c.tagline && <span style={{ display: "block", fontSize: 11, color: "#9AA2B1", lineHeight: 1.3, marginTop: 1 }}>{c.tagline}</span>}
+              </span>
             </Link>
           ))}
         {!showAllCategories && CATS.length - 1 > 8 && (
@@ -265,6 +266,7 @@ export default function HomePage() {
             style={{
               display: "inline-flex",
               alignItems: "center",
+              alignSelf: "center",
               gap: 5,
               padding: "9px 16px",
               borderRadius: 999,
@@ -285,6 +287,7 @@ export default function HomePage() {
             style={{
               display: "inline-flex",
               alignItems: "center",
+              alignSelf: "center",
               gap: 5,
               padding: "9px 16px",
               borderRadius: 999,
@@ -444,6 +447,60 @@ export default function HomePage() {
         </>
       )}
 
+      <SectionHead title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." />
+      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 12 }}>
+        {[
+          { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
+          { num: "02", title: "Modtag bud", text: "Dygtige hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser." },
+          { num: "03", title: "Betal når du er tilfreds", text: "Beløbet holdes sikkert og frigives først, når opgaven er løst som aftalt." },
+        ].map((step) => (
+          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#DCE4FB", marginBottom: 8 }}>{step.num}</div>
+            <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 6 }}>{step.title}</div>
+            <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>{step.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "28px 32px", marginTop: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+          <ShieldCheck size={18} color="#2A55E5" />
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
+        </div>
+        <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 22, maxWidth: 600 }}>
+          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+        </p>
+        <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+          {[
+            "Beløbet reserveres, når du accepterer et bud",
+            "Hjælperen går i gang med opgaven",
+            "Du godkender - og pengene udbetales",
+          ].map((text, i) => (
+            <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+              <div
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  background: "#2A55E5",
+                  color: "#fff",
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: "0 0 auto",
+                }}
+              >
+                {i + 1}
+              </div>
+              <div style={{ fontSize: 13.5, color: "#14213D", fontWeight: 600, lineHeight: 1.4 }}>{text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div
         style={{
           display: "flex",
@@ -467,18 +524,6 @@ export default function HomePage() {
         >
           Sådan fungerer det →
         </Link>
-      </div>
-
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "26px 32px", margin: "20px 0 0", display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
-        <div style={{ width: 46, height: 46, borderRadius: 12, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
-          <ShieldCheck size={22} color="#2A55E5" />
-        </div>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Betaling håndteres af Stripe</div>
-          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
-            Stripe bruges af millioner af virksomheder verden over og opfylder de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og pengene holdes sikkert, indtil du selv frigiver dem.
-          </p>
-        </div>
       </div>
 
       <Footer />
