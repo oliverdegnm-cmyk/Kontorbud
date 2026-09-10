@@ -189,6 +189,47 @@ export default function HomePage() {
         </div>
       </div>
 
+      <div style={{ margin: "28px 20px 0" }}>
+        <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 10 }}>Sådan kan en opgave se ud</div>
+        <div style={{ position: "relative", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: "20px 22px" }}>
+          <span
+            style={{
+              position: "absolute",
+              top: 16,
+              right: 16,
+              fontSize: 10.5,
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              padding: "4px 10px",
+              borderRadius: 999,
+              background: "#FFF6E0",
+              color: "#9A6B00",
+            }}
+          >
+            Eksempel
+          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <Badge tone="open">Åben</Badge>
+            <span style={{ fontSize: 12, color: "#5B6478" }}>Bogføring & regnskab</span>
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6, maxWidth: 420 }}>Bogføring af 3 måneders bilag</div>
+          <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.55, marginBottom: 14, maxWidth: 460 }}>
+            Ca. 180 bilag i e-conomic. Skal afstemmes og klargøres til momsindberetning.
+          </p>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Budget</div>
+              <div style={{ fontSize: 14, fontWeight: 800 }}>4.500 kr.</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Bud modtaget</div>
+              <div style={{ fontSize: 14, fontWeight: 800 }}>3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." large />
       <div
         style={{
@@ -524,6 +565,27 @@ export default function HomePage() {
         >
           Sådan fungerer det →
         </Link>
+      </div>
+
+      <div style={{ textAlign: "center", margin: "56px 0 32px", padding: "0 20px" }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 10 }}>Klar til at få opgaven fra hånden?</h2>
+        <p style={{ fontSize: 14, color: "#5B6478", maxWidth: 440, margin: "0 auto 22px", lineHeight: 1.6 }}>
+          Det er gratis at oprette en opgave, og du forpligter dig først, når du accepterer et bud.
+        </p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link
+            href="/opret"
+            style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
+          >
+            Opret opgave gratis
+          </Link>
+          <Link
+            href="/hvordan-det-virker"
+            style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, border: "1.5px solid #E4E8F0", color: "#14213D" }}
+          >
+            Sådan fungerer det
+          </Link>
+        </div>
       </div>
 
       <Footer />
