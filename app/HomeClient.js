@@ -473,31 +473,6 @@ export default function HomePage() {
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: "#F5F7FB",
-          borderRadius: 18,
-          padding: "20px 26px",
-          margin: "40px 0 0",
-          flexWrap: "wrap",
-          gap: 12,
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 4 }}>Ny på Kontorbud?</div>
-          <div style={{ fontSize: 13, color: "#5B6478" }}>Se hvordan bud, betaling og udbetaling fungerer, trin for trin.</div>
-        </div>
-        <Link
-          href="/hvordan-det-virker"
-          style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 20px", borderRadius: 10, background: "#fff", border: "1.5px solid #E4E8F0", color: "#14213D", whiteSpace: "nowrap" }}
-        >
-          Sådan fungerer det →
-        </Link>
-      </div>
-
       <div style={{ textAlign: "center", margin: "56px 0 32px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 22 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
