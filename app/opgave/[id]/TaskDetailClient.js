@@ -136,6 +136,7 @@ export default function TaskDetailClient() {
   }
 
   const [checkingOut, setCheckingOut] = useState(null);
+  const [completing, setCompleting] = useState(false);
 
   async function acceptBid(bidId) {
     setActionError("");
@@ -160,15 +161,24 @@ export default function TaskDetailClient() {
   }
 
   async function completeTask() {
+    if (completing) return; // undgår dobbeltklik, der ville sende to samtidige kald
     setActionError("");
-    const res = await fetch(`/api/tasks/${id}/complete`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ requesterName: name }),
-    });
-    const data = await res.json();
-    if (data.error) return setActionError(data.error);
-    load();
+    setCompleting(true);
+    try {
+      const res = await fetch(`/api/tasks/${id}/complete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requesterName: name }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setActionError(data.error);
+        return;
+      }
+      load();
+    } finally {
+      setCompleting(false);
+    }
   }
 
   async function cancelTask() {
@@ -287,13 +297,15 @@ export default function TaskDetailClient() {
               <div style={{ display: "flex", gap: 8 }}>
                 <button
                   onClick={completeTask}
-                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "none", background: "#1AA37A", color: "#fff", cursor: "pointer" }}
+                  disabled={completing}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "none", background: "#1AA37A", color: "#fff", cursor: completing ? "default" : "pointer", opacity: completing ? 0.7 : 1 }}
                 >
-                  Marker som udført
+                  {completing ? "Markerer..." : "Marker som udført"}
                 </button>
                 <button
                   onClick={cancelTask}
-                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: "pointer" }}
+                  disabled={completing}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", cursor: completing ? "default" : "pointer", opacity: completing ? 0.7 : 1 }}
                 >
                   Annullér
                 </button>

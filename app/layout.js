@@ -17,6 +17,13 @@ export const metadata = {
     locale: "da_DK",
     type: "website",
   },
+  // Kortet ("summary_large_image") vises kun rigtigt, hvis Twitter/X finder et
+  // billede - det leverer app/opengraph-image.js automatisk til både Open
+  // Graph og Twitter, så alle sider får et delt preview-billede uden at vi
+  // selv skal sætte "images" her.
+  twitter: {
+    card: "summary_large_image",
+  },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
