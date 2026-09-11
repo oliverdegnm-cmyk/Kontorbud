@@ -117,12 +117,13 @@ export default function HomePage() {
             ))}
         </div>
         <div
+          className="kb-hero-card"
           style={{
             position: "relative",
             background: "#fff",
             borderRadius: 24,
-            padding: "32px 36px",
-            margin: "-64px 20px 0",
+            padding: "40px 40px",
+            margin: "-64px 0 0",
             boxShadow: "0 24px 48px -24px rgba(20,33,61,.25)",
           }}
         >
@@ -140,10 +141,10 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
-          <h1 className="kb-hero-title" style={{ fontSize: 36, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
+          <h1 className="kb-hero-title" style={{ fontSize: 42, lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.02em", maxWidth: 520, margin: 0 }}>
             Få bud på dine kontoropgaver
           </h1>
-          <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 26px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -507,9 +508,11 @@ function TrustBadge({ icon: Icon, text }) {
 
 function SectionHead({ title, sub, large }) {
   return (
-    <div style={{ margin: "64px 0 22px" }}>
-      <h2 style={{ fontSize: large ? 30 : 23, fontWeight: 800, margin: 0 }}>{title}</h2>
-      {sub && <p style={{ fontSize: large ? 15 : 13.5, color: "#5B6478", marginTop: 8 }}>{sub}</p>}
+    <div style={{ margin: "72px 0 24px" }}>
+      <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 34 : 25, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
+        {title}
+      </h2>
+      {sub && <p style={{ fontSize: large ? 15.5 : 14, color: "#5B6478", marginTop: 8 }}>{sub}</p>}
     </div>
   );
 }
