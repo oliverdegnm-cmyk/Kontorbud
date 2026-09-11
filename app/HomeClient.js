@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock, Wrench, Wallet } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -90,9 +90,55 @@ export default function HomePage() {
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
             Få bud på dine kontoropgaver
           </h1>
-          <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 26px", maxWidth: 460, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
           </p>
+          <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
+            <Link
+              href="/opret"
+              style={{
+                flex: "1 1 220px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                textDecoration: "none",
+                background: "#F5F7FB",
+                border: "1.5px solid #E4E8F0",
+                borderRadius: 14,
+                padding: "14px 16px",
+              }}
+            >
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+                <Wrench size={18} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, color: "#14213D" }}>Få en opgave løst</div>
+                <div style={{ fontSize: 12, color: "#5B6478" }}>Bogføring, kundeservice, oversættelse og mere</div>
+              </div>
+            </Link>
+            <Link
+              href="/opgaver"
+              style={{
+                flex: "1 1 220px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                textDecoration: "none",
+                background: "#F5F7FB",
+                border: "1.5px solid #E4E8F0",
+                borderRadius: 14,
+                padding: "14px 16px",
+              }}
+            >
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+                <Wallet size={18} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 800, color: "#14213D" }}>Byd og tjen penge</div>
+                <div style={{ fontSize: 12, color: "#5B6478" }}>Se åbne opgaver og send dit bud</div>
+              </div>
+            </Link>
+          </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
               href="/opret"
