@@ -75,8 +75,15 @@ textarea {
   .kb-section-title-large {
     font-size: 26px !important;
   }
+  .kb-section-title {
+    font-size: 24px !important;
+  }
+  .kb-section-headwrap {
+    margin: 56px 0 20px !important;
+  }
   .kb-section-band {
-    padding: 30px 22px !important;
+    padding: 26px 20px !important;
+    border-radius: 20px !important;
   }
 }
 
@@ -127,6 +134,8 @@ textarea {
 @container (max-width: 640px) {
   .kb-task-row {
     grid-template-columns: 42px 1fr !important;
+    padding: 18px 16px !important;
+    gap: 12px !important;
   }
   .kb-task-secondary {
     grid-column: 1 / -1 !important;

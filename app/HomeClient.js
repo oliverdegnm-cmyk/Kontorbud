@@ -225,13 +225,13 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
+      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." tint="#EEF2FF">
       <div
         style={{
           display: "flex",
           gap: 10,
           marginBottom: 36,
-          background: "#F5F7FB",
+          background: "#fff",
           border: "1.5px solid #E4E8F0",
           borderRadius: 16,
           padding: 16,
@@ -282,7 +282,7 @@ export default function HomePage() {
                 gap: 10,
                 padding: "13px 20px 13px 15px",
                 borderRadius: 16,
-                background: "#F5F7FB",
+                background: "#fff",
                 border: "1.5px solid #E4E8F0",
                 color: "#14213D",
               }}
@@ -306,8 +306,8 @@ export default function HomePage() {
               gap: 5,
               padding: "9px 16px",
               borderRadius: 999,
-              background: "#EEF2FF",
-              border: "1.5px solid #DCE4FB",
+              background: "#fff",
+              border: "1.5px solid #C7D3FA",
               color: "#1B3AA6",
               fontSize: 12.5,
               fontWeight: 700,
@@ -339,7 +339,7 @@ export default function HomePage() {
           </button>
         )}
       </div>
-      <div style={{ marginBottom: 84 }} />
+      </SectionBand>
 
       <SectionBand title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu.">
       {openTasks.length === 0 ? (
@@ -548,8 +548,8 @@ function TrustBadge({ icon: Icon, text }) {
 
 function SectionHead({ title, sub, large, mt }) {
   return (
-    <div style={{ margin: `${mt ?? 96}px 0 32px` }}>
-      <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 38 : 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
+    <div className="kb-section-headwrap" style={{ margin: `${mt ?? 96}px 0 32px` }}>
+      <h2 className={large ? "kb-section-title-large" : "kb-section-title"} style={{ fontSize: large ? 38 : 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
         {title}
       </h2>
       {sub && <p style={{ fontSize: large ? 17 : 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
@@ -565,8 +565,8 @@ function SectionHead({ title, sub, large, mt }) {
 function SectionBand({ title, sub, children, tint }) {
   return (
     <>
-      <div style={{ margin: "96px 0 32px" }}>
-        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
+      <div className="kb-section-headwrap" style={{ margin: "96px 0 32px" }}>
+        <h2 className="kb-section-title" style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
         {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
       </div>
       <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }}>
