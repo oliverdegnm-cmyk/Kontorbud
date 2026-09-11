@@ -33,6 +33,12 @@ textarea {
 /* Disse klasser bruges sammen med inline grid-template-columns på desktop;
    på mindre skærme vinder disse regler (fordi !important i et stylesheet slår
    inline-styling uden !important), så sektionerne falder ned i én kolonne. */
+@media (min-width: 761px) {
+  .kb-hero-title {
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 760px) {
   .kb-grid-hero,
   .kb-grid-detail,

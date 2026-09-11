@@ -141,7 +141,7 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
-          <h1 className="kb-hero-title" style={{ fontSize: 42, lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.02em", maxWidth: 520, margin: 0 }}>
+          <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
             Få bud på dine kontoropgaver
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 26px", maxWidth: 460, lineHeight: 1.6 }}>
@@ -190,7 +190,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." large />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
       <div
         style={{
           display: "flex",
