@@ -141,23 +141,34 @@ textarea {
 }
 @container (max-width: 640px) {
   .kb-task-row {
-    grid-template-columns: 42px 1fr !important;
-    padding: 18px 16px !important;
+    grid-template-columns: 34px 1fr !important;
+    padding: 16px 14px !important;
     gap: 12px !important;
+  }
+  .kb-task-icon {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .kb-task-title {
+    font-size: 13px !important;
+  }
+  .kb-task-desc {
+    display: none !important;
   }
   .kb-task-secondary {
     grid-column: 1 / -1 !important;
     justify-content: space-between !important;
+    gap: 10px !important;
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid #f0f1f5;
   }
-  .kb-task-secondary > div:first-child {
+  .kb-task-name {
     text-align: left !important;
-    width: auto !important;
+    width: 108px !important;
   }
   .kb-task-secondary a {
-    max-width: none !important;
+    max-width: 108px !important;
   }
 }
 

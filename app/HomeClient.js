@@ -37,6 +37,18 @@ export default function HomePage() {
   const [showAllCategories, setShowAllCategories] = useState(false);
   const matchedCategory = matchCategoryFromText(quickDescription);
 
+  // Viser færre kategori-chips på mobil, så "Hvad skal du have løst?"
+  // ikke bliver en lang, rodet søjle af kategorier på en smal skærm.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  const visibleCatCount = isMobile ? 4 : 8;
+
   async function goToCreateTask() {
     const title = quickDescription.trim();
     const titleParam = title ? `title=${encodeURIComponent(title)}` : "";
@@ -270,7 +282,7 @@ export default function HomePage() {
       <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
       <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10, marginBottom: 20 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
-          .slice(0, showAllCategories ? undefined : 8)
+          .slice(0, showAllCategories ? undefined : visibleCatCount)
           .map((c) => (
             <Link
               key={c.slug}
@@ -295,7 +307,7 @@ export default function HomePage() {
               </span>
             </Link>
           ))}
-        {!showAllCategories && CATS.length - 1 > 8 && (
+        {!showAllCategories && CATS.length - 1 > visibleCatCount && (
           <button
             onClick={() => setShowAllCategories(true)}
             style={{
@@ -313,7 +325,7 @@ export default function HomePage() {
               cursor: "pointer",
             }}
           >
-            +{CATS.length - 1 - 8} flere
+            +{CATS.length - 1 - visibleCatCount} flere
           </button>
         )}
         {showAllCategories && (
@@ -366,6 +378,7 @@ export default function HomePage() {
                 }}
               >
                 <div
+                  className="kb-task-icon"
                   style={{
                     width: 38,
                     height: 38,
@@ -381,7 +394,7 @@ export default function HomePage() {
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{capitalizeFirst(t.title)}</div>
+                  <div className="kb-task-title" style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{capitalizeFirst(t.title)}</div>
                   <div style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
@@ -390,13 +403,13 @@ export default function HomePage() {
                     </span>
                   </div>
                   {t.description && (
-                    <div style={{ fontSize: 12, color: "#9AA2B1", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <div className="kb-task-desc" style={{ fontSize: 12, color: "#9AA2B1", marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {truncateText(t.description, 80)}
                     </div>
                   )}
                 </div>
                 <div className="kb-task-secondary" style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
-                  <div style={{ textAlign: "left", width: 120 }}>
+                  <div className="kb-task-name" style={{ textAlign: "left", width: 120, flex: "0 0 auto" }}>
                     <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Oprettet af</div>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 5 }}>
                       <Link
@@ -417,7 +430,7 @@ export default function HomePage() {
                       )}
                     </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto", flexShrink: 0 }}>
                     <div style={{ width: 62, textAlign: "center" }}>
                       <Badge tone={status.tone}>{status.label}</Badge>
                     </div>
