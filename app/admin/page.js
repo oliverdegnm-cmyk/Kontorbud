@@ -153,6 +153,12 @@ export default function AdminPage() {
         >
           Kontakt
         </button>
+        <button
+          onClick={() => setTab("images")}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#2A55E5" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
+        >
+          Billeder
+        </button>
       </div>
 
       {error && <div style={{ marginBottom: 16, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" }}>{error}</div>}
@@ -250,6 +256,176 @@ export default function AdminPage() {
       )}
 
       {tab === "contact" && <ContactSettings />}
+      {tab === "images" && <ImagesTab />}
+    </div>
+  );
+}
+
+function ImagesTab() {
+  return (
+    <div>
+      <HeroImagesSetting />
+    </div>
+  );
+}
+
+function HeroImagesSetting() {
+  const [images, setImages] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [adjustSaved, setAdjustSaved] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        try {
+          const parsed = JSON.parse(data.settings?.hero_images || "[]");
+          if (Array.isArray(parsed)) setImages(parsed);
+        } catch (err) {
+          // behold tom liste, hvis noget ikke kan tolkes
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  async function persist(next) {
+    setImages(next);
+    await fetch("/api/admin/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "hero_images", value: JSON.stringify(next) }),
+    });
+  }
+
+  async function handleUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setError("");
+    try {
+      const blob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ purpose: "image" }),
+      });
+      const next = [...images, { url: blob.url, position: 50, zoom: 100 }];
+      await persist(next);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      setError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
+    }
+    setUploading(false);
+    e.target.value = "";
+  }
+
+  function updateField(idx, field, value) {
+    setImages((prev) => prev.map((img, i) => (i === idx ? { ...img, [field]: value } : img)));
+  }
+
+  async function saveAdjustment(idx) {
+    await persist(images);
+    setAdjustSaved(idx);
+    setTimeout(() => setAdjustSaved(null), 2000);
+  }
+
+  async function removeImage(idx) {
+    const next = images.filter((_, i) => i !== idx);
+    await persist(next);
+  }
+
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 16 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Billede i forsidens rubrik</div>
+      <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 14 }}>
+        Vises i højre side af forsidens rubrik (skjules på mobil). Tilføj flere billeder, så skifter de automatisk hvert 6. sekund.
+      </div>
+
+      {!loaded && <p style={{ color: "#5B6478", fontSize: 13.5 }}>Henter…</p>}
+      {loaded && images.length === 0 && (
+        <p style={{ color: "#5B6478", fontSize: 13, marginBottom: 14 }}>Der er intet billede sat op endnu - upload ét herunder.</p>
+      )}
+
+      {loaded && images.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 14 }}>
+          {images.map((img, idx) => (
+            <div key={img.url + idx} style={{ border: "1px solid #E4E8F0", borderRadius: 12, padding: 14 }}>
+              <div style={{ width: "100%", maxWidth: 320, height: 140, borderRadius: 12, border: "1px solid #E4E8F0", overflow: "hidden", marginBottom: 12 }}>
+                <img
+                  src={img.url}
+                  alt={`Billede ${idx + 1}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: `center ${img.position}%`,
+                    transform: `scale(${img.zoom / 100})`,
+                    transformOrigin: "center",
+                    display: "block",
+                  }}
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 380, marginBottom: 12 }}>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+                    <span>Lodret position</span>
+                    <span>{img.position}%</span>
+                  </div>
+                  <input type="range" min="0" max="100" value={img.position} onChange={(e) => updateField(idx, "position", Number(e.target.value))} style={{ width: "100%" }} />
+                </div>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+                    <span>Zoom</span>
+                    <span>{img.zoom}%</span>
+                  </div>
+                  <input type="range" min="100" max="200" value={img.zoom} onChange={(e) => updateField(idx, "zoom", Number(e.target.value))} style={{ width: "100%" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <button
+                  onClick={() => saveAdjustment(idx)}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 16px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#14213D", cursor: "pointer" }}
+                >
+                  Gem justering
+                </button>
+                <button
+                  onClick={() => removeImage(idx)}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 16px", borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", cursor: "pointer" }}
+                >
+                  Fjern
+                </button>
+                {adjustSaved === idx && <span style={{ fontSize: 12, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <label
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 13,
+          fontWeight: 700,
+          padding: "10px 18px",
+          borderRadius: 10,
+          border: "1.5px solid #E4E8F0",
+          color: "#14213D",
+          cursor: uploading ? "default" : "pointer",
+          opacity: uploading ? 0.6 : 1,
+        }}
+      >
+        <Upload size={14} />
+        {uploading ? "Uploader…" : "Upload nyt billede"}
+        <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ display: "none" }} />
+      </label>
+      {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
+      {error && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
     </div>
   );
 }

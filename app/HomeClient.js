@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock, Wrench, Wallet } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
@@ -49,6 +50,36 @@ export default function HomePage() {
     setMatchingWithAi(false);
   }
   const [tasks, setTasks] = useState(null);
+  const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&auto=format&fit=crop&q=70";
+  const [heroImages, setHeroImages] = useState([{ url: DEFAULT_HERO_IMAGE, position: 50, zoom: 100 }]);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroLoaded, setHeroLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        try {
+          const parsed = JSON.parse(data.settings?.hero_images || "[]");
+          if (Array.isArray(parsed) && parsed.length > 0) setHeroImages(parsed);
+        } catch (err) {
+          // behold standardbilledet, hvis noget ikke kan tolkes
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        setHeroLoaded(true);
+      });
+  }, []);
+
+  // Skifter automatisk til næste billede hvert 6. sekund, hvis der er mere end ét.
+  useEffect(() => {
+    if (heroImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setHeroIndex((i) => (i + 1) % heroImages.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
 
   useEffect(() => {
     fetch("/api/tasks")
@@ -63,7 +94,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <div style={{ marginTop: 6 }}>
+      <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 24, alignItems: "stretch", marginTop: 6 }}>
         <div
           className="kb-hero-card"
           style={{
@@ -179,6 +210,30 @@ export default function HomePage() {
             <ShieldCheck size={15} />
             {activeTasks.length} opgaver oprettet af rigtige brugere.
           </div>
+        </div>
+        <div
+          className="kb-hide-mobile"
+          style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 380 }}
+        >
+          {heroLoaded &&
+            heroImages.map((img, i) => (
+              <Image
+                key={img.url + i}
+                src={img.url}
+                alt="Kontorbud - få bud på dine kontoropgaver"
+                fill
+                priority={i === 0}
+                sizes="(max-width: 760px) 100vw, 480px"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: `center ${img.position}%`,
+                  transform: `scale(${img.zoom / 100})`,
+                  transformOrigin: "center",
+                  opacity: i === heroIndex ? 1 : 0,
+                  transition: "opacity 1.2s ease",
+                }}
+              />
+            ))}
         </div>
       </div>
 
