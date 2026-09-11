@@ -126,7 +126,7 @@ export default function HomePage() {
           style={{
             background: "#fff",
             borderRadius: 24,
-            padding: "48px 48px 48px 0",
+            padding: "8px 48px 48px 0",
           }}
         >
           <div
@@ -224,7 +224,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." tint="#14213D">
+      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#2A55E5" titleColor="#2A55E5">
       <div
         style={{
           display: "flex",
@@ -267,7 +267,7 @@ export default function HomePage() {
         <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
       )}
 
-      <div style={{ fontSize: 12.5, color: "#B7C0DA", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
       <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10, marginBottom: 20 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : 8)
@@ -561,14 +561,21 @@ function SectionHead({ title, sub, large, mt }) {
 // på Handyhands forside. Overskriften selv sidder UDENFOR feltet, i nøjagtig
 // samme stil og med samme venstre-kant som alle andre overskrifter på siden,
 // så ingen overskrifter "springer" i, hvor langt til venstre de starter.
-function SectionBand({ title, sub, children, tint }) {
+function SectionBand({ title, sub, children, tint, border, titleColor }) {
   return (
     <>
       <div className="kb-section-headwrap" style={{ margin: "96px 0 32px" }}>
-        <h2 className="kb-section-title" style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
+        <h2 className="kb-section-title" style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0, color: titleColor || "inherit" }}>{title}</h2>
         {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
       </div>
-      <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }}>
+      <div
+        className="kb-section-band"
+        style={
+          border
+            ? { background: "#fff", border: `2px solid ${border}`, borderRadius: 28, padding: "40px 40px" }
+            : { background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }
+        }
+      >
         {children}
       </div>
     </>
