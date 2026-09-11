@@ -14,6 +14,22 @@ import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
 
+// Ord der skiftevis vises i forsidens rubrik ("Få bud på dine ___").
+// "kontoropgaver" er sat ind som hvert femte ord, så platformens eget navn
+// jævnligt vender tilbage og fremhæves med et lille "pop".
+const HERO_ROTATING_WORDS = [
+  "AI-opgaver",
+  "IT-opgaver",
+  "regnskabsopgaver",
+  "kundeserviceopgaver",
+  "kontoropgaver",
+  "oversættelsesopgaver",
+  "HR-opgaver",
+  "marketingopgaver",
+  "designopgaver",
+  "kontoropgaver",
+];
+
 export default function HomePage() {
   const router = useRouter();
   const [quickDescription, setQuickDescription] = useState("");
@@ -88,6 +104,16 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
+  const [heroWordIndex, setHeroWordIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroWordIndex((i) => (i + 1) % HERO_ROTATING_WORDS.length);
+    }, 2400);
+    return () => clearInterval(interval);
+  }, []);
+  const heroWord = HERO_ROTATING_WORDS[heroWordIndex];
+  const heroWordIsKontor = heroWord === "kontoropgaver";
+
   const activeTasks = (tasks || []).filter((t) => t.status !== "cancelled");
   const openTasks = (tasks || []).filter((t) => t.status === "open");
   const inspirationTasks = (tasks || []).filter((t) => t.status === "completed" || t.status === "matched");
@@ -119,7 +145,14 @@ export default function HomePage() {
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
-            Få bud på dine kontoropgaver
+            Få bud på dine{" "}
+            <span
+              key={heroWordIndex}
+              className={heroWordIsKontor ? "kb-hero-rotate-word kb-hero-rotate-word--pop" : "kb-hero-rotate-word"}
+              style={{ color: heroWordIsKontor ? "#2A55E5" : "inherit" }}
+            >
+              {heroWord}
+            </span>
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
@@ -307,7 +340,7 @@ export default function HomePage() {
       </div>
       <div style={{ marginBottom: 84 }} />
 
-      <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
+      <SectionBand title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu.">
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
@@ -397,50 +430,54 @@ export default function HomePage() {
           })}
         </div>
       )}
-      <Link
-        href="/opgaver"
-        style={{
-          display: "inline-block",
-          fontSize: 13.5,
-          fontWeight: 700,
-          padding: "11px 22px",
-          borderRadius: 10,
-          border: "1.5px solid #E4E8F0",
-          color: "#14213D",
-        }}
-      >
-        Se alle opgaver →
-      </Link>
-      <Link
-        href="/opgaver?filter=private"
-        style={{
-          display: "inline-block",
-          fontSize: 13.5,
-          fontWeight: 700,
-          padding: "11px 22px",
-          borderRadius: 10,
-          border: "1.5px solid #E4E8F0",
-          color: "#14213D",
-          marginLeft: 10,
-        }}
-      >
-        Se opgaver fra private →
-      </Link>
-      <Link
-        href="/opgaver?filter=business"
-        style={{
-          display: "inline-block",
-          fontSize: 13.5,
-          fontWeight: 700,
-          padding: "11px 22px",
-          borderRadius: 10,
-          border: "1.5px solid #E4E8F0",
-          color: "#14213D",
-          marginLeft: 10,
-        }}
-      >
-        Se opgaver fra virksomheder →
-      </Link>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        <Link
+          href="/opgaver"
+          style={{
+            display: "inline-block",
+            fontSize: 13.5,
+            fontWeight: 700,
+            padding: "11px 22px",
+            borderRadius: 10,
+            border: "1.5px solid #E4E8F0",
+            background: "#fff",
+            color: "#14213D",
+          }}
+        >
+          Se alle opgaver →
+        </Link>
+        <Link
+          href="/opgaver?filter=private"
+          style={{
+            display: "inline-block",
+            fontSize: 13.5,
+            fontWeight: 700,
+            padding: "11px 22px",
+            borderRadius: 10,
+            border: "1.5px solid #E4E8F0",
+            background: "#fff",
+            color: "#14213D",
+          }}
+        >
+          Se opgaver fra private →
+        </Link>
+        <Link
+          href="/opgaver?filter=business"
+          style={{
+            display: "inline-block",
+            fontSize: 13.5,
+            fontWeight: 700,
+            padding: "11px 22px",
+            borderRadius: 10,
+            border: "1.5px solid #E4E8F0",
+            background: "#fff",
+            color: "#14213D",
+          }}
+        >
+          Se opgaver fra virksomheder →
+        </Link>
+      </div>
+      </SectionBand>
 
       {inspirationTasks.length > 0 && (
         <>
@@ -449,8 +486,8 @@ export default function HomePage() {
         </>
       )}
 
-      <SectionHead title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." />
-      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, marginBottom: 16 }}>
+      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst.">
+      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
           { num: "02", title: "Modtag bud", text: "Dygtige hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser." },
@@ -463,6 +500,7 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+      </SectionBand>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
@@ -514,6 +552,18 @@ function SectionHead({ title, sub, large }) {
         {title}
       </h2>
       {sub && <p style={{ fontSize: large ? 17 : 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
+    </div>
+  );
+}
+
+// Ligesom SectionHead, men pakket ind i et rundet, farvet felt - så forsiden
+// får skiftevis hvide og farvede sektioner, ligesom på Handyhands forside.
+function SectionBand({ title, sub, children }) {
+  return (
+    <div className="kb-section-band" style={{ background: "#F5F7FB", borderRadius: 28, padding: "56px 48px", marginTop: 96, marginBottom: 32 }}>
+      <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
+      {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
+      <div style={{ marginTop: 32 }}>{children}</div>
     </div>
   );
 }

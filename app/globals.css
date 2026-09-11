@@ -33,12 +33,6 @@ textarea {
 /* Disse klasser bruges sammen med inline grid-template-columns på desktop;
    på mindre skærme vinder disse regler (fordi !important i et stylesheet slår
    inline-styling uden !important), så sektionerne falder ned i én kolonne. */
-@media (min-width: 761px) {
-  .kb-hero-title {
-    white-space: nowrap;
-  }
-}
-
 @media (max-width: 760px) {
   .kb-grid-hero,
   .kb-grid-detail,
@@ -81,6 +75,45 @@ textarea {
   .kb-section-title-large {
     font-size: 26px !important;
   }
+  .kb-section-band {
+    padding: 30px 22px !important;
+  }
+}
+
+/* ---------- roterende ord i forsidens rubrik ("Få bud på dine ___") ---------- */
+@keyframes kb-word-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes kb-word-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(0) scale(1.09);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.kb-hero-rotate-word {
+  display: inline-block;
+  animation: kb-word-fade 0.35s ease;
+}
+
+.kb-hero-rotate-word--pop {
+  animation: kb-word-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ---------- opgave-kort: fold "Oprettet af" + status/budget ned på en
