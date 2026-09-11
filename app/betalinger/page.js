@@ -139,7 +139,7 @@ function PaymentsPage() {
   return (
     <div style={{ marginTop: 24, maxWidth: 560, marginBottom: 60 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-        <Wallet size={20} color="#2A55E5" />
+        <Wallet size={20} color="#7C3AED" />
         <h2 style={{ fontSize: 24, fontWeight: 800 }}>Betalingsmetoder</h2>
       </div>
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Både dine gemte kort og kontoen, du modtager penge på, samlet ét sted.</p>
@@ -167,7 +167,7 @@ function PaymentsPage() {
             <button
               onClick={connectStripe}
               disabled={connecting}
-              style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: connecting ? 0.6 : 1 }}
+              style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", opacity: connecting ? 0.6 : 1 }}
             >
               {connecting ? "Åbner Stripe…" : "Fortsæt opsætning"}
             </button>
@@ -180,7 +180,7 @@ function PaymentsPage() {
             <button
               onClick={connectStripe}
               disabled={connecting}
-              style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: connecting ? 0.6 : 1 }}
+              style={{ fontSize: 13.5, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", opacity: connecting ? 0.6 : 1 }}
             >
               {connecting ? "Åbner Stripe…" : "Forbind Stripe"}
             </button>
@@ -268,7 +268,7 @@ function PaymentsPage() {
             padding: "10px 18px",
             borderRadius: 10,
             border: "none",
-            background: "#2A55E5",
+            background: "#7C3AED",
             color: "#fff",
             cursor: adding ? "default" : "pointer",
             opacity: adding ? 0.6 : 1,
@@ -279,16 +279,16 @@ function PaymentsPage() {
         </button>
       </div>
 
-      <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20 }}>
+      <div style={{ background: "#F1EBFF", borderRadius: 16, padding: 20 }}>
         <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
-          <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <ShieldCheck size={18} color="#7C3AED" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Krypteret betaling</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe - de går aldrig gennem Kontorbuds egne servere.</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe - de går aldrig gennem AIbuds egne servere.</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 12 }}>
-          <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <Lock size={18} color="#7C3AED" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
             <div style={{ fontSize: 12.5, color: "#5B6478" }}>Beløbet holdes, indtil du selv markerer opgaven som udført - det udbetales aldrig automatisk.</div>

@@ -1,9 +1,9 @@
 import LoginClient from "./LoginClient";
 
 export const metadata = {
-  title: "Log ind - Kontorbud",
-  description: "Log ind på Kontorbud, eller opret en gratis konto.",
-  alternates: { canonical: "https://kontorbud.dk/login" },
+  title: "Log ind - AIbud",
+  description: "Log ind på AIbud, eller opret en gratis konto.",
+  alternates: { canonical: "https://aibud.dk/login" },
 };
 
 export default function Page() {

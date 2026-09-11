@@ -7,7 +7,7 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 // Brand-farvet nål med KB-prik i midten, i stedet for Googles standard røde dråbe.
 function brandIcon(google) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="40" viewBox="0 0 34 40">
-    <path d="M17 0C7.6 0 0 7.6 0 17c0 12 17 23 17 23s17-11 17-23C34 7.6 26.4 0 17 0z" fill="#2A55E5"/>
+    <path d="M17 0C7.6 0 0 7.6 0 17c0 12 17 23 17 23s17-11 17-23C34 7.6 26.4 0 17 0z" fill="#7C3AED"/>
     <circle cx="17" cy="16" r="6.5" fill="#fff"/>
   </svg>`;
   return {
@@ -77,7 +77,7 @@ export default function TaskMap({ tasks }) {
         content: `<div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:160px">
           <div style="font-weight:700;font-size:13px;margin-bottom:4px">${t.title}</div>
           <div style="font-size:12px;color:#5B6478;margin-bottom:6px">${t.budget}</div>
-          <a href="/opgave/${t.id}" style="font-size:12px;font-weight:700;color:#2A55E5">Se opgave →</a>
+          <a href="/opgave/${t.id}" style="font-size:12px;font-weight:700;color:#7C3AED">Se opgave →</a>
         </div>`,
       });
       marker.addListener("click", () => info.open({ anchor: marker, map: mapInstance.current }));

@@ -10,7 +10,7 @@ import RequireAuth from "@/components/RequireAuth";
 function Badge({ children, tone }) {
   const tones = {
     open: { bg: "#FFF1E0", color: "#B5610E" },
-    matched: { bg: "#EEF2FF", color: "#1B3AA6" },
+    matched: { bg: "#F1EBFF", color: "#5B21B6" },
     completed: { bg: "#E9F9F1", color: "#146B4E" },
     cancelled: { bg: "#F5F7FB", color: "#5B6478" },
   };
@@ -111,7 +111,7 @@ export default function AdminPage() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-        <ShieldCheck size={20} color="#2A55E5" />
+        <ShieldCheck size={20} color="#7C3AED" />
         <h2 style={{ fontSize: 24, fontWeight: 800 }}>Admin</h2>
       </div>
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Overblik til kundeservice - alle opgaver og brugere, uanset status.</p>
@@ -119,25 +119,25 @@ export default function AdminPage() {
       <div style={{ display: "flex", gap: 6, marginBottom: 22, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
         <button
           onClick={() => setTab("tasks")}
-          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "tasks" ? "#2A55E5" : "transparent", color: tab === "tasks" ? "#fff" : "#5B6478" }}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "tasks" ? "#7C3AED" : "transparent", color: tab === "tasks" ? "#fff" : "#5B6478" }}
         >
           Opgaver
         </button>
         <button
           onClick={() => setTab("users")}
-          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "users" ? "#2A55E5" : "transparent", color: tab === "users" ? "#fff" : "#5B6478" }}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "users" ? "#7C3AED" : "transparent", color: tab === "users" ? "#fff" : "#5B6478" }}
         >
           Brugere
         </button>
         <button
           onClick={() => setTab("images")}
-          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#2A55E5" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#7C3AED" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
         >
           Billeder
         </button>
         <button
           onClick={() => setTab("contact")}
-          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "contact" ? "#2A55E5" : "transparent", color: tab === "contact" ? "#fff" : "#5B6478" }}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "contact" ? "#7C3AED" : "transparent", color: tab === "contact" ? "#fff" : "#5B6478" }}
         >
           Kontakt
         </button>
@@ -407,7 +407,7 @@ function ContactSettings() {
       <div>
         <button
           onClick={save}
-          style={{ fontSize: 13, fontWeight: 700, padding: "9px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+          style={{ fontSize: 13, fontWeight: 700, padding: "9px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer" }}
         >
           Gem
         </button>

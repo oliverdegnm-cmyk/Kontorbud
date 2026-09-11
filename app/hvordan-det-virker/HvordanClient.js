@@ -14,7 +14,7 @@ function StepCard({ icon: Icon, num, title, children }) {
           right: 18,
           fontSize: 26,
           fontWeight: 800,
-          color: "#EEF2FF",
+          color: "#F1EBFF",
         }}
       >
         {num}
@@ -24,8 +24,8 @@ function StepCard({ icon: Icon, num, title, children }) {
           width: 42,
           height: 42,
           borderRadius: 12,
-          background: "#EEF2FF",
-          color: "#2A55E5",
+          background: "#F1EBFF",
+          color: "#7C3AED",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -47,16 +47,16 @@ export default function HowItWorksClient() {
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div
         style={{
-          background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
+          background: "linear-gradient(180deg, #F1EBFF 0%, #fff 100%)",
           borderRadius: 28,
           padding: "44px 40px",
           marginBottom: 36,
           textAlign: "center",
         }}
       >
-        <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer Kontorbud</h1>
+        <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Sådan fungerer AIbud</h1>
         <p style={{ fontSize: 15, color: "#5B6478", lineHeight: 1.65, maxWidth: 480, margin: "0 auto" }}>
-          Beskriv din opgave, få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
+          Beskriv din opgave - eller det, du gerne vil lære om AI - få tilbud, vælg den rette hjælper. Betal først, når du er tilfreds.
         </p>
         <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 10 }}>🇩🇰 Dansk platform, dansk kundeservice</div>
       </div>
@@ -72,7 +72,7 @@ export default function HowItWorksClient() {
             fontSize: 13.5,
             fontWeight: 700,
             cursor: "pointer",
-            background: tab === "poster" ? "#2A55E5" : "transparent",
+            background: tab === "poster" ? "#7C3AED" : "transparent",
             color: tab === "poster" ? "#fff" : "#5B6478",
           }}
         >
@@ -88,7 +88,7 @@ export default function HowItWorksClient() {
             fontSize: 13.5,
             fontWeight: 700,
             cursor: "pointer",
-            background: tab === "helper" ? "#2A55E5" : "transparent",
+            background: tab === "helper" ? "#7C3AED" : "transparent",
             color: tab === "helper" ? "#fff" : "#5B6478",
           }}
         >
@@ -144,28 +144,28 @@ export default function HowItWorksClient() {
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
         <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>
           <div style={{ textAlign: "center" }}>
-            <ShieldCheck size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
+            <ShieldCheck size={22} color="#7C3AED" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Betaling holdes sikkert</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Pengene frigives først, når du selv markerer opgaven som udført.
             </p>
           </div>
           <div style={{ textAlign: "center" }}>
-            <MessageCircle size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
+            <MessageCircle size={22} color="#7C3AED" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Al kontakt på siden</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               I skriver sammen direkte på opgaven - ingen grund til at bytte private numre.
             </p>
           </div>
           <div style={{ textAlign: "center" }}>
-            <Star size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
+            <Star size={22} color="#7C3AED" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Anmeldelser begge veje</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Efter en opgave giver I hinanden stjerner, så tilliden bygges over tid.
             </p>
           </div>
           <div style={{ textAlign: "center" }}>
-            <Headset size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
+            <Headset size={22} color="#7C3AED" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Dansk kundeservice</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Vi svarer hurtigt, og altid på dansk, hvis du har brug for hjælp.
@@ -177,7 +177,7 @@ export default function HowItWorksClient() {
       <div style={{ textAlign: "center" }}>
         <Link
           href="/opret"
-          style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "13px 26px", borderRadius: 12, background: "#2A55E5", color: "#fff", marginRight: 12 }}
+          style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "13px 26px", borderRadius: 12, background: "#7C3AED", color: "#fff", marginRight: 12 }}
         >
           Opret en opgave
         </Link>

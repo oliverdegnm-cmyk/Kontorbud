@@ -129,7 +129,7 @@ export async function POST(request) {
       ]
     );
     const task = rows[0];
-    const caseNo = `K-2026-${String(100 + task.id).padStart(3, "0")}`;
+    const caseNo = `A-2026-${String(100 + task.id).padStart(3, "0")}`;
     await pool.query("UPDATE tasks SET case_no = $1 WHERE id = $2", [caseNo, task.id]);
     task.case_no = caseNo;
 

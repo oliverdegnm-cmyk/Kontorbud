@@ -108,7 +108,7 @@ export default function EditTaskPage() {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#5B6478" }}>
         Du kan ikke redigere denne opgave - enten er den ikke din, eller også er den ikke længere åben.{" "}
-        <Link href={`/opgave/${id}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
+        <Link href={`/opgave/${id}`} style={{ color: "#7C3AED", fontWeight: 700 }}>
           Tilbage til opgaven
         </Link>
       </div>
@@ -155,9 +155,9 @@ export default function EditTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: deadlineType === "date" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: deadlineType === "date" ? "#EEF2FF" : "#fff",
-                  color: deadlineType === "date" ? "#1B3AA6" : "#5B6478",
+                  border: deadlineType === "date" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "date" ? "#F1EBFF" : "#fff",
+                  color: deadlineType === "date" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -172,9 +172,9 @@ export default function EditTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: deadlineType === "flexible" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: deadlineType === "flexible" ? "#EEF2FF" : "#fff",
-                  color: deadlineType === "flexible" ? "#1B3AA6" : "#5B6478",
+                  border: deadlineType === "flexible" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "flexible" ? "#F1EBFF" : "#fff",
+                  color: deadlineType === "flexible" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -207,9 +207,9 @@ export default function EditTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: locationType === "remote" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: locationType === "remote" ? "#EEF2FF" : "#fff",
-                  color: locationType === "remote" ? "#1B3AA6" : "#5B6478",
+                  border: locationType === "remote" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: locationType === "remote" ? "#F1EBFF" : "#fff",
+                  color: locationType === "remote" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -224,9 +224,9 @@ export default function EditTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: locationType === "in_person" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: locationType === "in_person" ? "#EEF2FF" : "#fff",
-                  color: locationType === "in_person" ? "#1B3AA6" : "#5B6478",
+                  border: locationType === "in_person" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: locationType === "in_person" ? "#F1EBFF" : "#fff",
+                  color: locationType === "in_person" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -273,7 +273,7 @@ export default function EditTaskPage() {
                     href={a.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 8, width: "fit-content" }}
+                    style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#7C3AED", background: "#F5F7FB", padding: "8px 12px", borderRadius: 8, width: "fit-content" }}
                   >
                     <FileText size={13} /> {a.filename}
                   </a>
@@ -285,7 +285,7 @@ export default function EditTaskPage() {
         </div>
         <button
           onClick={submit}
-          style={{ marginTop: 20, fontSize: 14.5, fontWeight: 700, padding: "12px 22px", borderRadius: 12, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+          style={{ marginTop: 20, fontSize: 14.5, fontWeight: 700, padding: "12px 22px", borderRadius: 12, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer" }}
         >
           Gem ændringer
         </button>

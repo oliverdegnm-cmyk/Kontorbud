@@ -64,7 +64,7 @@ export default function AuthForm({ title, subtitle }) {
   }
 
   return (
-    <div style={{ background: "#EEF2FF", borderRadius: 20, padding: 32, maxWidth: 420 }}>
+    <div style={{ background: "#F1EBFF", borderRadius: 20, padding: 32, maxWidth: 420 }}>
       {mode !== "forgot" && (
         <div style={{ display: "flex", gap: 4, marginBottom: 20, background: "#fff", borderRadius: 10, padding: 4 }}>
           <button
@@ -77,7 +77,7 @@ export default function AuthForm({ title, subtitle }) {
               fontSize: 13.5,
               fontWeight: 700,
               cursor: "pointer",
-              background: mode === "login" ? "#2A55E5" : "transparent",
+              background: mode === "login" ? "#7C3AED" : "transparent",
               color: mode === "login" ? "#fff" : "#5B6478",
             }}
           >
@@ -93,7 +93,7 @@ export default function AuthForm({ title, subtitle }) {
               fontSize: 13.5,
               fontWeight: 700,
               cursor: "pointer",
-              background: mode === "signup" ? "#2A55E5" : "transparent",
+              background: mode === "signup" ? "#7C3AED" : "transparent",
               color: mode === "signup" ? "#fff" : "#5B6478",
             }}
           >
@@ -103,7 +103,7 @@ export default function AuthForm({ title, subtitle }) {
       )}
 
       <h2 style={{ fontSize: 19, marginBottom: 6, fontWeight: 800 }}>
-        {title || (mode === "login" ? "Log ind på Kontorbud" : mode === "signup" ? "Opret en konto" : "Nulstil adgangskode")}
+        {title || (mode === "login" ? "Log ind på AIbud" : mode === "signup" ? "Opret en konto" : "Nulstil adgangskode")}
       </h2>
       <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 18, lineHeight: 1.6 }}>
         {subtitle ||
@@ -198,7 +198,7 @@ export default function AuthForm({ title, subtitle }) {
           {mode === "signup" && (
             <>
               <div style={{ marginTop: 6 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 8 }}>Hvad er dit mål med Kontorbud?</div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 8 }}>Hvad er dit mål med AIbud?</div>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button
                     type="button"
@@ -211,9 +211,9 @@ export default function AuthForm({ title, subtitle }) {
                       gap: 7,
                       padding: "10px 0",
                       borderRadius: 10,
-                      border: goal === "tasks" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                      border: goal === "tasks" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
                       background: goal === "tasks" ? "#fff" : "#F5F7FB",
-                      color: goal === "tasks" ? "#1B3AA6" : "#5B6478",
+                      color: goal === "tasks" ? "#5B21B6" : "#5B6478",
                       fontSize: 12.5,
                       fontWeight: 700,
                       cursor: "pointer",
@@ -232,9 +232,9 @@ export default function AuthForm({ title, subtitle }) {
                       gap: 7,
                       padding: "10px 0",
                       borderRadius: 10,
-                      border: goal === "earn" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                      border: goal === "earn" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
                       background: goal === "earn" ? "#fff" : "#F5F7FB",
-                      color: goal === "earn" ? "#1B3AA6" : "#5B6478",
+                      color: goal === "earn" ? "#5B21B6" : "#5B6478",
                       fontSize: 12.5,
                       fontWeight: 700,
                       cursor: "pointer",
@@ -254,11 +254,11 @@ export default function AuthForm({ title, subtitle }) {
                 />
                 <span style={{ fontSize: 12, color: "#5B6478", lineHeight: 1.5 }}>
                   Jeg accepterer{" "}
-                  <Link href="/vilkaar" target="_blank" style={{ color: "#2A55E5", fontWeight: 700 }}>
+                  <Link href="/vilkaar" target="_blank" style={{ color: "#7C3AED", fontWeight: 700 }}>
                     vilkår og betingelser
                   </Link>{" "}
                   og{" "}
-                  <Link href="/privatliv" target="_blank" style={{ color: "#2A55E5", fontWeight: 700 }}>
+                  <Link href="/privatliv" target="_blank" style={{ color: "#7C3AED", fontWeight: 700 }}>
                     privatlivspolitikken
                   </Link>
                   .
@@ -282,7 +282,7 @@ export default function AuthForm({ title, subtitle }) {
           {mode === "login" && (
             <button
               onClick={() => switchMode("forgot")}
-              style={{ alignSelf: "flex-end", fontSize: 12.5, fontWeight: 600, color: "#2A55E5", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+              style={{ alignSelf: "flex-end", fontSize: 12.5, fontWeight: 600, color: "#7C3AED", background: "none", border: "none", cursor: "pointer", padding: 0 }}
             >
               Glemt adgangskode?
             </button>
@@ -296,7 +296,7 @@ export default function AuthForm({ title, subtitle }) {
               padding: "11px 20px",
               borderRadius: 10,
               border: "none",
-              background: "#2A55E5",
+              background: "#7C3AED",
               color: "#fff",
               cursor: submitting || (mode === "signup" && !acceptedTerms) ? "default" : "pointer",
               opacity: submitting || (mode === "signup" && !acceptedTerms) ? 0.5 : 1,

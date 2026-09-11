@@ -42,7 +42,7 @@ export default function FileUploader({ files, setFiles, compact }) {
           gap: 6,
           fontSize: compact ? 12 : 12.5,
           fontWeight: 700,
-          color: "#2A55E5",
+          color: "#7C3AED",
           cursor: uploading ? "default" : "pointer",
           opacity: uploading ? 0.6 : 1,
         }}

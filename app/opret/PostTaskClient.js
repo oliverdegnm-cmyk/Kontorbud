@@ -159,9 +159,9 @@ function PostTaskPage() {
                 flex: 1,
                 padding: "11px 0",
                 borderRadius: 10,
-                border: posterType === "private" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                background: posterType === "private" ? "#EEF2FF" : "#fff",
-                color: posterType === "private" ? "#1B3AA6" : "#5B6478",
+                border: posterType === "private" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                background: posterType === "private" ? "#F1EBFF" : "#fff",
+                color: posterType === "private" ? "#5B21B6" : "#5B6478",
                 fontSize: 13.5,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -176,9 +176,9 @@ function PostTaskPage() {
                 flex: 1,
                 padding: "11px 0",
                 borderRadius: 10,
-                border: posterType === "business" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                background: posterType === "business" ? "#EEF2FF" : "#fff",
-                color: posterType === "business" ? "#1B3AA6" : "#5B6478",
+                border: posterType === "business" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                background: posterType === "business" ? "#F1EBFF" : "#fff",
+                color: posterType === "business" ? "#5B21B6" : "#5B6478",
                 fontSize: 13.5,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -224,7 +224,7 @@ function PostTaskPage() {
             <input
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="f.eks. Bogfør kvartalsregnskab for Q3"
+              placeholder="f.eks. Lær mig at bruge ChatGPT i mit arbejde"
               style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
             />
           </div>
@@ -261,9 +261,9 @@ function PostTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: deadlineType === "date" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: deadlineType === "date" ? "#EEF2FF" : "#fff",
-                  color: deadlineType === "date" ? "#1B3AA6" : "#5B6478",
+                  border: deadlineType === "date" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "date" ? "#F1EBFF" : "#fff",
+                  color: deadlineType === "date" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -278,9 +278,9 @@ function PostTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: deadlineType === "flexible" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: deadlineType === "flexible" ? "#EEF2FF" : "#fff",
-                  color: deadlineType === "flexible" ? "#1B3AA6" : "#5B6478",
+                  border: deadlineType === "flexible" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: deadlineType === "flexible" ? "#F1EBFF" : "#fff",
+                  color: deadlineType === "flexible" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -312,9 +312,9 @@ function PostTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: locationType === "remote" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: locationType === "remote" ? "#EEF2FF" : "#fff",
-                  color: locationType === "remote" ? "#1B3AA6" : "#5B6478",
+                  border: locationType === "remote" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: locationType === "remote" ? "#F1EBFF" : "#fff",
+                  color: locationType === "remote" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -329,9 +329,9 @@ function PostTaskPage() {
                   flex: 1,
                   padding: "10px 0",
                   borderRadius: 10,
-                  border: locationType === "in_person" ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
-                  background: locationType === "in_person" ? "#EEF2FF" : "#fff",
-                  color: locationType === "in_person" ? "#1B3AA6" : "#5B6478",
+                  border: locationType === "in_person" ? "1.5px solid #7C3AED" : "1.5px solid #E4E8F0",
+                  background: locationType === "in_person" ? "#F1EBFF" : "#fff",
+                  color: locationType === "in_person" ? "#5B21B6" : "#5B6478",
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -379,7 +379,7 @@ function PostTaskPage() {
         </div>
         <button
           onClick={submit}
-          style={{ marginTop: 20, fontSize: 14.5, fontWeight: 700, padding: "12px 22px", borderRadius: 12, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+          style={{ marginTop: 20, fontSize: 14.5, fontWeight: 700, padding: "12px 22px", borderRadius: 12, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer" }}
         >
           Opret opgave gratis
         </button>

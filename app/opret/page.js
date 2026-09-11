@@ -1,9 +1,9 @@
 import PostTaskClient from "./PostTaskClient";
 
 export const metadata = {
-  title: "Opret opgave - Kontorbud",
-  description: "Beskriv din kontoropgave, sæt et budget, og modtag bud fra kvalificerede hjælpere. Gratis at oprette.",
-  alternates: { canonical: "https://kontorbud.dk/opret" },
+  title: "Opret opgave - AIbud",
+  description: "Beskriv din AI-opgave, sæt et budget, og modtag bud fra kvalificerede hjælpere. Gratis at oprette.",
+  alternates: { canonical: "https://aibud.dk/opret" },
 };
 
 export default function Page() {

@@ -104,7 +104,7 @@ function SettingsPage() {
         <button
           onClick={saveEmail}
           disabled={emailSaving || newEmail.trim().toLowerCase() === email}
-          style={{ marginTop: 12, fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: emailSaving || newEmail.trim().toLowerCase() === email ? 0.5 : 1 }}
+          style={{ marginTop: 12, fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", opacity: emailSaving || newEmail.trim().toLowerCase() === email ? 0.5 : 1 }}
         >
           {emailSaving ? "Gemmer…" : "Opdater email"}
         </button>
@@ -135,7 +135,7 @@ function SettingsPage() {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: notifOn ? "#2A55E5" : "#E4E8F0",
+                background: notifOn ? "#7C3AED" : "#E4E8F0",
                 borderRadius: 999,
                 cursor: "pointer",
                 transition: "background .15s ease",
@@ -161,7 +161,7 @@ function SettingsPage() {
         <button
           onClick={saveSettings}
           disabled={settingsSaving}
-          style={{ marginTop: 20, fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: settingsSaving ? 0.6 : 1 }}
+          style={{ marginTop: 20, fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", opacity: settingsSaving ? 0.6 : 1 }}
         >
           {settingsSaving ? "Gemmer…" : "Gem indstillinger"}
         </button>
@@ -197,7 +197,7 @@ function SettingsPage() {
         <button
           onClick={savePassword}
           disabled={pwSaving}
-          style={{ fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: pwSaving ? 0.6 : 1 }}
+          style={{ fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", opacity: pwSaving ? 0.6 : 1 }}
         >
           {pwSaving ? "Skifter…" : "Skift adgangskode"}
         </button>

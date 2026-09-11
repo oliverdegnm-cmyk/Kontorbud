@@ -1,12 +1,12 @@
 export default function manifest() {
   return {
-    name: "Kontorbud - Byd ind på kontoropgaver",
-    short_name: "Kontorbud",
-    description: "Danmarks platform for kontoropgaver. Opret opgaver, byd, og få klaret det, der skal klares.",
+    name: "AIbud - Byd ind på AI-opgaver",
+    short_name: "AIbud",
+    description: "Danmarks platform for AI-opgaver. Opret opgaver, byd, og få klaret det, der skal klares.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
-    theme_color: "#2A55E5",
+    theme_color: "#7C3AED",
     orientation: "portrait",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

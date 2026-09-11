@@ -101,7 +101,7 @@ export default function HomePage() {
               <Image
                 key={img.url + i}
                 src={img.url}
-                alt="Overvældet af kontoropgaver - beder om hjælp"
+                alt="Overvældet af AI-opgaver - beder om hjælp"
                 fill
                 priority={i === 0}
                 sizes="(max-width: 760px) 100vw, 1080px"
@@ -130,22 +130,22 @@ export default function HomePage() {
           <div
             style={{
               display: "inline-block",
-              background: "#EEF2FF",
+              background: "#F1EBFF",
               padding: "6px 14px",
               borderRadius: 999,
               fontSize: 12.5,
               fontWeight: 700,
-              color: "#1B3AA6",
+              color: "#5B21B6",
               marginBottom: 16,
             }}
           >
-            🇩🇰 Danmarks platform for kontoropgaver
+            🇩🇰 Danmarks platform for AI-opgaver
           </div>
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
-            Få bud på dine kontoropgaver
+            Få bud på dine AI-opgaver
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 26px", maxWidth: 460, lineHeight: 1.6 }}>
-            Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
+            Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til AI-opgaver - uanset om noget skal bygges, eller du bare vil lære AI's muligheder at kende.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
@@ -156,7 +156,7 @@ export default function HomePage() {
                 fontWeight: 700,
                 padding: "12px 24px",
                 borderRadius: 999,
-                background: "#2A55E5",
+                background: "#7C3AED",
                 color: "#fff",
               }}
             >
@@ -190,7 +190,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - det kan lige så godt være en opgave, der skal løses, som noget du gerne vil have forklaret eller lært. Vi finder automatisk den rette kategori for dig." />
       <div
         style={{
           display: "flex",
@@ -207,7 +207,7 @@ export default function HomePage() {
           value={quickDescription}
           onChange={(e) => setQuickDescription(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && goToCreateTask()}
-          placeholder="f.eks. Hjælp til mit årsregnskab…"
+          placeholder="f.eks. Byg en chatbot til min hjemmeside…"
           style={{ flex: "1 1 240px", fontSize: 14.5, padding: "13px 16px", border: "1.5px solid #E4E8F0", borderRadius: 12, background: "#fff" }}
         />
         <button
@@ -219,7 +219,7 @@ export default function HomePage() {
             padding: "13px 24px",
             borderRadius: 12,
             border: "none",
-            background: "#2A55E5",
+            background: "#7C3AED",
             color: "#fff",
             cursor: matchingWithAi ? "default" : "pointer",
             opacity: matchingWithAi ? 0.7 : 1,
@@ -252,7 +252,7 @@ export default function HomePage() {
                 color: "#14213D",
               }}
             >
-              <span style={{ display: "flex", color: "#2A55E5", flex: "0 0 auto" }}>
+              <span style={{ display: "flex", color: "#7C3AED", flex: "0 0 auto" }}>
                 <CatIcon name={c.icon} size={16} />
               </span>
               <span>
@@ -271,9 +271,9 @@ export default function HomePage() {
               gap: 5,
               padding: "9px 16px",
               borderRadius: 999,
-              background: "#EEF2FF",
+              background: "#F1EBFF",
               border: "1.5px solid #DCE4FB",
-              color: "#1B3AA6",
+              color: "#5B21B6",
               fontSize: 12.5,
               fontWeight: 700,
               cursor: "pointer",
@@ -336,8 +336,8 @@ export default function HomePage() {
                     width: 38,
                     height: 38,
                     borderRadius: 11,
-                    background: "#EEF2FF",
-                    color: "#2A55E5",
+                    background: "#F1EBFF",
+                    color: "#7C3AED",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -368,7 +368,7 @@ export default function HomePage() {
                       <Link
                         href={`/bruger/${encodeURIComponent(t.postedBy)}`}
                         onClick={(e) => e.stopPropagation()}
-                        style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 120 }}
+                        style={{ fontSize: 13, fontWeight: 700, color: "#7C3AED", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 120 }}
                       >
                         {t.postedBy}
                       </Link>
@@ -465,12 +465,12 @@ export default function HomePage() {
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginTop: 48 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-          <ShieldCheck size={18} color="#2A55E5" />
-          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
+          <ShieldCheck size={18} color="#7C3AED" />
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#7C3AED" }}>Sikker betaling via Stripe</span>
         </div>
         <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Pengene bliver stående, til opgaven er løst</h3>
         <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem AIbuds egne servere, og beløbet frigives først, når du selv godkender.
         </p>
       </div>
 
@@ -479,7 +479,7 @@ export default function HomePage() {
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
           <Link
             href="/opret"
-            style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
+            style={{ display: "inline-block", fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, background: "#7C3AED", color: "#fff" }}
           >
             Opret opgave gratis
           </Link>
@@ -500,7 +500,7 @@ export default function HomePage() {
 function TrustBadge({ icon: Icon, text }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 600, color: "#5B6478" }}>
-      <Icon size={15} color="#2A55E5" />
+      <Icon size={15} color="#7C3AED" />
       {text}
     </div>
   );

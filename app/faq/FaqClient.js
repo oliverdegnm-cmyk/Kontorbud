@@ -42,12 +42,12 @@ export default function FaqClient() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60, maxWidth: 700 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-        <HelpCircle size={22} color="#2A55E5" />
+        <HelpCircle size={22} color="#7C3AED" />
         <h1 style={{ fontSize: 26, fontWeight: 800 }}>Ofte stillede spørgsmål</h1>
       </div>
       <p style={{ fontSize: 14, color: "#5B6478", marginBottom: 32 }}>
         Finder du ikke svar på dit spørgsmål her?{" "}
-        <Link href="/kontakt" style={{ color: "#2A55E5", fontWeight: 700 }}>
+        <Link href="/kontakt" style={{ color: "#7C3AED", fontWeight: 700 }}>
           Kontakt kundeservice
         </Link>
         .

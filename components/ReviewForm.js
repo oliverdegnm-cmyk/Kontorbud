@@ -59,7 +59,7 @@ export default function ReviewForm({ taskId, currentName, onSubmitted }) {
       />
       <button
         onClick={submit}
-        style={{ marginTop: 10, fontSize: 12.5, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+        style={{ marginTop: 10, fontSize: 12.5, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer" }}
       >
         Send anmeldelse
       </button>

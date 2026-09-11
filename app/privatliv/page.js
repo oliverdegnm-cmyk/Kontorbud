@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Privatlivspolitik - Kontorbud",
-  description: "Sådan behandler Kontorbud dine personoplysninger.",
-  alternates: { canonical: "https://kontorbud.dk/privatliv" },
+  title: "Privatlivspolitik - AIbud",
+  description: "Sådan behandler AIbud dine personoplysninger.",
+  alternates: { canonical: "https://aibud.dk/privatliv" },
 };
 
 function Section({ title, children }) {
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
 
       <Section title="1. Dataansvarlig">
         <p>
-          [Firmanavn / dit fulde navn], [CVR-nummer, hvis relevant], [adresse], er dataansvarlig for behandlingen af personoplysninger på kontorbud.dk. Ved spørgsmål kan du kontakte os via <a href="/kontakt" style={{ color: "#2A55E5", fontWeight: 700 }}>kontaktformularen</a>.
+          [Firmanavn / dit fulde navn], [CVR-nummer, hvis relevant], [adresse], er dataansvarlig for behandlingen af personoplysninger på aibud.dk. Ved spørgsmål kan du kontakte os via <a href="/kontakt" style={{ color: "#7C3AED", fontWeight: 700 }}>kontaktformularen</a>.
         </p>
       </Section>
 
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
       <Section title="4. Videregivelse af oplysninger til tredjeparter">
         <p>Vi bruger følgende databehandlere til at drive platformen:</p>
         <ul style={{ marginTop: 8, paddingLeft: 20 }}>
-          <li><b>Stripe</b> - behandler betalinger og udbetalinger. Stripe modtager de oplysninger, der er nødvendige for at gennemføre en betaling, herunder betalingskortoplysninger, som Kontorbud ikke selv har adgang til.</li>
+          <li><b>Stripe</b> - behandler betalinger og udbetalinger. Stripe modtager de oplysninger, der er nødvendige for at gennemføre en betaling, herunder betalingskortoplysninger, som AIbud ikke selv har adgang til.</li>
           <li><b>Google Maps</b> - bruges til at vise Opgavers omtrentlige placering på et kort, baseret på det område, du selv angiver.</li>
           <li><b>Resend</b> - sender transaktionelle emails (f.eks. bekræftelse af konto, nulstilling af adgangskode, notifikationer).</li>
           <li><b>Vercel</b> - hoster platformen og den tilhørende database.</li>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
 
       <Section title="6. Dine rettigheder">
         <p>
-          Du har efter databeskyttelsesforordningen (GDPR) ret til at få indsigt i, berigtiget, slettet eller udleveret (dataportabilitet) dine personoplysninger, samt ret til at gøre indsigelse mod behandlingen. Kontakt os via <a href="/kontakt" style={{ color: "#2A55E5", fontWeight: 700 }}>kontaktformularen</a> for at gøre brug af dine rettigheder. Du kan også klage til Datatilsynet (datatilsynet.dk).
+          Du har efter databeskyttelsesforordningen (GDPR) ret til at få indsigt i, berigtiget, slettet eller udleveret (dataportabilitet) dine personoplysninger, samt ret til at gøre indsigelse mod behandlingen. Kontakt os via <a href="/kontakt" style={{ color: "#7C3AED", fontWeight: 700 }}>kontaktformularen</a> for at gøre brug af dine rettigheder. Du kan også klage til Datatilsynet (datatilsynet.dk).
         </p>
       </Section>
 

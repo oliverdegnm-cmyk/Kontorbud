@@ -13,11 +13,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const cat = categoryBySlug(params.slug);
-  if (!cat) return { title: "Kategori - Kontorbud" };
+  if (!cat) return { title: "Kategori - AIbud" };
   return {
-    title: `${cat.name} - find hjælpere på Kontorbud`,
+    title: `${cat.name} - find hjælpere på AIbud`,
     description: cat.intro || `Se åbne opgaver inden for ${cat.name.toLowerCase()}, eller opret din egen opgave og få bud fra dygtige danske hjælpere.`,
-    alternates: { canonical: `https://kontorbud.dk/kategori/${cat.slug}` },
+    alternates: { canonical: `https://aibud.dk/kategori/${cat.slug}` },
   };
 }
 
@@ -26,7 +26,7 @@ export default async function CategoryPage({ params }) {
   if (!cat) {
     return (
       <div style={{ marginTop: 40, textAlign: "center", color: "#5B6478" }}>
-        Kategorien blev ikke fundet. <Link href="/opgaver" style={{ color: "#2A55E5", fontWeight: 700 }}>Se alle opgaver</Link>
+        Kategorien blev ikke fundet. <Link href="/opgaver" style={{ color: "#7C3AED", fontWeight: 700 }}>Se alle opgaver</Link>
       </div>
     );
   }
@@ -47,9 +47,9 @@ export default async function CategoryPage({ params }) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Kontorbud", item: "https://kontorbud.dk/" },
-      { "@type": "ListItem", position: 2, name: "Opgaver", item: "https://kontorbud.dk/opgaver" },
-      { "@type": "ListItem", position: 3, name: cat.name, item: `https://kontorbud.dk/kategori/${cat.slug}` },
+      { "@type": "ListItem", position: 1, name: "AIbud", item: "https://aibud.dk/" },
+      { "@type": "ListItem", position: 2, name: "Opgaver", item: "https://aibud.dk/opgaver" },
+      { "@type": "ListItem", position: 3, name: cat.name, item: `https://aibud.dk/kategori/${cat.slug}` },
     ],
   };
 
@@ -58,12 +58,12 @@ export default async function CategoryPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />
 
       <div style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 16 }}>
-        <Link href="/">Kontorbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
+        <Link href="/">AIbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
         <Link href="/opgaver">Opgaver</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} /> {cat.name}
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
-        <div style={{ width: 46, height: 46, borderRadius: 14, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+        <div style={{ width: 46, height: 46, borderRadius: 14, background: "#F1EBFF", color: "#7C3AED", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
           <CatIcon name={cat.icon} size={22} />
         </div>
         <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0 }}>{cat.name}</h1>
@@ -88,7 +88,7 @@ export default async function CategoryPage({ params }) {
       <div style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap" }}>
         <Link
           href={`/opret?category=${encodeURIComponent(cat.name)}`}
-          style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 22px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
+          style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 22px", borderRadius: 999, background: "#7C3AED", color: "#fff" }}
         >
           Opret en opgave i {cat.name}
         </Link>
@@ -110,7 +110,7 @@ export default async function CategoryPage({ params }) {
       {tasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>
           Vær den første til at{" "}
-          <Link href={`/opret?category=${encodeURIComponent(cat.name)}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
+          <Link href={`/opret?category=${encodeURIComponent(cat.name)}`} style={{ color: "#7C3AED", fontWeight: 700 }}>
             oprette en opgave
           </Link>{" "}
           i denne kategori.

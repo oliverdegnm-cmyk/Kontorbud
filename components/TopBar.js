@@ -36,7 +36,7 @@ export default function TopBar() {
             width: 38,
             height: 38,
             borderRadius: 11,
-            background: "#2A55E5",
+            background: "#7C3AED",
             color: "#fff",
             display: "flex",
             alignItems: "center",
@@ -45,9 +45,9 @@ export default function TopBar() {
             fontSize: 15,
           }}
         >
-          KB
+          AB
         </div>
-        <div style={{ fontSize: 19, fontWeight: 800 }}>Kontorbud</div>
+        <div style={{ fontSize: 19, fontWeight: 800 }}>AIbud</div>
       </Link>
       <div className="kb-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
         <Link
@@ -57,7 +57,7 @@ export default function TopBar() {
             borderRadius: 999,
             fontSize: 13.5,
             fontWeight: 700,
-            background: "#2A55E5",
+            background: "#7C3AED",
             color: "#fff",
             marginRight: 4,
           }}
@@ -73,8 +73,8 @@ export default function TopBar() {
               borderRadius: 999,
               fontSize: 13.5,
               fontWeight: 600,
-              background: pathname === l.href ? "#EEF2FF" : "transparent",
-              color: pathname === l.href ? "#1B3AA6" : "#5B6478",
+              background: pathname === l.href ? "#F1EBFF" : "transparent",
+              color: pathname === l.href ? "#5B21B6" : "#5B6478",
             }}
           >
             {l.label}

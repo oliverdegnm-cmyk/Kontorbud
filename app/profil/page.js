@@ -16,7 +16,7 @@ function SectionCard({ icon: Icon, title, children }) {
   return (
     <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: 24, marginBottom: 18 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 16 }}>
-        <div style={{ width: 30, height: 30, borderRadius: 9, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+        <div style={{ width: 30, height: 30, borderRadius: 9, background: "#F1EBFF", color: "#7C3AED", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
           <Icon size={15} />
         </div>
         <div style={{ fontSize: 14.5, fontWeight: 800 }}>{title}</div>
@@ -36,8 +36,8 @@ function FileSlot({ label, hint, fileUrl, filename, uploading, error, onChange, 
       {hint && <p style={{ fontSize: 11.5, color: "#9AA2B1", margin: "0 0 8px" }}>{hint}</p>}
       {fileUrl ? (
         <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#F5F7FB", borderRadius: 12 }}>
-          <FileText size={18} color="#2A55E5" />
-          <a href={fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}>
+          <FileText size={18} color="#7C3AED" />
+          <a href={fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: 13.5, fontWeight: 700, color: "#7C3AED" }}>
             {filename || "Dokument.pdf"}
           </a>
           <button
@@ -244,7 +244,7 @@ function ProfilePage() {
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #2A55E5, #6D8CF0)",
+            background: "linear-gradient(135deg, #7C3AED, #A78BFA)",
             color: "#fff",
             display: "flex",
             alignItems: "center",
@@ -270,7 +270,7 @@ function ProfilePage() {
           </div>
           <p style={{ fontSize: 13, color: "#5B6478", margin: "3px 0 0" }}>
             Vises for andre, når de ser dine bud eller opgaver.{" "}
-            <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
+            <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ color: "#7C3AED", fontWeight: 700 }}>
               Se din profil, som andre ser den →
             </Link>
           </p>
@@ -280,13 +280,13 @@ function ProfilePage() {
       {!emailVerified && <EmailVerifyBanner />}
 
       {completeness < 100 && (
-        <div style={{ background: "#EEF2FF", border: "1.5px solid #DCE4FB", borderRadius: 16, padding: "16px 20px", marginBottom: 20 }}>
+        <div style={{ background: "#F1EBFF", border: "1.5px solid #DCE4FB", borderRadius: 16, padding: "16px 20px", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Din profil er {completeness}% udfyldt</div>
             <div style={{ fontSize: 12, color: "#5B6478" }}>En komplet profil får flere bud valgt</div>
           </div>
           <div style={{ height: 8, borderRadius: 999, background: "#fff", overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${completeness}%`, background: "#2A55E5", borderRadius: 999, transition: "width .3s ease" }} />
+            <div style={{ height: "100%", width: `${completeness}%`, background: "#7C3AED", borderRadius: 999, transition: "width .3s ease" }} />
           </div>
         </div>
       )}
@@ -393,7 +393,7 @@ function ProfilePage() {
 
       <button
         onClick={save}
-        style={{ fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 12, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", marginBottom: 18 }}
+        style={{ fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 12, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", marginBottom: 18 }}
       >
         Gem profil
       </button>
@@ -434,8 +434,8 @@ function ProfilePage() {
                 padding: "9px 16px",
                 borderRadius: 999,
                 border: "1.5px solid #DCE4FB",
-                background: "#EEF2FF",
-                color: "#1B3AA6",
+                background: "#F1EBFF",
+                color: "#5B21B6",
                 cursor: parsingCv ? "default" : "pointer",
                 opacity: parsingCv ? 0.6 : 1,
               }}

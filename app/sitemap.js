@@ -3,7 +3,7 @@ import { CATS } from "@/lib/categories";
 import { POSTS } from "@/lib/blogPosts";
 
 export default async function sitemap() {
-  const base = "https://kontorbud.dk";
+  const base = "https://aibud.dk";
 
   const staticRoutes = ["", "/opgaver", "/hvordan-det-virker", "/kontakt", "/opret", "/login", "/blog", "/faq"].map((path) => ({
     url: `${base}${path}`,

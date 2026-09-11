@@ -1,11 +1,11 @@
 import { ImageResponse } from "next/og";
 
 // Next.js finder automatisk denne fil og bruger den som standard-billede,
-// når Kontorbud deles på LinkedIn, Facebook, Slack, X/Twitter osv. - for alle
+// når AIbud deles på LinkedIn, Facebook, Slack, X/Twitter osv. - for alle
 // sider, der ikke selv definerer et andet billede. Genereres ved request,
 // så der ikke skal vedligeholdes en billedfil manuelt.
 export const runtime = "edge";
-export const alt = "Kontorbud - Danmarks platform for kontoropgaver";
+export const alt = "AIbud - Danmarks platform for AI-opgaver";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,7 +20,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#14213D",
+          background: "#211334",
           fontFamily: "sans-serif",
         }}
       >
@@ -30,7 +30,7 @@ export default async function Image() {
               width: 84,
               height: 84,
               borderRadius: 22,
-              background: "#2A55E5",
+              background: "#7C3AED",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -39,17 +39,17 @@ export default async function Image() {
               color: "#fff",
             }}
           >
-            K
+            A
           </div>
           <div style={{ display: "flex", fontSize: 68, fontWeight: 800, color: "#fff", letterSpacing: "-1px" }}>
-            Kontorbud
+            AIbud
           </div>
         </div>
         <div style={{ display: "flex", marginTop: 22, fontSize: 32, color: "#B7C0DA", textAlign: "center" }}>
-          Danmarks platform for kontoropgaver
+          Danmarks platform for AI-opgaver
         </div>
         <div style={{ display: "flex", gap: 14, marginTop: 44 }}>
-          {["Bogføring", "Kundeservice", "HR & rekruttering", "Grafisk design"].map((tag) => (
+          {["Prompt-engineering", "Automatisering", "Chatbots", "AI-undervisning"].map((tag) => (
             <div
               key={tag}
               style={{

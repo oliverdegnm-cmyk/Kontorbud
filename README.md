@@ -1,4 +1,4 @@
-# Kontorbud
+# AIbud
 
 En rigtig, delt budplatform for administrative opgaver — bygget med Next.js og Postgres.
 
@@ -18,27 +18,27 @@ Der er ikke rigtigt login endnu — man skriver bare et navn, man optræder unde
 
 ### 2. Læg koden på GitHub
 
-1. Opret et gratis GitHub-repo (f.eks. `kontorbud`).
+1. Opret et gratis GitHub-repo (f.eks. `aibud`).
 2. Upload alle filerne fra denne mappe til repoet (træk-og-slip virker fint på github.com, eller brug `git push` hvis du er vant til det).
 
 ### 3. Deploy på Vercel
 
 1. Gå til [vercel.com](https://vercel.com) og log ind med din GitHub-konto.
-2. Klik "Add New Project" og vælg dit `kontorbud`-repo.
+2. Klik "Add New Project" og vælg dit `aibud`-repo.
 3. Under "Environment Variables", tilføj:
    - **Name**: `DATABASE_URL`
    - **Value**: connection string'en fra Neon (trin 1)
-4. Klik "Deploy". Efter et par minutter får du et live link som `kontorbud.vercel.app`.
+4. Klik "Deploy". Efter et par minutter får du et live link som `aibud.vercel.app`.
 
 ### 4. Det er det
 
-Appen opretter selv sine databasetabeller (`tasks` og `bids`), første gang nogen besøger sitet eller kalder et API-endepunkt. Der er ikke flere manuelle trin — åbn bare dit `kontorbud.vercel.app`-link.
+Appen opretter selv sine databasetabeller (`tasks` og `bids`), første gang nogen besøger sitet eller kalder et API-endepunkt. Der er ikke flere manuelle trin — åbn bare dit `aibud.vercel.app`-link.
 
 (Foretrækker du at oprette tabellerne manuelt på forhånd, ligger `npm run db:init` stadig i projektet og gør præcis det samme.)
 
 ### 5. Login (påkrævet variabel)
 
-Kontorbud bruger rigtige konti med email og adgangskode. For at det virker, skal du tilføje en hemmelig nøgle, appen bruger til at signere login-sessioner:
+AIbud bruger rigtige konti med email og adgangskode. For at det virker, skal du tilføje en hemmelig nøgle, appen bruger til at signere login-sessioner:
 
 - **Name**: `JWT_SECRET`
 - **Value**: en lang, tilfældig streng — mindst 32 tegn. Du kan generere en med f.eks. [1password.com/password-generator](https://1password.com/password-generator) (vælg "Random" og 40+ tegn), eller køre `openssl rand -hex 32` i en terminal, hvis du har det installeret.
@@ -47,36 +47,36 @@ Tilføj den under **Environment Variables** i Vercel, ligesom `DATABASE_URL`.
 
 ### 6. Eget domæne (valgfrit)
 
-Køb et domæne (f.eks. kontorbud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
+Køb et domæne (f.eks. aibud.dk) hos simply.com eller one.com, og tilføj det under dit projekts "Domains" i Vercel. Vercel guider dig igennem DNS-opsætningen.
 
 ## Sådan forbinder du email-bekræftelse (Resend)
 
-Kontorbud sender en bekræftelsesmail, når nogen opretter en konto. Det kræver Resend, en mailudbyder med en gratis kvote (100 mails/dag).
+AIbud sender en bekræftelsesmail, når nogen opretter en konto. Det kræver Resend, en mailudbyder med en gratis kvote (100 mails/dag).
 
 1. Gå til [resend.com](https://resend.com) og opret en gratis konto
 2. Under "API Keys", opret en ny nøgle og kopiér den
 3. Tilføj den i Vercel som `RESEND_API_KEY`
 
-Til at starte med sender Resend automatisk fra `onboarding@resend.dev` — det virker med det samme, uden yderligere opsætning, men mails kan ende i spam hos nogle modtagere. For et mere troværdigt afsenderdomæne (f.eks. `noreply@kontorbud.dk`), skal I under "Domains" hos Resend verificere jeres eget domæne (tilføje et par DNS-poster), og derefter sætte `RESEND_FROM_EMAIL` i Vercel til den nye adresse.
+Til at starte med sender Resend automatisk fra `onboarding@resend.dev` — det virker med det samme, uden yderligere opsætning, men mails kan ende i spam hos nogle modtagere. For et mere troværdigt afsenderdomæne (f.eks. `noreply@aibud.dk`), skal I under "Domains" hos Resend verificere jeres eget domæne (tilføje et par DNS-poster), og derefter sætte `RESEND_FROM_EMAIL` i Vercel til den nye adresse.
 
 ## Sådan forbinder du vedhæftede filer (Vercel Blob)
 
-Kontorbud bruger Vercel Blob til at gemme filer, folk vedhæfter til opgaver og beskeder. Det er markant nemmere end de andre integrationer, fordi det foregår direkte i Vercel:
+AIbud bruger Vercel Blob til at gemme filer, folk vedhæfter til opgaver og beskeder. Det er markant nemmere end de andre integrationer, fordi det foregår direkte i Vercel:
 
 1. Gå til dit projekt på vercel.com → fanen **"Storage"**
 2. Klik **"Create Database"** → vælg **"Blob"**
-3. Giv den et navn (f.eks. "kontorbud-filer") og klik **"Create"**
+3. Giv den et navn (f.eks. "aibud-filer") og klik **"Create"**
 4. Vercel spørger, om den skal forbindes til dit projekt — sig ja
 
 Det er det. Vercel tilføjer selv en `BLOB_READ_WRITE_TOKEN`-miljøvariabel til projektet — du skal ikke kopiere eller indsætte noget nøgle manuelt. Redeploy projektet én gang, så er filuploads aktive.
 
 ## Sådan forbinder du kortet (Google Maps)
 
-Kontorbud viser opgavernes placering på et Google Maps-kort med klynge-tal, ligesom Handyhand. Det kræver en Google Cloud-konto med faktureringsoplysninger tilknyttet (også selvom I bliver inden for den gratis kvote).
+AIbud viser opgavernes placering på et Google Maps-kort med klynge-tal, ligesom Handyhand. Det kræver en Google Cloud-konto med faktureringsoplysninger tilknyttet (også selvom I bliver inden for den gratis kvote).
 
 ### 1. Opret et Google Cloud-projekt
 
-Gå til [console.cloud.google.com](https://console.cloud.google.com), opret et nyt projekt (f.eks. "Kontorbud"), og tilknyt en faktureringskonto under "Billing" — det er obligatorisk, men I betaler kun, hvis I overstiger de gratis 10.000 kald om måneden pr. tjeneste.
+Gå til [console.cloud.google.com](https://console.cloud.google.com), opret et nyt projekt (f.eks. "AIbud"), og tilknyt en faktureringskonto under "Billing" — det er obligatorisk, men I betaler kun, hvis I overstiger de gratis 10.000 kald om måneden pr. tjeneste.
 
 ### 2. Aktivér de nødvendige API'er
 
@@ -88,7 +88,7 @@ Under "APIs & Services" → "Library", søg efter og aktivér:
 
 Under "APIs & Services" → "Credentials" → "Create Credentials" → "API key", opret **to separate nøgler**:
 
-- **Browser-nøgle**: begræns den under "Application restrictions" til "Websites", og tilføj jeres Vercel-domæne (f.eks. `kontorbud-xxxx.vercel.app/*` og evt. jeres eget domæne). Begræns den under "API restrictions" til kun **Maps JavaScript API**.
+- **Browser-nøgle**: begræns den under "Application restrictions" til "Websites", og tilføj jeres Vercel-domæne (f.eks. `aibud-xxxx.vercel.app/*` og evt. jeres eget domæne). Begræns den under "API restrictions" til kun **Maps JavaScript API**.
 - **Server-nøgle**: begræns den under "API restrictions" til kun **Geocoding API**. Denne skal ikke have en website-begrænsning, da den kaldes fra serveren, ikke browseren.
 
 ### 4. Tilføj nøglerne i Vercel
@@ -102,7 +102,7 @@ Redeploy projektet bagefter.
 
 ## Sådan forbinder du rigtig betaling (Stripe Connect)
 
-Kontorbud bruger Stripe Connect til at holde betalingen, når et bud vælges, og frigive den til hjælperen (minus servicegebyr) når opgaven markeres som udført — præcis som Handyhands "HandyhandPay".
+AIbud bruger Stripe Connect til at holde betalingen, når et bud vælges, og frigive den til hjælperen (minus servicegebyr) når opgaven markeres som udført — præcis som Handyhands "HandyhandPay".
 
 ### 1. Opret en Stripe-konto
 
@@ -114,7 +114,7 @@ I Stripe Dashboard: **Developers → API keys**. Kopiér **Secret key** (starter
 
 ### 3. Opret en webhook
 
-Kontorbud skal vide, når en betaling er gennemført. Gå til **Developers → Webhooks → Add endpoint**:
+AIbud skal vide, når en betaling er gennemført. Gå til **Developers → Webhooks → Add endpoint**:
 
 - **Endpoint URL**: `https://dit-projekt.vercel.app/api/stripe/webhook`
 - **Events to send**: vælg `checkout.session.completed`
@@ -146,14 +146,14 @@ Når I er klar til rigtige penge: aktivér din Stripe-konto til **Live mode** (k
 
 ## Sådan gør du dig selv til administrator
 
-Kontorbud har en admin-side (`/admin`), hvor kundeservice kan se alle opgaver og brugere og om nødvendigt slette en opgave permanent. Der er ingen knap til at blive admin i selve appen — det gøres én gang direkte i databasen, så det ikke kan misbruges:
+AIbud har en admin-side (`/admin`), hvor kundeservice kan se alle opgaver og brugere og om nødvendigt slette en opgave permanent. Der er ingen knap til at blive admin i selve appen — det gøres én gang direkte i databasen, så det ikke kan misbruges:
 
 1. Gå til dit Neon-projekt → fanen **"SQL Editor"**
 2. Kør denne kommando, med din egen email indsat:
    ```sql
    UPDATE users SET is_admin = true WHERE email = 'din@email.dk';
    ```
-3. Log ud og ind igen på Kontorbud — der dukker nu et "Admin"-punkt op i menuen
+3. Log ud og ind igen på AIbud — der dukker nu et "Admin"-punkt op i menuen
 
 ## Kør det lokalt (til udvikling)
 

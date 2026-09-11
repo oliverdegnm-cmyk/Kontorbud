@@ -30,7 +30,7 @@ export default function MobileMenu() {
   ];
 
   function handleLogOut() {
-    if (confirm("Log ud af Kontorbud?")) {
+    if (confirm("Log ud af AIbud?")) {
       logOut().then(() => {
         window.location.href = "/";
       });
@@ -55,10 +55,10 @@ export default function MobileMenu() {
               <X size={22} />
             </button>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: "#2A55E5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>
-                KB
+              <div style={{ width: 30, height: 30, borderRadius: 9, background: "#7C3AED", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>
+                AB
               </div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Kontorbud</div>
+              <div style={{ fontSize: 16, fontWeight: 800 }}>AIbud</div>
             </div>
             <div style={{ width: 22 }} />
           </div>
@@ -74,7 +74,7 @@ export default function MobileMenu() {
                   padding: "18px 0",
                   fontSize: 17,
                   fontWeight: l.cta ? 800 : 600,
-                  color: l.cta ? "#2A55E5" : "#14213D",
+                  color: l.cta ? "#7C3AED" : "#14213D",
                   borderBottom: "1px solid #F0F1F5",
                 }}
               >

@@ -13,7 +13,7 @@ export async function GET(request) {
       headers: {
         // CVR API kræver en beskrivende user-agent frem for standardværdien,
         // ellers risikerer opslag at blive afvist.
-        "User-Agent": "CVR API - Kontorbud.dk - support@kontorbud.dk",
+        "User-Agent": "CVR API - AIbud.dk - support@aibud.dk",
       },
     });
 

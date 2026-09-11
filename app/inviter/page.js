@@ -18,7 +18,7 @@ function InviterPage() {
     setCanNativeShare(typeof navigator !== "undefined" && !!navigator.share);
   }, [id]);
 
-  const shareText = `Hej! ${name ? name + " her - " : ""}jeg synes du skal tjekke Kontorbud.dk ud. Det er en dansk platform, hvor man nemt kan få hjælp til kontoropgaver, eller selv byde og tjene penge.`;
+  const shareText = `Hej! ${name ? name + " her - " : ""}jeg synes du skal tjekke AIbud.dk ud. Det er en dansk platform, hvor man nemt kan få hjælp til AI-opgaver, eller selv byde og tjene penge.`;
 
   async function copyLink() {
     try {
@@ -32,7 +32,7 @@ function InviterPage() {
 
   async function nativeShare() {
     try {
-      await navigator.share({ title: "Kontorbud", text: shareText, url: link });
+      await navigator.share({ title: "AIbud", text: shareText, url: link });
     } catch (e) {
       // brugeren annullerede - ingen grund til at vise en fejl
     }
@@ -43,7 +43,7 @@ function InviterPage() {
   return (
     <div style={{ marginTop: 24, maxWidth: 560, marginBottom: 60 }}>
       <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>Inviter venner</h2>
-      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Del dit personlige link, så andre nemt kan finde vej til Kontorbud.</p>
+      <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>Del dit personlige link, så andre nemt kan finde vej til AIbud.</p>
 
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22, marginBottom: 20 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12 }}>
@@ -52,7 +52,7 @@ function InviterPage() {
         <div style={{ background: "#F5F7FB", border: "1.5px dashed #E4E8F0", borderRadius: 10, padding: "14px 16px", fontSize: 13.5, color: "#14213D", lineHeight: 1.6, marginBottom: 20 }}>
           {shareText}
           <br />
-          <span style={{ color: "#2A55E5", fontWeight: 700 }}>{link || "Henter…"}</span>
+          <span style={{ color: "#7C3AED", fontWeight: 700 }}>{link || "Henter…"}</span>
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -68,7 +68,7 @@ function InviterPage() {
                 padding: "12px 20px",
                 borderRadius: 10,
                 border: "none",
-                background: "#2A55E5",
+                background: "#7C3AED",
                 color: "#fff",
                 cursor: "pointer",
               }}

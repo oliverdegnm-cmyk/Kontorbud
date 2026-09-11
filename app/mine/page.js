@@ -41,7 +41,7 @@ function MinePage() {
       <h2 style={{ fontSize: 24, marginBottom: 4 }}>Mine sager</h2>
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 10 }}>
         Overblik over dine opgaver og bud, som{" "}
-        <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ color: "#2A55E5", fontWeight: 700 }}>
+        <Link href={`/bruger/${encodeURIComponent(name)}`} style={{ color: "#7C3AED", fontWeight: 700 }}>
           {name}
         </Link>
         .

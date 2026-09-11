@@ -80,7 +80,7 @@ function ResetPasswordPage() {
           <button
             onClick={submit}
             disabled={submitting}
-            style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "11px 20px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: submitting ? "default" : "pointer", opacity: submitting ? 0.6 : 1 }}
+            style={{ width: "100%", fontSize: 14, fontWeight: 700, padding: "11px 20px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: submitting ? "default" : "pointer", opacity: submitting ? 0.6 : 1 }}
           >
             {submitting ? "Et øjeblik…" : "Skift adgangskode"}
           </button>

@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { CATS, categoryBySlug } from "@/lib/categories";
 
-const POPULAR_SLUGS = ["bogforing-regnskab", "kundeservice-support", "grafisk-design", "ai-opgaver", "hjemmeside-it"];
+const POPULAR_SLUGS = ["prompt-engineering", "ai-automatisering", "chatbots-ai-assistenter", "ai-tekst-indhold", "ai-billeder-video"];
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#14213D", borderRadius: 24, padding: "40px 36px", margin: "60px 0 24px", color: "#fff" }}>
+    <footer style={{ background: "#211334", borderRadius: 24, padding: "40px 36px", margin: "60px 0 24px", color: "#fff" }}>
       <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr 1fr", gap: 32 }} className="kb-grid-3">
         <div>
-          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Kontorbud</div>
+          <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 12 }}>AIbud</div>
           <p style={{ fontSize: 13, color: "#B7C0DA", lineHeight: 1.65, maxWidth: 320 }}>
-            Kontorbud er en dansk platform, hvor du kan finde hjælp til kontoropgaver af enhver slags, eller selv byde og tjene penge på det, du er god til.
+            AIbud er en dansk platform, hvor du kan finde hjælp til AI-opgaver af enhver slags - fra konkrete opgaver til at lære AI's muligheder at kende - eller selv byde og tjene penge på det, du er god til.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)", marginTop: 32, paddingTop: 20, fontSize: 12, color: "#8A93B0", textAlign: "center" }}>
-        © {new Date().getFullYear()} Kontorbud
+        © {new Date().getFullYear()} AIbud
       </div>
     </footer>
   );
