@@ -574,21 +574,28 @@ function SectionHead({ title, sub, large, mt }) {
 // på Handyhands forside. Overskriften selv sidder UDENFOR feltet, i nøjagtig
 // samme stil og med samme venstre-kant som alle andre overskrifter på siden,
 // så ingen overskrifter "springer" i, hvor langt til venstre de starter.
+// Undtagelsen er "border"-varianten (en hvid boks med farvet kant): der sidder
+// overskriften INDE i selve boksen, som en samlet, indrammet "kort"-sektion.
 function SectionBand({ title, sub, children, tint, border, titleColor }) {
+  if (border) {
+    return (
+      <div
+        className="kb-section-headwrap kb-section-band"
+        style={{ background: "#fff", border: `2px solid ${border}`, borderRadius: 28, padding: "40px 40px", margin: "96px 0 0" }}
+      >
+        <h2 className="kb-section-title" style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0, color: titleColor || "inherit" }}>{title}</h2>
+        {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, marginBottom: 28, maxWidth: 560 }}>{sub}</p>}
+        {children}
+      </div>
+    );
+  }
   return (
     <>
       <div className="kb-section-headwrap" style={{ margin: "96px 0 32px" }}>
         <h2 className="kb-section-title" style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0, color: titleColor || "inherit" }}>{title}</h2>
         {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
       </div>
-      <div
-        className="kb-section-band"
-        style={
-          border
-            ? { background: "#fff", border: `2px solid ${border}`, borderRadius: 28, padding: "40px 40px" }
-            : { background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }
-        }
-      >
+      <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }}>
         {children}
       </div>
     </>
