@@ -80,6 +80,24 @@ export default function AdminPage() {
     loadUsers();
   }
 
+  async function toggleAdmin(id, userName, currentlyAdmin) {
+    const question = currentlyAdmin
+      ? `Fjern administrator-adgang fra "${userName}"?`
+      : `Gør "${userName}" til administrator? De får derefter fuld adgang til denne admin-side.`;
+    if (!confirm(question)) return;
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isAdmin: !currentlyAdmin }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+    loadUsers();
+  }
+
   async function messageUser(userName) {
     const message = prompt(`Skriv en besked til ${userName}:`);
     if (!message?.trim()) return;
@@ -204,6 +222,24 @@ export default function AdminPage() {
                   style={{ width: 32, height: 32, borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flex: "0 0 auto" }}
                 >
                   <MessageSquare size={14} />
+                </button>
+                <button
+                  onClick={() => toggleAdmin(u.id, u.name, u.isAdmin)}
+                  title={u.isAdmin ? "Fjern administrator-adgang" : "Gør til administrator"}
+                  style={{
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    padding: "6px 12px",
+                    borderRadius: 999,
+                    border: u.isAdmin ? "1.5px solid #E4E8F0" : "1.5px solid #C7D3FA",
+                    background: u.isAdmin ? "#fff" : "#EEF2FF",
+                    color: u.isAdmin ? "#5B6478" : "#1B3AA6",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  {u.isAdmin ? "Fjern admin" : "Gør til admin"}
                 </button>
                 {!u.isAdmin && (
                   <button
