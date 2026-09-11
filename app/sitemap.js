@@ -5,7 +5,7 @@ import { POSTS } from "@/lib/blogPosts";
 export default async function sitemap() {
   const base = "https://kontorbud.dk";
 
-  const staticRoutes = ["", "/opgaver", "/hvordan-det-virker", "/kontakt", "/opret", "/login", "/blog"].map((path) => ({
+  const staticRoutes = ["", "/opgaver", "/hvordan-det-virker", "/kontakt", "/opret", "/login", "/blog", "/faq"].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
   }));

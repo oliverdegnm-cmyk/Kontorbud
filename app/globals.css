@@ -66,6 +66,9 @@ textarea {
   .kb-grid-steps4 {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+  .kb-hero-title {
+    font-size: 28px !important;
+  }
 }
 
 /* ---------- opgave-kort: fold "Oprettet af" + status/budget ned på en

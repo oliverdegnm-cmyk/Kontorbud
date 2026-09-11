@@ -140,7 +140,7 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
-          <h1 style={{ fontSize: 32, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
+          <h1 className="kb-hero-title" style={{ fontSize: 36, lineHeight: 1.15, fontWeight: 800, maxWidth: 480, margin: 0 }}>
             Få bud på dine kontoropgaver
           </h1>
           <p style={{ fontSize: 15, color: "#5B6478", margin: "14px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
@@ -303,7 +303,7 @@ export default function HomePage() {
           </button>
         )}
       </div>
-      <div style={{ marginBottom: 48 }} />
+      <div style={{ marginBottom: 64 }} />
 
       <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
       {openTasks.length === 0 ? (
@@ -448,33 +448,33 @@ export default function HomePage() {
       )}
 
       <SectionHead title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." />
-      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, marginBottom: 12 }}>
+      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginBottom: 12 }}>
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
           { num: "02", title: "Modtag bud", text: "Dygtige hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser." },
           { num: "03", title: "Betal når du er tilfreds", text: "Beløbet holdes sikkert og frigives først, når opgaven er løst som aftalt." },
         ].map((step) => (
-          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22 }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#DCE4FB", marginBottom: 8 }}>{step.num}</div>
-            <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 6 }}>{step.title}</div>
-            <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>{step.text}</p>
+          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 26 }}>
+            <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
+            <div style={{ fontSize: 15.5, fontWeight: 800, marginBottom: 8 }}>{step.title}</div>
+            <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>{step.text}</p>
           </div>
         ))}
       </div>
 
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "28px 32px", marginTop: 32 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginTop: 48 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
           <ShieldCheck size={18} color="#2A55E5" />
           <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
         </div>
-        <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 8 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Pengene bliver stående, til opgaven er løst</h3>
         <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
           Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
         </p>
       </div>
 
-      <div style={{ textAlign: "center", margin: "56px 0 32px", padding: "0 20px" }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 22 }}>Klar til at starte?</h2>
+      <div style={{ textAlign: "center", margin: "72px 0 40px", padding: "0 20px" }}>
+        <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 22 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
           <Link
             href="/opret"
@@ -507,9 +507,9 @@ function TrustBadge({ icon: Icon, text }) {
 
 function SectionHead({ title, sub, large }) {
   return (
-    <div style={{ margin: "40px 0 16px" }}>
-      <h2 style={{ fontSize: large ? 26 : 20, fontWeight: 800, margin: 0 }}>{title}</h2>
-      {sub && <p style={{ fontSize: large ? 14.5 : 13, color: "#5B6478", marginTop: 6 }}>{sub}</p>}
+    <div style={{ margin: "64px 0 22px" }}>
+      <h2 style={{ fontSize: large ? 30 : 23, fontWeight: 800, margin: 0 }}>{title}</h2>
+      {sub && <p style={{ fontSize: large ? 15 : 13.5, color: "#5B6478", marginTop: 8 }}>{sub}</p>}
     </div>
   );
 }
