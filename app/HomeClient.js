@@ -510,10 +510,10 @@ function TrustBadge({ icon: Icon, text }) {
 function SectionHead({ title, sub, large }) {
   return (
     <div style={{ margin: "96px 0 32px" }}>
-      <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 34 : 25, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
+      <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 38 : 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
         {title}
       </h2>
-      {sub && <p style={{ fontSize: large ? 15.5 : 14, color: "#5B6478", marginTop: 8 }}>{sub}</p>}
+      {sub && <p style={{ fontSize: large ? 17 : 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
     </div>
   );
 }
