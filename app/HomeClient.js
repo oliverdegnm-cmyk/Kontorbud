@@ -395,7 +395,7 @@ export default function HomePage() {
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div className="kb-task-title" style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{capitalizeFirst(t.title)}</div>
-                  <div style={{ fontSize: 12, color: "#5B6478" }}>
+                  <div className="kb-task-meta" style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontWeight: 700, color: t.deadline === "Fleksibel" ? "#1AA37A" : getDeadlineLabel(t).urgent ? "#C0392B" : "#14213D" }}>
