@@ -125,7 +125,6 @@ export default function HomePage() {
           className="kb-hero-card"
           style={{
             background: "#fff",
-            border: "1.5px solid #E4E8F0",
             borderRadius: 24,
             padding: "48px 48px 48px 0",
           }}
@@ -225,7 +224,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." tint="#EEF2FF">
+      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." tint="#14213D">
       <div
         style={{
           display: "flex",
@@ -268,7 +267,7 @@ export default function HomePage() {
         <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
       )}
 
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
+      <div style={{ fontSize: 12.5, color: "#B7C0DA", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
       <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10, marginBottom: 20 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : 8)
@@ -307,7 +306,7 @@ export default function HomePage() {
               padding: "9px 16px",
               borderRadius: 999,
               background: "#fff",
-              border: "1.5px solid #C7D3FA",
+              border: "1.5px solid #E4E8F0",
               color: "#1B3AA6",
               fontSize: 12.5,
               fontWeight: 700,
