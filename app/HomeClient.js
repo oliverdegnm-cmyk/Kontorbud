@@ -144,8 +144,9 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
-          <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0, minHeight: 82 }}>
-            Få bud på dine{" "}
+          <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
+            Få bud på dine
+            <br />
             <span
               key={heroWordIndex}
               className={heroWordIsKontor ? "kb-hero-rotate-word kb-hero-rotate-word--pop" : "kb-hero-rotate-word"}
@@ -486,7 +487,7 @@ export default function HomePage() {
         </>
       )}
 
-      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#EEF2FF">
+      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#14213D">
       <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
