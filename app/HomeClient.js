@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock, Wrench, Wallet } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -94,14 +94,14 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 24, alignItems: "stretch", marginTop: 6 }}>
+      <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "stretch", marginTop: 6 }}>
         <div
           className="kb-hero-card"
           style={{
             background: "#fff",
             border: "1.5px solid #E4E8F0",
             borderRadius: 24,
-            padding: "40px 40px",
+            padding: "48px 48px",
           }}
         >
           <div
@@ -124,52 +124,6 @@ export default function HomePage() {
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
           </p>
-          <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
-            <Link
-              href="/opret"
-              style={{
-                flex: "1 1 220px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                textDecoration: "none",
-                background: "#F5F7FB",
-                border: "1.5px solid #E4E8F0",
-                borderRadius: 14,
-                padding: "14px 16px",
-              }}
-            >
-              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
-                <Wrench size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 800, color: "#14213D" }}>Få en opgave løst</div>
-                <div style={{ fontSize: 12, color: "#5B6478" }}>Bogføring, kundeservice, oversættelse og mere</div>
-              </div>
-            </Link>
-            <Link
-              href="/opgaver"
-              style={{
-                flex: "1 1 220px",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                textDecoration: "none",
-                background: "#F5F7FB",
-                border: "1.5px solid #E4E8F0",
-                borderRadius: 14,
-                padding: "14px 16px",
-              }}
-            >
-              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
-                <Wallet size={18} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 800, color: "#14213D" }}>Byd og tjen penge</div>
-                <div style={{ fontSize: 12, color: "#5B6478" }}>Se åbne opgaver og send dit bud</div>
-              </div>
-            </Link>
-          </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
               href="/opret"
@@ -213,7 +167,7 @@ export default function HomePage() {
         </div>
         <div
           className="kb-hide-mobile"
-          style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 380 }}
+          style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 420 }}
         >
           {heroLoaded &&
             heroImages.map((img, i) => (
@@ -242,11 +196,11 @@ export default function HomePage() {
         style={{
           display: "flex",
           gap: 10,
-          marginBottom: 28,
+          marginBottom: 36,
           background: "#F5F7FB",
           border: "1.5px solid #E4E8F0",
           borderRadius: 16,
-          padding: 10,
+          padding: 16,
           flexWrap: "wrap",
         }}
       >
@@ -280,8 +234,8 @@ export default function HomePage() {
         <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
       )}
 
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 14 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
-      <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 8, marginBottom: 12 }}>
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
+      <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10, marginBottom: 20 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : 8)
           .map((c) => (
@@ -292,7 +246,7 @@ export default function HomePage() {
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
-                padding: "10px 16px 10px 12px",
+                padding: "13px 20px 13px 15px",
                 borderRadius: 16,
                 background: "#F5F7FB",
                 border: "1.5px solid #E4E8F0",
@@ -351,13 +305,13 @@ export default function HomePage() {
           </button>
         )}
       </div>
-      <div style={{ marginBottom: 64 }} />
+      <div style={{ marginBottom: 84 }} />
 
       <SectionHead title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu." />
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
-        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 20 }}>
+        <div className="kb-task-list-container" style={{ display: "flex", flexDirection: "column", gap: 22, marginBottom: 24 }}>
           {openTasks.slice(0, 5).map((t) => {
             const cat = CATS.find((c) => c.name === t.category);
             const status = statusInfo(t);
@@ -370,11 +324,11 @@ export default function HomePage() {
                   display: "grid",
                   gridTemplateColumns: "38px 1fr 320px",
                   alignItems: "center",
-                  gap: 16,
+                  gap: 18,
                   background: "#fff",
                   border: "1.5px solid #E4E8F0",
                   borderRadius: 16,
-                  padding: "22px 24px",
+                  padding: "28px 30px",
                   cursor: "pointer",
                 }}
               >
@@ -496,13 +450,13 @@ export default function HomePage() {
       )}
 
       <SectionHead title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." />
-      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginBottom: 12 }}>
+      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, marginBottom: 16 }}>
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
           { num: "02", title: "Modtag bud", text: "Dygtige hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser." },
           { num: "03", title: "Betal når du er tilfreds", text: "Beløbet holdes sikkert og frigives først, når opgaven er løst som aftalt." },
         ].map((step) => (
-          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 26 }}>
+          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
             <div style={{ fontSize: 15.5, fontWeight: 800, marginBottom: 8 }}>{step.title}</div>
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>{step.text}</p>
@@ -510,19 +464,19 @@ export default function HomePage() {
         ))}
       </div>
 
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginTop: 48 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
           <ShieldCheck size={18} color="#2A55E5" />
           <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
         </div>
-        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
         <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
           Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
         </p>
       </div>
 
-      <div style={{ textAlign: "center", margin: "72px 0 40px", padding: "0 20px" }}>
-        <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 22 }}>Klar til at starte?</h2>
+      <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
+        <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
           <Link
             href="/opret"
@@ -555,7 +509,7 @@ function TrustBadge({ icon: Icon, text }) {
 
 function SectionHead({ title, sub, large }) {
   return (
-    <div style={{ margin: "72px 0 24px" }}>
+    <div style={{ margin: "96px 0 32px" }}>
       <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 34 : 25, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
         {title}
       </h2>
