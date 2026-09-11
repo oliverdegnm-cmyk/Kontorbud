@@ -224,7 +224,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#2A55E5" titleColor="#2A55E5">
+      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
       <div
         style={{
           display: "flex",
@@ -417,7 +417,7 @@ export default function HomePage() {
                       )}
                     </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
                     <div style={{ width: 62, textAlign: "center" }}>
                       <Badge tone={status.tone}>{status.label}</Badge>
                     </div>
