@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
@@ -50,36 +49,6 @@ export default function HomePage() {
     setMatchingWithAi(false);
   }
   const [tasks, setTasks] = useState(null);
-  const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70";
-  const [heroImages, setHeroImages] = useState([{ url: DEFAULT_HERO_IMAGE, position: 50, zoom: 100 }]);
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [heroLoaded, setHeroLoaded] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/site-settings")
-      .then((r) => r.json())
-      .then((data) => {
-        try {
-          const parsed = JSON.parse(data.settings?.hero_images || "[]");
-          if (Array.isArray(parsed) && parsed.length > 0) setHeroImages(parsed);
-        } catch (err) {
-          // behold standardbilledet, hvis noget ikke kan tolkes
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        setHeroLoaded(true);
-      });
-  }, []);
-
-  // Skifter automatisk til næste billede hvert 6. sekund, hvis der er mere end ét.
-  useEffect(() => {
-    if (heroImages.length <= 1) return;
-    const interval = setInterval(() => {
-      setHeroIndex((i) => (i + 1) % heroImages.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [heroImages.length]);
 
   useEffect(() => {
     fetch("/api/tasks")
@@ -94,37 +63,14 @@ export default function HomePage() {
 
   return (
     <div>
-      <div style={{ position: "relative", marginTop: 6 }}>
-        <div style={{ width: "100%", height: 340, borderRadius: 28, overflow: "hidden", background: "#F5F7FB", position: "relative" }}>
-          {heroLoaded &&
-            heroImages.map((img, i) => (
-              <Image
-                key={img.url + i}
-                src={img.url}
-                alt="Overvældet af kontoropgaver - beder om hjælp"
-                fill
-                priority={i === 0}
-                sizes="(max-width: 760px) 100vw, 1080px"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: `center ${img.position}%`,
-                  transform: `scale(${img.zoom / 100})`,
-                  transformOrigin: "center",
-                  opacity: i === heroIndex ? 1 : 0,
-                  transition: "opacity 1.2s ease",
-                }}
-              />
-            ))}
-        </div>
+      <div style={{ marginTop: 6 }}>
         <div
           className="kb-hero-card"
           style={{
-            position: "relative",
             background: "#fff",
+            border: "1.5px solid #E4E8F0",
             borderRadius: 24,
             padding: "40px 40px",
-            margin: "-64px 0 0",
-            boxShadow: "0 24px 48px -24px rgba(20,33,61,.25)",
           }}
         >
           <div

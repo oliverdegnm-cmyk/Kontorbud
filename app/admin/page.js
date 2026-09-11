@@ -148,12 +148,6 @@ export default function AdminPage() {
           Brugere
         </button>
         <button
-          onClick={() => setTab("images")}
-          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#2A55E5" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
-        >
-          Billeder
-        </button>
-        <button
           onClick={() => setTab("contact")}
           style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "contact" ? "#2A55E5" : "transparent", color: tab === "contact" ? "#fff" : "#5B6478" }}
         >
@@ -255,7 +249,6 @@ export default function AdminPage() {
         </div>
       )}
 
-      {tab === "images" && <ImagesTab />}
       {tab === "contact" && <ContactSettings />}
     </div>
   );
@@ -449,181 +442,6 @@ function ContactSettings() {
         </button>
         {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
       </div>
-    </div>
-  );
-}
-
-function ImagesTab() {
-  return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-        <ImageIcon size={16} color="#5B6478" />
-        <span style={{ fontSize: 13, color: "#5B6478" }}>
-          Tilføj flere billeder til forsidens hero - de skifter automatisk imellem hinanden med et blødt fade. Ændringer er synlige for alle med det samme.
-        </span>
-      </div>
-      <HeroImagesSetting />
-    </div>
-  );
-}
-
-const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1758611972678-bc3b29b4718f?w=1400&auto=format&fit=crop&q=70";
-
-function HeroImagesSetting() {
-  const [images, setImages] = useState([{ url: DEFAULT_HERO_IMAGE, position: 50, zoom: 100 }]);
-  const [uploading, setUploading] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/site-settings")
-      .then((r) => r.json())
-      .then((data) => {
-        try {
-          const parsed = JSON.parse(data.settings?.hero_images || "[]");
-          if (Array.isArray(parsed) && parsed.length > 0) setImages(parsed);
-        } catch (err) {
-          // ignorer - behold standardbilledet
-        }
-        setLoaded(true);
-      })
-      .catch(() => setLoaded(true));
-  }, []);
-
-  async function persist(next) {
-    setImages(next);
-    await fetch("/api/admin/settings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: "hero_images", value: JSON.stringify(next) }),
-    });
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  }
-
-  async function handleUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setError("");
-    try {
-      const blob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
-        clientPayload: JSON.stringify({ purpose: "image" }),
-      });
-      await persist([...images, { url: blob.url, position: 50, zoom: 100 }]);
-    } catch (err) {
-      setError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
-    }
-    setUploading(false);
-    e.target.value = "";
-  }
-
-  function updateLocal(idx, patch) {
-    setImages((prev) => prev.map((img, i) => (i === idx ? { ...img, ...patch } : img)));
-  }
-
-  function removeImage(idx) {
-    if (images.length <= 1) return; // mindst ét billede skal altid være sat
-    persist(images.filter((_, i) => i !== idx));
-  }
-
-  if (!loaded) return null;
-
-  return (
-    <div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 16 }}>
-        {images.map((img, idx) => (
-          <div key={idx} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 700 }}>Billede {idx + 1}</div>
-              {images.length > 1 && (
-                <button
-                  onClick={() => removeImage(idx)}
-                  style={{ fontSize: 12, fontWeight: 700, color: "#C0392B", background: "none", border: "none", cursor: "pointer" }}
-                >
-                  Fjern
-                </button>
-              )}
-            </div>
-
-            <div style={{ width: "100%", maxWidth: 480, height: 130, borderRadius: 12, border: "1px solid #E4E8F0", overflow: "hidden", marginBottom: 14 }}>
-              <img
-                src={img.url}
-                alt={`Hero-billede ${idx + 1}`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: `center ${img.position}%`,
-                  transform: `scale(${img.zoom / 100})`,
-                  transformOrigin: "center",
-                  display: "block",
-                }}
-              />
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 480 }}>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
-                  <span>Lodret position</span>
-                  <span>{img.position}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={img.position}
-                  onChange={(e) => updateLocal(idx, { position: Number(e.target.value) })}
-                  onMouseUp={() => persist(images)}
-                  onTouchEnd={() => persist(images)}
-                  style={{ width: "100%" }}
-                />
-              </div>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
-                  <span>Zoom</span>
-                  <span>{img.zoom}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="100"
-                  max="200"
-                  value={img.zoom}
-                  onChange={(e) => updateLocal(idx, { zoom: Number(e.target.value) })}
-                  onMouseUp={() => persist(images)}
-                  onTouchEnd={() => persist(images)}
-                  style={{ width: "100%" }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <label
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          fontSize: 13,
-          fontWeight: 700,
-          padding: "10px 18px",
-          borderRadius: 10,
-          border: "1.5px solid #E4E8F0",
-          background: "#fff",
-          color: "#14213D",
-          cursor: uploading ? "default" : "pointer",
-          opacity: uploading ? 0.6 : 1,
-        }}
-      >
-        {uploading ? "Uploader…" : "+ Tilføj et billede mere"}
-        <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ display: "none" }} />
-      </label>
-      {saved && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</div>}
-      {error && <div style={{ marginTop: 10, fontSize: 12.5, fontWeight: 700, color: "#C0392B" }}>{error}</div>}
     </div>
   );
 }
