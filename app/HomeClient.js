@@ -120,14 +120,14 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "stretch", marginTop: 6 }}>
+      <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "stretch", marginTop: 40 }}>
         <div
           className="kb-hero-card"
           style={{
             background: "#fff",
             border: "1.5px solid #E4E8F0",
             borderRadius: 24,
-            padding: "48px 48px 48px 20px",
+            padding: "48px 48px 48px 0",
           }}
         >
           <div
@@ -144,7 +144,7 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
-          <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
+          <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0, minHeight: 82 }}>
             Få bud på dine{" "}
             <span
               key={heroWordIndex}
@@ -224,7 +224,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." mt={132} />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
       <div
         style={{
           display: "flex",
@@ -556,14 +556,21 @@ function SectionHead({ title, sub, large, mt }) {
   );
 }
 
-// Ligesom SectionHead, men pakket ind i et rundet, farvet felt - så forsiden
-// får skiftevis hvide og farvede sektioner, ligesom på Handyhands forside.
+// Ligesom SectionHead, men med indholdet pakket ind i et rundet, farvet felt
+// nedenunder - så forsiden får skiftevis hvide og farvede sektioner, ligesom
+// på Handyhands forside. Overskriften selv sidder UDENFOR feltet, i nøjagtig
+// samme stil og med samme venstre-kant som alle andre overskrifter på siden,
+// så ingen overskrifter "springer" i, hvor langt til venstre de starter.
 function SectionBand({ title, sub, children, tint }) {
   return (
-    <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "56px 48px", marginTop: 96, marginBottom: 32 }}>
-      <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
-      {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
-      <div style={{ marginTop: 32 }}>{children}</div>
-    </div>
+    <>
+      <div style={{ margin: "96px 0 32px" }}>
+        <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
+        {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
+      </div>
+      <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "40px 40px" }}>
+        {children}
+      </div>
+    </>
   );
 }
