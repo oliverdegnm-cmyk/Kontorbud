@@ -10,11 +10,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const post = getPostBySlug(params.slug);
-  if (!post) return { title: "Blogindlæg - AIbud" };
+  if (!post) return { title: "Blogindlæg - Kontorbud" };
   return {
-    title: `${post.title} - AIbud`,
+    title: `${post.title} - Kontorbud`,
     description: post.description,
-    alternates: { canonical: `https://aibud.dk/blog/${post.slug}` },
+    alternates: { canonical: `https://kontorbud.dk/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -35,7 +35,7 @@ export default function BlogPostPage({ params }) {
   if (!post) {
     return (
       <div style={{ marginTop: 40, textAlign: "center", color: "#5B6478" }}>
-        Indlægget blev ikke fundet. <Link href="/blog" style={{ color: "#7C3AED", fontWeight: 700 }}>Se alle indlæg</Link>
+        Indlægget blev ikke fundet. <Link href="/blog" style={{ color: "#2A55E5", fontWeight: 700 }}>Se alle indlæg</Link>
       </div>
     );
   }
@@ -48,17 +48,17 @@ export default function BlogPostPage({ params }) {
     headline: post.title,
     description: post.description,
     datePublished: post.publishedAt,
-    author: { "@type": "Organization", name: "AIbud" },
-    publisher: { "@type": "Organization", name: "AIbud" },
+    author: { "@type": "Organization", name: "Kontorbud" },
+    publisher: { "@type": "Organization", name: "Kontorbud" },
   };
 
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "AIbud", item: "https://aibud.dk/" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://aibud.dk/blog" },
-      { "@type": "ListItem", position: 3, name: post.title, item: `https://aibud.dk/blog/${post.slug}` },
+      { "@type": "ListItem", position: 1, name: "Kontorbud", item: "https://kontorbud.dk/" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://kontorbud.dk/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://kontorbud.dk/blog/${post.slug}` },
     ],
   };
 
@@ -68,11 +68,11 @@ export default function BlogPostPage({ params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }} />
 
       <div style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 16 }}>
-        <Link href="/">AIbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
+        <Link href="/">Kontorbud</Link> <ChevronRight size={11} style={{ display: "inline", verticalAlign: "middle" }} />{" "}
         <Link href="/blog">Blog</Link>
       </div>
 
-      <div style={{ fontSize: 11.5, fontWeight: 700, color: "#7C3AED", marginBottom: 10 }}>{post.category}</div>
+      <div style={{ fontSize: 11.5, fontWeight: 700, color: "#2A55E5", marginBottom: 10 }}>{post.category}</div>
       <h1 style={{ fontSize: 27, fontWeight: 800, marginBottom: 12, lineHeight: 1.3 }}>{post.title}</h1>
       <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12.5, color: "#9AA2B1", marginBottom: 32 }}>
         <Calendar size={13} /> {formatDate(post.publishedAt)}
@@ -107,7 +107,7 @@ export default function BlogPostPage({ params }) {
       </div>
 
       {cat && (
-        <div style={{ background: "#F1EBFF", borderRadius: 16, padding: "22px 24px", marginTop: 36 }}>
+        <div style={{ background: "#EEF2FF", borderRadius: 16, padding: "22px 24px", marginTop: 36 }}>
           <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 8 }}>Har du brug for hjælp til {cat.name.toLowerCase()}?</div>
           <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, marginBottom: 16 }}>
             Opret en opgave, og få bud fra dygtige danske hjælpere - betaling holdes sikkert, indtil du er tilfreds.
@@ -115,7 +115,7 @@ export default function BlogPostPage({ params }) {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
               href={`/opret?category=${encodeURIComponent(cat.name)}`}
-              style={{ display: "inline-block", fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 999, background: "#7C3AED", color: "#fff" }}
+              style={{ display: "inline-block", fontSize: 13, fontWeight: 700, padding: "10px 18px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
             >
               Opret en opgave
             </Link>
@@ -130,7 +130,7 @@ export default function BlogPostPage({ params }) {
       )}
 
       <div style={{ marginTop: 40 }}>
-        <Link href="/blog" style={{ fontSize: 13.5, fontWeight: 700, color: "#7C3AED" }}>
+        <Link href="/blog" style={{ fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}>
           ← Se alle blogindlæg
         </Link>
       </div>

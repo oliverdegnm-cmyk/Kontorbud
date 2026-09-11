@@ -33,8 +33,8 @@ function VerifyEmailPage() {
           <CheckCircle2 size={40} color="#1AA37A" style={{ marginBottom: 14 }} />
           <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Email bekræftet</h2>
           <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 20 }}>Din konto er nu fuldt aktiveret.</p>
-          <Link href="/" style={{ display: "inline-block", fontSize: 14, fontWeight: 700, padding: "11px 22px", borderRadius: 10, background: "#7C3AED", color: "#fff" }}>
-            Gå til AIbud
+          <Link href="/" style={{ display: "inline-block", fontSize: 14, fontWeight: 700, padding: "11px 22px", borderRadius: 10, background: "#2A55E5", color: "#fff" }}>
+            Gå til Kontorbud
           </Link>
         </>
       )}

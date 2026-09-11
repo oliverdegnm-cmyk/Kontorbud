@@ -12,8 +12,8 @@ export default function NotFound() {
           width: 64,
           height: 64,
           borderRadius: 18,
-          background: "#F1EBFF",
-          color: "#7C3AED",
+          background: "#EEF2FF",
+          color: "#2A55E5",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -30,7 +30,7 @@ export default function NotFound() {
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 40 }}>
         <Link
           href="/"
-          style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 22px", borderRadius: 999, background: "#7C3AED", color: "#fff" }}
+          style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 22px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
         >
           Til forsiden
         </Link>

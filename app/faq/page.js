@@ -3,9 +3,9 @@ import { FAQ_SECTIONS } from "@/lib/faqData";
 import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export const metadata = {
-  title: "Ofte stillede spørgsmål - AIbud",
-  description: "Svar på de mest almindelige spørgsmål om at oprette opgaver, byde, betaling og sikkerhed på AIbud.",
-  alternates: { canonical: "https://aibud.dk/faq" },
+  title: "Ofte stillede spørgsmål - Kontorbud",
+  description: "Svar på de mest almindelige spørgsmål om at oprette opgaver, byde, betaling og sikkerhed på Kontorbud.",
+  alternates: { canonical: "https://kontorbud.dk/faq" },
 };
 
 export default function FaqPage() {

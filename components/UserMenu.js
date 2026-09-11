@@ -26,7 +26,7 @@ export default function UserMenu() {
   }, []);
 
   function handleLogOut() {
-    if (confirm("Log ud af AIbud?")) {
+    if (confirm("Log ud af Kontorbud?")) {
       logOut().then(() => {
         window.location.href = "/";
       });
@@ -58,8 +58,8 @@ export default function UserMenu() {
             width: 28,
             height: 28,
             borderRadius: "50%",
-            background: "#F1EBFF",
-            color: "#5B21B6",
+            background: "#EEF2FF",
+            color: "#1B3AA6",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

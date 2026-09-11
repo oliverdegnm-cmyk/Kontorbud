@@ -38,7 +38,7 @@ export async function POST(request) {
           card_payments: { requested: true },
         },
         business_type: "individual",
-        metadata: { aibud_name: name.trim() },
+        metadata: { kontorbud_name: name.trim() },
         // Udbetales dagligt, med den lavest tilladte forsinkelse for danske
         // konti - så pengene rammer hjælperens bankkonto hurtigst muligt,
         // efter opgaven er markeret udført.

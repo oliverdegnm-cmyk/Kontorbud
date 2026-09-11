@@ -54,7 +54,7 @@ export default function InstallAppBanner() {
         display: "flex",
         alignItems: "center",
         gap: 14,
-        background: "#F1EBFF",
+        background: "#EEF2FF",
         border: "1.5px solid #DCE4FB",
         borderRadius: 16,
         padding: "14px 18px",
@@ -66,7 +66,7 @@ export default function InstallAppBanner() {
           width: 38,
           height: 38,
           borderRadius: 11,
-          background: "#7C3AED",
+          background: "#2A55E5",
           color: "#fff",
           display: "flex",
           alignItems: "center",
@@ -79,7 +79,7 @@ export default function InstallAppBanner() {
         KB
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 13.5, fontWeight: 700 }}>Installer AIbud som app</div>
+        <div style={{ fontSize: 13.5, fontWeight: 700 }}>Installer Kontorbud som app</div>
         {platform === "ios" ? (
           <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2, display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
             Tryk <Share size={13} style={{ display: "inline" }} /> og vælg "Føj til hjemmeskærm"
@@ -100,7 +100,7 @@ export default function InstallAppBanner() {
             padding: "9px 14px",
             borderRadius: 10,
             border: "none",
-            background: "#7C3AED",
+            background: "#2A55E5",
             color: "#fff",
             cursor: "pointer",
             flex: "0 0 auto",

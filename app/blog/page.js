@@ -3,9 +3,9 @@ import { POSTS } from "@/lib/blogPosts";
 import { ChevronRight, Calendar } from "lucide-react";
 
 export const metadata = {
-  title: "Blog - AIbud",
-  description: "Praktiske guides til prompt-engineering, AI-automatisering og de nyeste AI-værktøjer - skrevet til danske virksomheder og freelancere.",
-  alternates: { canonical: "https://aibud.dk/blog" },
+  title: "Blog - Kontorbud",
+  description: "Gode råd og praktisk viden om bogføring, kundeservice, oversættelse, AI og andre kontoropgaver.",
+  alternates: { canonical: "https://kontorbud.dk/blog" },
 };
 
 function formatDate(dateStr) {
@@ -20,7 +20,7 @@ export default function BlogIndexPage() {
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Blog</h1>
       <p style={{ fontSize: 14.5, color: "#5B6478", marginBottom: 32, maxWidth: 600 }}>
-        Gode råd og praktisk viden om bogføring, kundeservice, oversættelse, AI og de andre opgavetyper, I finder på AIbud.
+        Gode råd og praktisk viden om bogføring, kundeservice, oversættelse, AI og de andre opgavetyper, I finder på Kontorbud.
       </p>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -30,7 +30,7 @@ export default function BlogIndexPage() {
             href={`/blog/${post.slug}`}
             style={{ display: "block", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: "22px 24px" }}
           >
-            <div style={{ fontSize: 11.5, fontWeight: 700, color: "#7C3AED", marginBottom: 8 }}>{post.category}</div>
+            <div style={{ fontSize: 11.5, fontWeight: 700, color: "#2A55E5", marginBottom: 8 }}>{post.category}</div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <h2 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px" }}>{post.title}</h2>

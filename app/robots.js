@@ -5,6 +5,6 @@ export default function robots() {
       allow: "/",
       disallow: ["/admin", "/api/", "/indstillinger", "/betalinger", "/mine", "/beskeder", "/inviter"],
     },
-    sitemap: "https://aibud.dk/sitemap.xml",
+    sitemap: "https://kontorbud.dk/sitemap.xml",
   };
 }

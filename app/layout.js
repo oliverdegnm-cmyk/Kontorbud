@@ -6,14 +6,14 @@ import { Analytics } from "@vercel/analytics/react";
 import { safeJsonLd } from "@/lib/safeJsonLd";
 
 export const metadata = {
-  metadataBase: new URL("https://aibud.dk"),
+  metadataBase: new URL("https://kontorbud.dk"),
   title: {
-    default: "AIbud - Byd ind på AI-opgaver",
+    default: "Kontorbud - Byd ind på kontoropgaver",
     template: "%s",
   },
-  description: "Opret AI-opgaver - fra konkrete opgaver til at lære AI's muligheder at kende - og modtag bud fra kvalificerede hjælpere.",
+  description: "Opret kontoropgaver og modtag bud fra kvalificerede hjælpere.",
   openGraph: {
-    siteName: "AIbud",
+    siteName: "Kontorbud",
     locale: "da_DK",
     type: "website",
   },
@@ -28,7 +28,7 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AIbud",
+    title: "Kontorbud",
   },
   icons: {
     icon: [
@@ -40,7 +40,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#7C3AED",
+  themeColor: "#2A55E5",
 };
 
 export default function RootLayout({ children }) {
@@ -49,14 +49,14 @@ export default function RootLayout({ children }) {
     "@graph": [
       {
         "@type": "Organization",
-        name: "AIbud",
-        url: "https://aibud.dk",
-        logo: "https://aibud.dk/icon-512.png",
+        name: "Kontorbud",
+        url: "https://kontorbud.dk",
+        logo: "https://kontorbud.dk/icon-512.png",
       },
       {
         "@type": "WebSite",
-        name: "AIbud",
-        url: "https://aibud.dk",
+        name: "Kontorbud",
+        url: "https://kontorbud.dk",
         inLanguage: "da-DK",
       },
     ],

@@ -39,7 +39,7 @@ export default function CookieBanner() {
       }}
     >
       <p style={{ fontSize: 12.5, lineHeight: 1.55, margin: 0, flex: "1 1 260px", color: "#D6DCEC" }}>
-        AIbud bruger kun én nødvendig cookie til at holde dig logget ind - ingen sporing eller reklamer. Læs mere i vores{" "}
+        Kontorbud bruger kun én nødvendig cookie til at holde dig logget ind - ingen sporing eller reklamer. Læs mere i vores{" "}
         <Link href="/privatliv" style={{ color: "#fff", textDecoration: "underline" }}>
           privatlivspolitik
         </Link>
@@ -47,7 +47,7 @@ export default function CookieBanner() {
       </p>
       <button
         onClick={accept}
-        style={{ fontSize: 13, fontWeight: 700, padding: "9px 18px", borderRadius: 10, border: "none", background: "#7C3AED", color: "#fff", cursor: "pointer", flex: "0 0 auto" }}
+        style={{ fontSize: 13, fontWeight: 700, padding: "9px 18px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", flex: "0 0 auto" }}
       >
         Forstået
       </button>

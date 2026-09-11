@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Vilkår og betingelser - AIbud",
-  description: "Vilkår og betingelser for brug af AIbud.",
-  alternates: { canonical: "https://aibud.dk/vilkaar" },
+  title: "Vilkår og betingelser - Kontorbud",
+  description: "Vilkår og betingelser for brug af Kontorbud.",
+  alternates: { canonical: "https://kontorbud.dk/vilkaar" },
 };
 
 function Section({ title, children }) {
@@ -22,15 +22,15 @@ export default function TermsPage() {
         <b>Bemærk:</b> Dette er et udkast, som endnu ikke er juridisk gennemgået. Felter i [firkantede parenteser] skal udfyldes med jeres konkrete virksomhedsoplysninger, før dokumentet tages i brug.
       </div>
 
-      <Section title="1. Om AIbud">
+      <Section title="1. Om Kontorbud">
         <p>
-          AIbud er en dansk platform, der formidler kontakt mellem brugere, der har behov for hjælp til AI-opgaver ("Opgavestillere"), og brugere, der tilbyder at udføre sådanne opgaver mod betaling ("Hjælpere"). Platformen drives af [firmanavn / dit fulde navn], [CVR-nummer, hvis relevant], [adresse].
+          Kontorbud er en dansk platform, der formidler kontakt mellem brugere, der har behov for hjælp til kontoropgaver ("Opgavestillere"), og brugere, der tilbyder at udføre sådanne opgaver mod betaling ("Hjælpere"). Platformen drives af [firmanavn / dit fulde navn], [CVR-nummer, hvis relevant], [adresse].
         </p>
       </Section>
 
       <Section title="2. Definitioner">
         <p>
-          "Opgave" betyder en arbejdsopgave oprettet af en Opgavestiller på platformen. "Bud" betyder et tilbud fra en Hjælper om at udføre en Opgave til en angivet pris. "Platformen" betyder hjemmesiden aibud.dk og de tilhørende funktioner.
+          "Opgave" betyder en arbejdsopgave oprettet af en Opgavestiller på platformen. "Bud" betyder et tilbud fra en Hjælper om at udføre en Opgave til en angivet pris. "Platformen" betyder hjemmesiden kontorbud.dk og de tilhørende funktioner.
         </p>
       </Section>
 
@@ -54,28 +54,28 @@ export default function TermsPage() {
 
       <Section title="6. Platformens rolle og ansvarsbegrænsning">
         <p>
-          AIbud er alene en formidler af kontakt mellem Opgavestillere og Hjælpere. Aftalen om udførelse af en Opgave indgås direkte mellem disse to parter. AIbud er ikke part i denne aftale og påtager sig intet ansvar for kvaliteten, lovligheden eller udførelsen af en Opgave. AIbud fører ikke kontrol med Hjælperes kvalifikationer ud over det, der fremgår af deres profil og eventuelle anmeldelser.
+          Kontorbud er alene en formidler af kontakt mellem Opgavestillere og Hjælpere. Aftalen om udførelse af en Opgave indgås direkte mellem disse to parter. Kontorbud er ikke part i denne aftale og påtager sig intet ansvar for kvaliteten, lovligheden eller udførelsen af en Opgave. Kontorbud fører ikke kontrol med Hjælperes kvalifikationer ud over det, der fremgår af deres profil og eventuelle anmeldelser.
         </p>
       </Section>
 
       <Section title="7. Annullering og tvister">
         <p>
-          En Opgave kan annulleres, før den er markeret som udført, hvorved en eventuel holdt betaling refunderes til Opgavestilleren. Opstår der uenighed mellem en Opgavestiller og en Hjælper, opfordres parterne til først at søge at løse denne indbyrdes. AIbud kan i særlige tilfælde bistå via kundeservice, men er ikke forpligtet til at afgøre tvister mellem brugere.
+          En Opgave kan annulleres, før den er markeret som udført, hvorved en eventuel holdt betaling refunderes til Opgavestilleren. Opstår der uenighed mellem en Opgavestiller og en Hjælper, opfordres parterne til først at søge at løse denne indbyrdes. Kontorbud kan i særlige tilfælde bistå via kundeservice, men er ikke forpligtet til at afgøre tvister mellem brugere.
         </p>
       </Section>
 
       <Section title="8. Brugerens forpligtelser">
         <p>
-          Du må ikke bruge platformen til ulovlige formål, til at omgå platformens gebyrer ved at aftale betaling uden for platformen for en Opgave oprettet på platformen, eller til at chikanere andre brugere. AIbud forbeholder sig retten til at lukke konti, der overtræder disse vilkår.
+          Du må ikke bruge platformen til ulovlige formål, til at omgå platformens gebyrer ved at aftale betaling uden for platformen for en Opgave oprettet på platformen, eller til at chikanere andre brugere. Kontorbud forbeholder sig retten til at lukke konti, der overtræder disse vilkår.
         </p>
       </Section>
 
       <Section title="9. Opsigelse">
-        <p>Du kan til enhver tid lukke din konto ved at kontakte kundeservice. AIbud kan opsige eller suspendere en konto ved overtrædelse af disse vilkår.</p>
+        <p>Du kan til enhver tid lukke din konto ved at kontakte kundeservice. Kontorbud kan opsige eller suspendere en konto ved overtrædelse af disse vilkår.</p>
       </Section>
 
       <Section title="10. Ændringer af vilkårene">
-        <p>AIbud kan opdatere disse vilkår løbende. Væsentlige ændringer vil blive meddelt brugere, f.eks. via email.</p>
+        <p>Kontorbud kan opdatere disse vilkår løbende. Væsentlige ændringer vil blive meddelt brugere, f.eks. via email.</p>
       </Section>
 
       <Section title="11. Lovvalg og værneting">
@@ -84,7 +84,7 @@ export default function TermsPage() {
 
       <Section title="12. Kontakt">
         <p>
-          Spørgsmål til disse vilkår kan rettes via <a href="/kontakt" style={{ color: "#7C3AED", fontWeight: 700 }}>kontaktformularen</a>.
+          Spørgsmål til disse vilkår kan rettes via <a href="/kontakt" style={{ color: "#2A55E5", fontWeight: 700 }}>kontaktformularen</a>.
         </p>
       </Section>
     </div>

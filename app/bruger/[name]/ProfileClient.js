@@ -36,8 +36,8 @@ function ExperienceTimeline({ text }) {
                     display: "inline-block",
                     fontSize: 11,
                     fontWeight: 700,
-                    color: "#7C3AED",
-                    background: "#F1EBFF",
+                    color: "#2A55E5",
+                    background: "#EEF2FF",
                     padding: "4px 9px",
                     borderRadius: 8,
                     whiteSpace: "nowrap",
@@ -46,7 +46,7 @@ function ExperienceTimeline({ text }) {
                   {years}
                 </span>
               </div>
-              <div style={{ flex: 1, minWidth: 0, borderLeft: "2px solid #F1EBFF", paddingLeft: 14 }}>
+              <div style={{ flex: 1, minWidth: 0, borderLeft: "2px solid #EEF2FF", paddingLeft: 14 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "#14213D", marginBottom: description ? 4 : 0 }}>{titlePart}</div>
                 {description && <div style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.55 }}>{description}</div>}
               </div>
@@ -75,7 +75,7 @@ function SectionCard({ icon: Icon, title, children }) {
   return (
     <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 18, padding: 24, marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-        <div style={{ width: 28, height: 28, borderRadius: 8, background: "#F1EBFF", color: "#7C3AED", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" }}>
           <Icon size={14} />
         </div>
         <div style={{ fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.03em", color: "#5B6478" }}>{title}</div>
@@ -121,7 +121,7 @@ export default function ProfileClient() {
 
       {/* Header-kort med gradient, gør profilen hurtigere at genkende og skabe tillid til på et øjekast */}
       <div style={{ borderRadius: 22, overflow: "hidden", border: "1.5px solid #E4E8F0", marginBottom: 16 }}>
-        <div style={{ height: 64, background: "linear-gradient(120deg, #7C3AED, #A78BFA)" }} />
+        <div style={{ height: 64, background: "linear-gradient(120deg, #2A55E5, #6D8CF0)" }} />
         <div style={{ background: "#fff", padding: "0 24px 24px" }}>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginTop: -32, marginBottom: 14 }}>
             <div
@@ -129,7 +129,7 @@ export default function ProfileClient() {
                 width: 76,
                 height: 76,
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #7C3AED, #A78BFA)",
+                background: "linear-gradient(135deg, #2A55E5, #6D8CF0)",
                 color: "#fff",
                 display: "flex",
                 alignItems: "center",
@@ -205,7 +205,7 @@ export default function ProfileClient() {
           <div style={{ fontSize: 11.5, color: "#5B6478", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.03em", marginBottom: 10 }}>Kompetencer</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {profile.skills.split(",").map((s) => s.trim()).filter(Boolean).map((s, i) => (
-              <span key={i} style={{ fontSize: 12.5, fontWeight: 700, padding: "6px 13px", borderRadius: 999, background: "#F1EBFF", color: "#5B21B6" }}>
+              <span key={i} style={{ fontSize: 12.5, fontWeight: 700, padding: "6px 13px", borderRadius: 999, background: "#EEF2FF", color: "#1B3AA6" }}>
                 {s}
               </span>
             ))}
