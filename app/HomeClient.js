@@ -127,7 +127,7 @@ export default function HomePage() {
             background: "#fff",
             border: "1.5px solid #E4E8F0",
             borderRadius: 24,
-            padding: "48px 48px",
+            padding: "48px 48px 48px 20px",
           }}
         >
           <div
@@ -224,7 +224,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." />
+      <SectionHead title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." mt={132} />
       <div
         style={{
           display: "flex",
@@ -486,7 +486,7 @@ export default function HomePage() {
         </>
       )}
 
-      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst.">
+      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#EEF2FF">
       <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
@@ -545,9 +545,9 @@ function TrustBadge({ icon: Icon, text }) {
   );
 }
 
-function SectionHead({ title, sub, large }) {
+function SectionHead({ title, sub, large, mt }) {
   return (
-    <div style={{ margin: "96px 0 32px" }}>
+    <div style={{ margin: `${mt ?? 96}px 0 32px` }}>
       <h2 className={large ? "kb-section-title-large" : undefined} style={{ fontSize: large ? 38 : 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>
         {title}
       </h2>
@@ -558,9 +558,9 @@ function SectionHead({ title, sub, large }) {
 
 // Ligesom SectionHead, men pakket ind i et rundet, farvet felt - så forsiden
 // får skiftevis hvide og farvede sektioner, ligesom på Handyhands forside.
-function SectionBand({ title, sub, children }) {
+function SectionBand({ title, sub, children, tint }) {
   return (
-    <div className="kb-section-band" style={{ background: "#F5F7FB", borderRadius: 28, padding: "56px 48px", marginTop: 96, marginBottom: 32 }}>
+    <div className="kb-section-band" style={{ background: tint || "#F5F7FB", borderRadius: 28, padding: "56px 48px", marginTop: 96, marginBottom: 32 }}>
       <h2 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em", margin: 0 }}>{title}</h2>
       {sub && <p style={{ fontSize: 15.5, color: "#5B6478", marginTop: 10, maxWidth: 560 }}>{sub}</p>}
       <div style={{ marginTop: 32 }}>{children}</div>
