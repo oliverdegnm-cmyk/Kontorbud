@@ -23,6 +23,7 @@ export default function TaskCarousel({ tasks }) {
             <Link
               key={`${t.id}-${i}`}
               href={`/opgave/${t.id}`}
+              className="kb-carousel-card"
               style={{
                 display: "flex",
                 flexDirection: "column",

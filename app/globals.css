@@ -66,11 +66,14 @@ textarea {
   .kb-grid-steps4 {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+  .kb-grid-hero {
+    margin-top: 12px !important;
+  }
   .kb-hero-title {
     font-size: 30px !important;
   }
   .kb-hero-card {
-    padding: 12px 24px 28px 24px !important;
+    padding: 0px 24px 28px 24px !important;
   }
   .kb-section-title-large {
     font-size: 26px !important;
@@ -84,6 +87,11 @@ textarea {
   .kb-section-band {
     padding: 26px 20px !important;
     border-radius: 20px !important;
+  }
+  .kb-carousel-card {
+    width: 150px !important;
+    padding: 12px !important;
+    gap: 6px !important;
   }
 }
 
