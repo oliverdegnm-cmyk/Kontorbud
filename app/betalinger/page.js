@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
-import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet } from "lucide-react";
+import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock } from "lucide-react";
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
@@ -287,11 +287,20 @@ function PaymentsPage() {
             <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe - de går aldrig gennem Kontorbuds egne servere.</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 12 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
           <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
             <div style={{ fontSize: 12.5, color: "#5B6478" }}>Beløbet holdes, indtil du selv markerer opgaven som udført - det udbetales aldrig automatisk.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12 }}>
+          <Clock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Det tager lidt tid, før pengene rammer din bankkonto</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478" }}>
+              Så snart opgaven er markeret udført, sender vi beløbet videre til din Stripe-konto med det samme. Herfra er det Stripe selv, der - som en sikkerhedsforanstaltning for nye konti - holder pengene nogle dage, før de sendes videre til din bank. Perioden bliver kortere af sig selv, efterhånden som du får flere gennemførte opgaver.
+            </div>
           </div>
         </div>
       </div>
