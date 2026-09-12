@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, ChevronRight, Clock } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, Clock } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -435,7 +435,6 @@ export default function HomePage() {
                       <Badge tone={status.tone}>{status.label}</Badge>
                     </div>
                     <div style={{ fontSize: 13.5, fontWeight: 800, width: 78, textAlign: "right" }}>{formatBudgetDisplay(t.budget)}</div>
-                    <ChevronRight size={16} color="#5B6478" />
                   </div>
                 </div>
               </div>

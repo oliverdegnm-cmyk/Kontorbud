@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ChevronRight, Search, Clock, ShieldCheck } from "lucide-react";
+import { Search, Clock, ShieldCheck } from "lucide-react";
 import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -284,7 +284,6 @@ export default function OpgaverPage() {
                         <div style={{ fontSize: 14, fontWeight: 800 }}>{formatBudgetDisplay(t.budget)}</div>
                         <div style={{ fontSize: 10.5, fontWeight: 600, color: "#5B6478" }}>Budget</div>
                       </div>
-                      <ChevronRight size={18} color="#5B6478" />
                     </div>
                   </div>
                 </div>
