@@ -140,7 +140,7 @@ export default function HowItWorksClient() {
         </div>
       )}
 
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
+      <div className="kb-trust-band" style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
         <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
         <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>
           <div style={{ textAlign: "center" }}>
