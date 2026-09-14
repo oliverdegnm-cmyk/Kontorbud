@@ -45,6 +45,17 @@ function PaymentsPage() {
   const [connecting, setConnecting] = useState(false);
   const [stripeError, setStripeError] = useState("");
 
+  // Reg.nr. + kontonummer, i stedet for at bede folk slå deres eget IBAN op -
+  // de fleste danskere kender ikke deres IBAN, men kender altid disse to tal.
+  // Regnes om til et gyldigt IBAN på serveren, før Stripe overhovedet ser det.
+  const [regNr, setRegNr] = useState("");
+  const [kontoNr, setKontoNr] = useState("");
+
+  // Instant Payout - hjælperen beder selv om at få sin saldo udbetalt med det
+  // samme, i stedet for at vente på Stripes normale udbetalingsplan.
+  const [instantPayoutBusy, setInstantPayoutBusy] = useState(false);
+  const [instantPayoutMsg, setInstantPayoutMsg] = useState(null); // { type: "success" | "info" | "error", text }
+
   function loadCards() {
     fetch("/api/stripe/payment-methods")
       .then((r) => r.json())
@@ -97,7 +108,7 @@ function PaymentsPage() {
       const res = await fetch("/api/stripe/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, regNr, kontoNr }),
       });
       const data = await res.json();
       if (data.error) {
@@ -109,6 +120,32 @@ function PaymentsPage() {
     } catch (e) {
       setStripeError("Kunne ikke starte Stripe-forbindelsen.");
       setConnecting(false);
+    }
+  }
+
+  async function requestInstantPayout() {
+    setInstantPayoutBusy(true);
+    setInstantPayoutMsg(null);
+    try {
+      const res = await fetch("/api/stripe/instant-payout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setInstantPayoutMsg({ type: "error", text: data.error });
+        return;
+      }
+      if (data.paid) {
+        setInstantPayoutMsg({ type: "success", text: `${data.amount.toLocaleString("da-DK")} kr er sendt til din bank med det samme.` });
+      } else {
+        setInstantPayoutMsg({ type: "info", text: data.message });
+      }
+    } catch (e) {
+      setInstantPayoutMsg({ type: "error", text: "Kunne ikke gennemføre Instant Payout. Prøv igen." });
+    } finally {
+      setInstantPayoutBusy(false);
     }
   }
 
@@ -156,8 +193,42 @@ function PaymentsPage() {
       </div>
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 20 }}>
         {stripePayoutsEnabled ? (
-          <div style={{ fontSize: 13.5, color: "#1AA37A", fontWeight: 600 }}>
-            ✓ Din Stripe-konto er forbundet og klar til at modtage udbetalinger.
+          <div>
+            <div style={{ fontSize: 13.5, color: "#1AA37A", fontWeight: 600, marginBottom: 14 }}>
+              ✓ Din Stripe-konto er forbundet og klar til at modtage udbetalinger.
+            </div>
+
+            {level && level.completedCount >= 3 ? (
+              <div style={{ paddingTop: 14, borderTop: "1.5px solid #E4E8F0" }}>
+                <div style={{ fontSize: 13.5, fontWeight: 700, marginBottom: 4 }}>Instant Payout</div>
+                <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 10, lineHeight: 1.6 }}>
+                  Har du penge, der stadig venter hos Stripe efter en udført opgave? Du kan bede om at få det, der allerede er frigivet til udbetaling, sendt til din bank med det samme (mod et lille Stripe-gebyr), i stedet for at vente på den normale udbetalingsplan.
+                </p>
+                <button
+                  onClick={requestInstantPayout}
+                  disabled={instantPayoutBusy}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "9px 16px", borderRadius: 10, border: "none", background: "#1AA37A", color: "#fff", cursor: instantPayoutBusy ? "default" : "pointer", opacity: instantPayoutBusy ? 0.6 : 1 }}
+                >
+                  {instantPayoutBusy ? "Sender…" : "Udbetal med det samme"}
+                </button>
+                {instantPayoutMsg && (
+                  <div
+                    style={{
+                      marginTop: 10,
+                      fontSize: 12.5,
+                      fontWeight: 600,
+                      color: instantPayoutMsg.type === "error" ? "#C0392B" : instantPayoutMsg.type === "success" ? "#1AA37A" : "#5B6478",
+                    }}
+                  >
+                    {instantPayoutMsg.text}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={{ paddingTop: 14, borderTop: "1.5px solid #E4E8F0", fontSize: 12.5, color: "#9AA2B1" }}>
+                Instant Payout (udbetal med det samme mod et lille gebyr) låses op, når du har {3 - (level?.completedCount || 0)} flere gennemførte {3 - (level?.completedCount || 0) === 1 ? "opgave" : "opgaver"}.
+              </div>
+            )}
           </div>
         ) : stripeConnected ? (
           <div>
@@ -174,9 +245,41 @@ function PaymentsPage() {
           </div>
         ) : (
           <div>
-            <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 12, lineHeight: 1.6 }}>
+            <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 14, lineHeight: 1.6 }}>
               Forbind en Stripe-konto for at kunne modtage betaling, når du vinder bud. Opgavestillere kan ikke vælge dine bud, før du har forbundet Stripe.
             </p>
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 8 }}>Din bankkonto (valgfrit, men anbefalet)</div>
+              <p style={{ fontSize: 12, color: "#9AA2B1", marginBottom: 10, lineHeight: 1.5 }}>
+                Udfyld reg.nr. og kontonummer her, så slipper du for selv at slå dit IBAN op hos Stripe bagefter.
+              </p>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ flex: "0 1 120px" }}>
+                  <label style={{ display: "block", fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Reg.nr.</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="0040"
+                    maxLength={4}
+                    value={regNr}
+                    onChange={(e) => setRegNr(e.target.value.replace(/\D/g, ""))}
+                    style={{ width: "100%", boxSizing: "border-box", fontSize: 13.5, padding: "9px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0" }}
+                  />
+                </div>
+                <div style={{ flex: "1 1 180px" }}>
+                  <label style={{ display: "block", fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Kontonummer</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="0440116243"
+                    maxLength={10}
+                    value={kontoNr}
+                    onChange={(e) => setKontoNr(e.target.value.replace(/\D/g, ""))}
+                    style={{ width: "100%", boxSizing: "border-box", fontSize: 13.5, padding: "9px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0" }}
+                  />
+                </div>
+              </div>
+            </div>
             <button
               onClick={connectStripe}
               disabled={connecting}

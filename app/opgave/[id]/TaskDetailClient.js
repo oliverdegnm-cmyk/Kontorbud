@@ -162,6 +162,7 @@ export default function TaskDetailClient() {
 
   async function completeTask() {
     if (completing) return; // undgår dobbeltklik, der ville sende to samtidige kald
+    if (!confirm("Når du markerer opgaven som udført, frigives betalingen til hjælperen med det samme. Er du sikker på at arbejdet er udført tilfredsstillende?")) return;
     setActionError("");
     setCompleting(true);
     try {

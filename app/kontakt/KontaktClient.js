@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { useName } from "@/lib/NameContext";
 import { Mail, CheckCircle2, ShieldAlert } from "lucide-react";
 
@@ -39,9 +40,20 @@ export default function ContactClient() {
 
   return (
     <div style={{ marginTop: 24, maxWidth: 560, marginBottom: 60 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-        {isReport ? <ShieldAlert size={20} color="#C0392B" /> : <Mail size={20} color="#2A55E5" />}
-        <h2 style={{ fontSize: 24, fontWeight: 800 }}>{isReport ? "Rapportér mistænkelig aktivitet" : "Kontakt kundeservice"}</h2>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 4 }}>
+        {!isReport && (
+          <Image
+            src="/kontakt-foto.jpg"
+            alt="Kundeservice"
+            width={64}
+            height={64}
+            style={{ width: 64, height: 64, borderRadius: 14, objectFit: "cover", flexShrink: 0 }}
+          />
+        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {isReport ? <ShieldAlert size={20} color="#C0392B" /> : <Mail size={20} color="#2A55E5" />}
+          <h2 style={{ fontSize: 24, fontWeight: 800 }}>{isReport ? "Rapportér mistænkelig aktivitet" : "Kontakt kundeservice"}</h2>
+        </div>
       </div>
       {isReport && (
         <div style={{ background: "#FDECEC", border: "1.5px solid #F5C6C6", borderRadius: 12, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#8A2E2E", lineHeight: 1.55 }}>

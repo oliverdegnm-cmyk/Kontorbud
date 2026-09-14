@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, Clock } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, Clock, Bell } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -13,6 +13,7 @@ import { statusInfo, truncateText, getDeadlineLabel, capitalizeFirst } from "@/l
 import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
+import { useName } from "@/lib/NameContext";
 
 // Ord der skiftevis vises i forsidens rubrik ("Få bud på dine ___").
 // "kontoropgaver" er sat ind som hvert femte ord, så platformens eget navn
@@ -32,6 +33,7 @@ const HERO_ROTATING_WORDS = [
 
 export default function HomePage() {
   const router = useRouter();
+  const { name } = useName();
   const [quickDescription, setQuickDescription] = useState("");
   const [matchingWithAi, setMatchingWithAi] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -524,6 +526,39 @@ export default function HomePage() {
           Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
         </p>
       </div>
+
+      {!name && (
+        <div
+          style={{
+            background: "#EEF2FF",
+            borderRadius: 20,
+            padding: "40px 44px",
+            marginTop: 28,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 24,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ maxWidth: 480 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <Bell size={18} color="#2A55E5" />
+              <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Gå ikke glip af nye opgaver</span>
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Opret en gratis konto og hold øje med opgaver i dit felt</h3>
+            <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
+              Det tager under et minut. Som hjælper får du besked med det samme, når der sker noget på dine egne bud og opgaver.
+            </p>
+          </div>
+          <Link
+            href="/login"
+            style={{ display: "inline-block", flexShrink: 0, fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
+          >
+            Opret gratis konto
+          </Link>
+        </div>
+      )}
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
