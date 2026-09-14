@@ -265,6 +265,12 @@ function ImagesTab() {
   return (
     <div>
       <HeroImagesSetting />
+      <ImageSetting
+        label="Kontaktside-foto"
+        settingKey="kontakt_foto"
+        defaultUrl="/kontakt-foto.jpg"
+        hint="Vises til højre på kontaktsiden."
+      />
     </div>
   );
 }

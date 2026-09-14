@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useName } from "@/lib/NameContext";
@@ -16,6 +16,21 @@ export default function ContactClient() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
+  const [kontaktFoto, setKontaktFoto] = useState({ url: "/kontakt-foto.jpg", position: 50, zoom: 100 });
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        const s = data.settings || {};
+        setKontaktFoto({
+          url: s.kontakt_foto || "/kontakt-foto.jpg",
+          position: s.kontakt_foto_position ? parseFloat(s.kontakt_foto_position) : 50,
+          zoom: s.kontakt_foto_zoom ? parseFloat(s.kontakt_foto_zoom) : 100,
+        });
+      })
+      .catch(() => {});
+  }, []);
 
   async function submit() {
     if (!contactName.trim() || !contactEmail.trim() || !message.trim()) {
@@ -40,7 +55,7 @@ export default function ContactClient() {
 
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
-      <div className="kb-grid-detail" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "stretch" }}>
+      <div className="kb-grid-detail" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "start" }}>
         <div style={{ maxWidth: 560 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
             {isReport ? <ShieldAlert size={20} color="#C0392B" /> : <Mail size={20} color="#2A55E5" />}
@@ -103,8 +118,19 @@ export default function ContactClient() {
         </div>
 
         {!isReport && (
-          <div className="kb-hide-mobile" style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 420 }}>
-            <Image src="/kontakt-foto.jpg" alt="Kundeservice hos os" fill sizes="(max-width: 760px) 100vw, 460px" style={{ objectFit: "cover" }} />
+          <div className="kb-hide-mobile" style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", width: 230, height: 210 }}>
+            <Image
+              src={kontaktFoto.url}
+              alt="Kundeservice hos os"
+              fill
+              sizes="230px"
+              style={{
+                objectFit: "cover",
+                objectPosition: `center ${kontaktFoto.position}%`,
+                transform: `scale(${kontaktFoto.zoom / 100})`,
+                transformOrigin: "center",
+              }}
+            />
           </div>
         )}
       </div>
