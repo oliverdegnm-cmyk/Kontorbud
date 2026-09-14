@@ -7,6 +7,32 @@ import { ShieldCheck, Trash2, Image as ImageIcon, Upload, MessageSquare, UserX }
 import { upload } from "@vercel/blob/client";
 import RequireAuth from "@/components/RequireAuth";
 
+// Skalerer og komprimerer et uploadet billede i browseren, før det sendes til Blob-lageret -
+// så store, rå foto-filer fra en telefon (ofte 4000px+ og flere MB) altid ender som et skarpt,
+// hurtigt-indlæsende JPEG i en fornuftig størrelse, uanset hvad der uploades. Fejler optimeringen
+// af en eller anden grund, uploades originalfilen i stedet, så upload aldrig går i stå.
+async function optimizeImage(file, maxDim = 1920, quality = 0.85) {
+  if (!file.type?.startsWith("image/") || file.type === "image/svg+xml") return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    if (!blob) return file;
+    const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], newName, { type: "image/jpeg" });
+  } catch (err) {
+    console.error("Kunne ikke optimere billedet, uploader originalen i stedet:", err);
+    return file;
+  }
+}
+
 function Badge({ children, tone }) {
   const tones = {
     open: { bg: "#FFF1E0", color: "#B5610E" },
@@ -313,7 +339,8 @@ function HeroImagesSetting() {
     setUploading(true);
     setError("");
     try {
-      const blob = await upload(file.name, file, {
+      const optimized = await optimizeImage(file);
+      const blob = await upload(optimized.name, optimized, {
         access: "public",
         handleUploadUrl: "/api/upload",
         clientPayload: JSON.stringify({ purpose: "image" }),
@@ -430,6 +457,7 @@ function HeroImagesSetting() {
         {uploading ? "Uploader…" : "Upload nyt billede"}
         <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ display: "none" }} />
       </label>
+      <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 8 }}>Billeder skaleres og komprimeres automatisk ved upload.</div>
       {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
       {error && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
     </div>
@@ -463,7 +491,8 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
     setError("");
     setSaved(false);
     try {
-      const blob = await upload(file.name, file, {
+      const optimized = await optimizeImage(file);
+      const blob = await upload(optimized.name, optimized, {
         access: "public",
         handleUploadUrl: "/api/upload",
         clientPayload: JSON.stringify({ purpose: "image" }),
@@ -576,6 +605,7 @@ function ImageSetting({ label, settingKey, defaultUrl, hint }) {
         {uploading ? "Uploader…" : "Upload nyt billede"}
         <input type="file" accept="image/*" onChange={handleChange} disabled={uploading} style={{ display: "none" }} />
       </label>
+      <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 8 }}>Billeder skaleres og komprimeres automatisk ved upload.</div>
       {saved && <span style={{ marginLeft: 12, fontSize: 12.5, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
       {error && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
     </div>
