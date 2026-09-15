@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useName } from "@/lib/NameContext";
 import { Mail, CheckCircle2, ShieldAlert } from "lucide-react";
 
-export default function ContactClient() {
+export default function ContactClient({ initialKontaktFoto }) {
   const { name, email: accountEmail } = useName();
   const searchParams = useSearchParams();
   const isReport = searchParams.get("type") === "report";
@@ -16,21 +16,10 @@ export default function ContactClient() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
-  const [kontaktFoto, setKontaktFoto] = useState({ url: "/kontakt-foto.jpg", position: 50, zoom: 100 });
-
-  useEffect(() => {
-    fetch("/api/site-settings")
-      .then((r) => r.json())
-      .then((data) => {
-        const s = data.settings || {};
-        setKontaktFoto({
-          url: s.kontakt_foto || "/kontakt-foto.jpg",
-          position: s.kontakt_foto_position ? parseFloat(s.kontakt_foto_position) : 50,
-          zoom: s.kontakt_foto_zoom ? parseFloat(s.kontakt_foto_zoom) : 100,
-        });
-      })
-      .catch(() => {});
-  }, []);
+  // Kommer allerede fra serveren via page.js (ingen client-side fetch), så
+  // billedet er korrekt fra første render - undgår at det først viser
+  // standardbilledet og derefter "blinker" til det rigtige, uploadede foto.
+  const [kontaktFoto] = useState(initialKontaktFoto || { url: "/kontakt-foto.jpg", position: 50, zoom: 100 });
 
   async function submit() {
     if (!contactName.trim() || !contactEmail.trim() || !message.trim()) {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
-import { Briefcase, Wallet } from "lucide-react";
+import { Briefcase, Wallet, Eye, EyeOff } from "lucide-react";
 
 function GoogleIcon() {
   return (
@@ -12,14 +12,6 @@ function GoogleIcon() {
       <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6.5 29.6 4 24 4c-7.7 0-14.3 4.4-17.7 10.7z" />
       <path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.6l-6.5-5.5c-2 1.5-4.6 2.4-7.6 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.3 44 24 44z" />
       <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.5 5.5C41.4 36 44 30.6 44 24c0-1.3-.1-2.7-.4-3.5z" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff">
-      <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z" />
     </svg>
   );
 }
@@ -35,6 +27,7 @@ export default function AuthForm({ title, subtitle }) {
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [forgotSent, setForgotSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit() {
     if (mode === "signup" && !acceptedTerms) {
@@ -135,24 +128,6 @@ export default function AuthForm({ title, subtitle }) {
             >
               <GoogleIcon /> Fortsæt med Google
             </a>
-            <a
-              href="/api/auth/facebook"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
-                fontSize: 13.5,
-                fontWeight: 700,
-                padding: "11px 14px",
-                borderRadius: 10,
-                border: "none",
-                background: "#1877F2",
-                color: "#fff",
-              }}
-            >
-              <FacebookIcon /> Fortsæt med Facebook
-            </a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
             <div style={{ flex: 1, height: 1, background: "#DCE4FB" }} />
@@ -185,14 +160,36 @@ export default function AuthForm({ title, subtitle }) {
             style={{ fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10 }}
           />
           {mode !== "forgot" && (
-            <input
-              value={inputPassword}
-              onChange={(e) => setInputPassword(e.target.value)}
-              placeholder={mode === "signup" ? "Adgangskode (mindst 6 tegn)" : "Adgangskode"}
-              type="password"
-              onKeyDown={(e) => e.key === "Enter" && !submitting && submit()}
-              style={{ fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10 }}
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                value={inputPassword}
+                onChange={(e) => setInputPassword(e.target.value)}
+                placeholder={mode === "signup" ? "Adgangskode (mindst 6 tegn)" : "Adgangskode"}
+                type={showPassword ? "text" : "password"}
+                onKeyDown={(e) => e.key === "Enter" && !submitting && submit()}
+                style={{ width: "100%", boxSizing: "border-box", fontSize: 14, padding: "11px 42px 11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10 }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Skjul adgangskode" : "Vis adgangskode"}
+                style={{
+                  position: "absolute",
+                  right: 4,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  padding: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#9AA2B1",
+                }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           )}
 
           {mode === "signup" && (

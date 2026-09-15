@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
 import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock } from "lucide-react";
+import { regAndAccountToIban } from "@/lib/dkIban";
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
@@ -66,6 +67,22 @@ function BankAccountFields({ regNr, setRegNr, kontoNr, setKontoNr }) {
           />
         </div>
       </div>
+      {(() => {
+        // Vis det udregnede IBAN med det samme, så man selv kan tjekke det ser
+        // rigtigt ud, før man trykker "Forbind Stripe" - i stedet for først at
+        // opdage et evt. tastefejl bagefter hos Stripe.
+        if (regNr.length !== 4 || kontoNr.length === 0) return null;
+        try {
+          const iban = regAndAccountToIban(regNr, kontoNr);
+          return (
+            <div style={{ marginTop: 10, fontSize: 12, color: "#5B6478" }}>
+              Dit IBAN bliver: <span style={{ fontWeight: 700, color: "#14213D", fontFamily: "monospace" }}>{iban}</span>
+            </div>
+          );
+        } catch (err) {
+          return null;
+        }
+      })()}
     </div>
   );
 }
