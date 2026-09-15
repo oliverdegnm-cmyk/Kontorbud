@@ -187,24 +187,24 @@ function PaymentsPage() {
       </div>
 
       <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20, marginBottom: 16 }}>
-        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
-          <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Hvorfor bruger vi Stripe?</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-              Stripe er en stor, sikker betalingsudbyder. De opbevarer pengene sikkert, indtil opgaven er udført, og sender dem derefter videre til dig. Dine bank- og kortoplysninger går aldrig gennem vores egne servere.
-            </div>
-          </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto" }} />
+          <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sikker betaling via</div>
+          <span style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontWeight: 700, fontSize: 15, color: "#635BFF", letterSpacing: "-0.01em" }}>
+            Stripe
+          </span>
         </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Derfor beder Stripe om oplysninger og dit IBAN</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-              Stripe skal vide, hvem du er, og hvilken konto pengene skal sendes til - det er et lovkrav. Klik på "Forbind Stripe", og du bliver sendt til Stripes egen opsætning, hvor du skal oplyse dit IBAN. Det finder du i din netbank under kontooplysninger.
-            </div>
-          </div>
-        </div>
+        <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
+            Stripe er en stor, sikker betalingsudbyder, der opbevarer pengene sikkert, indtil opgaven er udført.
+          </li>
+          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
+            Dine bank- og kortoplysninger går aldrig gennem vores egne servere.
+          </li>
+          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
+            Stripe skal bekræfte din identitet og dit IBAN, før du kan modtage udbetalinger - det er et lovkrav. Du finder dit IBAN i din netbank under kontooplysninger.
+          </li>
+        </ul>
       </div>
 
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 20 }}>
