@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
-import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock, Info } from "lucide-react";
+import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Info } from "lucide-react";
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
@@ -195,24 +195,24 @@ function PaymentsPage() {
           </span>
         </div>
         <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+          <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Hvorfor bruger vi Stripe?</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Stripe er en af verdens største og mest sikre betalingsudbydere, og bruges af millioner af virksomheder til at håndtere betalinger trygt for begge parter.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
           <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sikkert og krypteret</div>
             <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Dine bank- og kortoplysninger går aldrig gennem vores egne servere.</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: 12 }}>
           <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Beløbet holdes, indtil du selv markerer opgaven som udført. For at modtage det skal Stripe bekræfte din identitet og dit IBAN (et lovkrav) - det finder du i din netbank.</div>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <Clock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Pengene er hurtigt på vej</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Så snart opgaven er udført, sendes beløbet til din Stripe-konto. Som sikkerhed for nye konti holdes det et par dage, før det når din bank - perioden bliver kortere, efterhånden som du får flere gennemførte opgaver.</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Beløbet holdes, indtil opgaven markeres som udført. For at modtage det skal Stripe bekræfte din identitet og dit IBAN (et lovkrav) - det finder du i din netbank.</div>
           </div>
         </div>
       </div>
