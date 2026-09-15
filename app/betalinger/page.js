@@ -187,13 +187,6 @@ function PaymentsPage() {
       </div>
 
       <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20, marginBottom: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-          <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto" }} />
-          <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sikker betaling via</div>
-          <span style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontWeight: 700, fontSize: 15, color: "#635BFF", letterSpacing: "-0.01em" }}>
-            Stripe
-          </span>
-        </div>
         <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
           <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
           <div>
