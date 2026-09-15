@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
 import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock, Info } from "lucide-react";
-import { regAndAccountToIban } from "@/lib/dkIban";
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
 
@@ -29,64 +28,6 @@ function LinkifiedText({ text }) {
   );
 }
 
-// De to felter, en hjælper kan udfylde i stedet for selv at skulle slå sit
-// IBAN op - vist både før man overhovedet har oprettet en Stripe-konto, OG
-// hvis man allerede er i gang med onboardingen, men ikke er færdig endnu
-// ("Fortsæt opsætning") - ellers ser en hjælper, der har startet før, aldrig
-// disse felter, når de vender tilbage for at færdiggøre opsætningen.
-function BankAccountFields({ regNr, setRegNr, kontoNr, setKontoNr }) {
-  return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 8 }}>Din bankkonto (valgfrit, men anbefalet)</div>
-      <p style={{ fontSize: 12, color: "#9AA2B1", marginBottom: 10, lineHeight: 1.5 }}>
-        Udfyld reg.nr. og kontonummer her, så slipper du for selv at slå dit IBAN op hos Stripe bagefter.
-      </p>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <div style={{ flex: "0 1 120px" }}>
-          <label style={{ display: "block", fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Reg.nr.</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="0040"
-            maxLength={4}
-            value={regNr}
-            onChange={(e) => setRegNr(e.target.value.replace(/\D/g, ""))}
-            style={{ width: "100%", boxSizing: "border-box", fontSize: 13.5, padding: "9px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0" }}
-          />
-        </div>
-        <div style={{ flex: "1 1 180px" }}>
-          <label style={{ display: "block", fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Kontonummer</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="0440116243"
-            maxLength={10}
-            value={kontoNr}
-            onChange={(e) => setKontoNr(e.target.value.replace(/\D/g, ""))}
-            style={{ width: "100%", boxSizing: "border-box", fontSize: 13.5, padding: "9px 12px", borderRadius: 8, border: "1.5px solid #E4E8F0" }}
-          />
-        </div>
-      </div>
-      {(() => {
-        // Vis det udregnede IBAN med det samme, så man selv kan tjekke det ser
-        // rigtigt ud, før man trykker "Forbind Stripe" - i stedet for først at
-        // opdage et evt. tastefejl bagefter hos Stripe.
-        if (regNr.length !== 4 || kontoNr.length === 0) return null;
-        try {
-          const iban = regAndAccountToIban(regNr, kontoNr);
-          return (
-            <div style={{ marginTop: 10, fontSize: 12, color: "#5B6478" }}>
-              Dit IBAN bliver: <span style={{ fontWeight: 700, color: "#14213D", fontFamily: "monospace" }}>{iban}</span>
-            </div>
-          );
-        } catch (err) {
-          return null;
-        }
-      })()}
-    </div>
-  );
-}
-
 function PaymentsPage() {
   const { name } = useName();
   const searchParams = useSearchParams();
@@ -103,12 +44,6 @@ function PaymentsPage() {
   const [stripePayoutsEnabled, setStripePayoutsEnabled] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [stripeError, setStripeError] = useState("");
-
-  // Reg.nr. + kontonummer, i stedet for at bede folk slå deres eget IBAN op -
-  // de fleste danskere kender ikke deres IBAN, men kender altid disse to tal.
-  // Regnes om til et gyldigt IBAN på serveren, før Stripe overhovedet ser det.
-  const [regNr, setRegNr] = useState("");
-  const [kontoNr, setKontoNr] = useState("");
 
   // Instant Payout - hjælperen beder selv om at få sin saldo udbetalt med det
   // samme, i stedet for at vente på Stripes normale udbetalingsplan.
@@ -167,7 +102,7 @@ function PaymentsPage() {
       const res = await fetch("/api/stripe/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, regNr, kontoNr }),
+        body: JSON.stringify({ name }),
       });
       const data = await res.json();
       if (data.error) {
@@ -257,7 +192,7 @@ function PaymentsPage() {
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Hvorfor bruger vi Stripe?</div>
             <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-              Kontorbud bruger Stripe - en af verdens største og mest sikre betalingsudbydere - til at holde betalinger sikkert i depot, indtil en opgave er udført, og til selve udbetalingen til dig. På den måde går dine bank- og kortoplysninger aldrig gennem vores egne servere.
+              Stripe er en stor, sikker betalingsudbyder. De opbevarer pengene sikkert, indtil opgaven er udført, og sender dem derefter videre til dig. Dine bank- og kortoplysninger går aldrig gennem vores egne servere.
             </div>
           </div>
         </div>
@@ -266,7 +201,7 @@ function PaymentsPage() {
           <div>
             <div style={{ fontSize: 13.5, fontWeight: 700 }}>Derfor beder Stripe om oplysninger og dit IBAN</div>
             <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-              For at kunne udbetale penge til netop din konto skal Stripe - som alle betalingsudbydere er lovmæssigt forpligtet til - bekræfte din identitet og vide, hvilken konto pengene skal sendes til. Når du klikker "Forbind Stripe", bliver du sendt videre til Stripes egen, sikre opsætning, hvor du blandt andet skal oplyse dit IBAN - det finder du i din netbank eller bankapp under kontooplysninger. Kender du i stedet bare dit almindelige reg.nr. og kontonummer, kan du udfylde dem herunder i stedet, så regner vi automatisk dit IBAN ud for dig.
+              Stripe skal vide, hvem du er, og hvilken konto pengene skal sendes til - det er et lovkrav. Klik på "Forbind Stripe", og du bliver sendt til Stripes egen opsætning, hvor du skal oplyse dit IBAN. Det finder du i din netbank under kontooplysninger.
             </div>
           </div>
         </div>
@@ -316,7 +251,6 @@ function PaymentsPage() {
             <div style={{ fontSize: 13.5, color: "#B5610E", fontWeight: 600, marginBottom: 14 }}>
               Din Stripe-konto er oprettet, men onboardingen er ikke færdig endnu.
             </div>
-            <BankAccountFields regNr={regNr} setRegNr={setRegNr} kontoNr={kontoNr} setKontoNr={setKontoNr} />
             <button
               onClick={connectStripe}
               disabled={connecting}
@@ -330,7 +264,6 @@ function PaymentsPage() {
             <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 14, lineHeight: 1.6 }}>
               Forbind en Stripe-konto for at kunne modtage betaling, når du vinder bud. Opgavestillere kan ikke vælge dine bud, før du har forbundet Stripe.
             </p>
-            <BankAccountFields regNr={regNr} setRegNr={setRegNr} kontoNr={kontoNr} setKontoNr={setKontoNr} />
             <button
               onClick={connectStripe}
               disabled={connecting}

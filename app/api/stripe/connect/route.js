@@ -1,28 +1,14 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
-import { regAndAccountToIban } from "@/lib/dkIban";
 
 export async function POST(request) {
   try {
     await ensureSchema();
     const body = await request.json();
-    const { name, regNr, kontoNr } = body;
+    const { name } = body;
     if (!name?.trim()) {
       return NextResponse.json({ error: "Mangler navn." }, { status: 400 });
-    }
-
-    // Reg.nr. + kontonummer er valgfrit: udfylder man dem ikke, beder Stripes
-    // egen onboarding om bankoplysningerne i stedet (som IBAN) - men langt de
-    // fleste danskere kender ikke deres eget IBAN, så vi lader dem i stedet
-    // bruge de to felter, de faktisk kender, og regner selv IBAN'et ud.
-    let iban = null;
-    if (regNr || kontoNr) {
-      try {
-        iban = regAndAccountToIban(regNr, kontoNr);
-      } catch (err) {
-        return NextResponse.json({ error: err.message }, { status: 400 });
-      }
     }
 
     const stripe = getStripe();
@@ -78,22 +64,6 @@ export async function POST(request) {
       } catch (err) {
         // Kontoen er muligvis ikke færdig med onboarding endnu - ikke kritisk,
         // det forsøges igen, næste gang personen besøger Betalinger.
-      }
-    }
-
-    // Sæt bankkontoen med det samme, hvis vi lige har regnet et IBAN ud fra
-    // reg.nr./kontonummer ovenfor - Stripe springer så bank-trinnet helt over
-    // i sin egen onboarding, og brugeren ser kun ID-verifikation (på dansk).
-    if (iban) {
-      try {
-        await stripe.accounts.createExternalAccount(accountId, {
-          external_account: { object: "bank_account", country: "DK", currency: "dkk", account_number: iban },
-        });
-      } catch (err) {
-        // Typisk fordi det samme IBAN allerede er sat som konto (f.eks. hvis
-        // brugeren genbesøger siden) - ikke kritisk, Stripes egen onboarding
-        // beder i så fald bare om bankoplysninger som normalt.
-        console.error("Kunne ikke sætte bankkonto automatisk (fortsætter uden):", err.message || err);
       }
     }
 
