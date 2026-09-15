@@ -187,24 +187,34 @@ function PaymentsPage() {
       </div>
 
       <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20, marginBottom: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
           <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto" }} />
           <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sikker betaling via</div>
           <span style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", fontWeight: 700, fontSize: 15, color: "#635BFF", letterSpacing: "-0.01em" }}>
             Stripe
           </span>
         </div>
-        <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 8 }}>
-          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-            Stripe er en stor, sikker betalingsudbyder, der opbevarer pengene sikkert, indtil opgaven er udført.
-          </li>
-          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-            Dine bank- og kortoplysninger går aldrig gennem vores egne servere.
-          </li>
-          <li style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
-            Stripe skal bekræfte din identitet og dit IBAN, før du kan modtage udbetalinger - det er et lovkrav. Du finder dit IBAN i din netbank under kontooplysninger.
-          </li>
-        </ul>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+          <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sikkert og krypteret</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Dine bank- og kortoplysninger går aldrig gennem vores egne servere.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+          <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Beløbet holdes, indtil du selv markerer opgaven som udført. For at modtage det skal Stripe bekræfte din identitet og dit IBAN (et lovkrav) - det finder du i din netbank.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12 }}>
+          <Clock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Pengene er hurtigt på vej</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>Så snart opgaven er udført, sendes beløbet til din Stripe-konto. Som sikkerhed for nye konti holdes det et par dage, før det når din bank - perioden bliver kortere, efterhånden som du får flere gennemførte opgaver.</div>
+          </div>
+        </div>
       </div>
 
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 20 }}>
@@ -366,31 +376,6 @@ function PaymentsPage() {
         </button>
       </div>
 
-      <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20 }}>
-        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
-          <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Krypteret betaling</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Dine kortoplysninger håndteres sikkert af Stripe - de går aldrig gennem Kontorbuds egne servere.</div>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
-          <Lock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Du bestemmer over pengene</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>Beløbet holdes, indtil du selv markerer opgaven som udført - det udbetales aldrig automatisk.</div>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <Clock size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
-          <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Det tager lidt tid, før pengene rammer din bankkonto</div>
-            <div style={{ fontSize: 12.5, color: "#5B6478" }}>
-              Så snart opgaven er markeret udført, sender vi beløbet videre til din Stripe-konto med det samme. Herfra er det Stripe selv, der - som en sikkerhedsforanstaltning for nye konti - holder pengene nogle dage, før de sendes videre til din bank. Perioden bliver kortere af sig selv, efterhånden som du får flere gennemførte opgaver.
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
