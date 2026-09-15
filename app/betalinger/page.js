@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
 import Stars from "@/components/Stars";
-import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock } from "lucide-react";
+import { CreditCard, ShieldCheck, Lock, Trash2, Plus, Wallet, Clock, Info } from "lucide-react";
 import { regAndAccountToIban } from "@/lib/dkIban";
 
 const BRAND_LABELS = { visa: "Visa", mastercard: "Mastercard", amex: "American Express" };
@@ -250,6 +250,28 @@ function PaymentsPage() {
       <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10, marginTop: 4 }}>
         Udbetaling - når du vinder et bud
       </div>
+
+      <div style={{ background: "#EEF2FF", borderRadius: 16, padding: 20, marginBottom: 16 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+          <Info size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Hvorfor bruger vi Stripe?</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
+              Kontorbud bruger Stripe - en af verdens største og mest sikre betalingsudbydere - til at holde betalinger sikkert i depot, indtil en opgave er udført, og til selve udbetalingen til dig. På den måde går dine bank- og kortoplysninger aldrig gennem vores egne servere.
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12 }}>
+          <ShieldCheck size={18} color="#2A55E5" style={{ flex: "0 0 auto", marginTop: 1 }} />
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Derfor beder Stripe om oplysninger og dit IBAN</div>
+            <div style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.5 }}>
+              For at kunne udbetale penge til netop din konto skal Stripe - som alle betalingsudbydere er lovmæssigt forpligtet til - bekræfte din identitet og vide, hvilken konto pengene skal sendes til. Når du klikker "Forbind Stripe", bliver du sendt videre til Stripes egen, sikre opsætning, hvor du blandt andet skal oplyse dit IBAN - det finder du i din netbank eller bankapp under kontooplysninger. Kender du i stedet bare dit almindelige reg.nr. og kontonummer, kan du udfylde dem herunder i stedet, så regner vi automatisk dit IBAN ud for dig.
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 20 }}>
         {stripePayoutsEnabled ? (
           <div>
