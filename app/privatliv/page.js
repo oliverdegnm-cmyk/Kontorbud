@@ -46,7 +46,7 @@ export default function PrivacyPage() {
           <li><b>Stripe</b> - behandler betalinger og udbetalinger. Stripe modtager de oplysninger, der er nødvendige for at gennemføre en betaling, herunder betalingskortoplysninger, som Kontorbud ikke selv har adgang til.</li>
           <li><b>Google Maps</b> - bruges til at vise Opgavers omtrentlige placering på et kort, baseret på det område, du selv angiver.</li>
           <li><b>Resend</b> - sender transaktionelle emails (f.eks. bekræftelse af konto, nulstilling af adgangskode, notifikationer).</li>
-          <li><b>Vercel</b> - hoster platformen og den tilhørende database.</li>
+          <li><b>Vercel</b> - hoster platformen og den tilhørende database, og leverer anonymiseret, cookie-fri trafikmåling (antal sidevisninger m.m.) via Vercel Analytics.</li>
         </ul>
       </Section>
 
@@ -65,6 +65,9 @@ export default function PrivacyPage() {
       <Section title="7. Cookies">
         <p>
           Platformen bruger én nødvendig cookie til at holde dig logget ind (en session-cookie). Denne cookie er teknisk nødvendig for platformens funktion og kræver ikke samtykke efter cookiebekendtgørelsen.
+        </p>
+        <p style={{ marginTop: 10 }}>
+          Hvis du siger ja tak til det i vores cookiebanner, bruger vi desuden Google Analytics til at måle besøg på siden (fx antal besøgende og hvilke sider, der bruges mest). Google Analytics sætter cookies, der ikke er teknisk nødvendige, og bruges derfor kun, hvis du har givet samtykke - siger du nej, eller tager du ikke stilling, sættes disse cookies ikke. Du kan til enhver tid ændre dit valg ved at slette dine cookies for siden og genindlæse den, hvorefter banneret vises igen.
         </p>
       </Section>
 

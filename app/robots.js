@@ -3,7 +3,7 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/api/", "/indstillinger", "/betalinger", "/mine", "/beskeder", "/inviter"],
+      disallow: ["/admin", "/api/", "/indstillinger", "/betalinger", "/mine", "/beskeder", "/inviter", "/profil"],
     },
     sitemap: "https://kontorbud.dk/sitemap.xml",
   };

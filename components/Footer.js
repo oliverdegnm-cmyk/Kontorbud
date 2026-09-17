@@ -3,6 +3,10 @@ import { CATS, categoryBySlug } from "@/lib/categories";
 
 const POPULAR_SLUGS = ["bogforing-regnskab", "kundeservice-support", "grafisk-design", "ai-opgaver", "hjemmeside-it"];
 
+// Sættes til null, hvis der endnu ikke findes en Trustpilot-virksomhedsside -
+// linket udelades så helt i stedet for at pege på en side, der ikke findes.
+const TRUSTPILOT_URL = "https://www.trustpilot.com/review/kontorbud.dk";
+
 export default function Footer() {
   return (
     <footer style={{ background: "#14213D", borderRadius: 24, padding: "40px 36px", margin: "60px 0 24px", color: "#fff" }}>
@@ -44,8 +48,32 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)", marginTop: 32, paddingTop: 20, fontSize: 12, color: "#8A93B0", textAlign: "center" }}>
-        © {new Date().getFullYear()} Kontorbud
+      <div
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.12)",
+          marginTop: 32,
+          paddingTop: 20,
+          fontSize: 12,
+          color: "#8A93B0",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 16,
+          flexWrap: "wrap",
+          textAlign: "center",
+        }}
+      >
+        <span>© {new Date().getFullYear()} Kontorbud</span>
+        {TRUSTPILOT_URL && (
+          <a
+            href={TRUSTPILOT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#D6DCEC", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}
+          >
+            ★ Se vores anmeldelser på Trustpilot
+          </a>
+        )}
       </div>
     </footer>
   );

@@ -2,6 +2,7 @@ import "./globals.css";
 import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
 import CookieBanner from "@/components/CookieBanner";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { Analytics } from "@vercel/analytics/react";
 import { safeJsonLd } from "@/lib/safeJsonLd";
 
@@ -25,6 +26,12 @@ export const metadata = {
     card: "summary_large_image",
   },
   manifest: "/manifest.webmanifest",
+  // Udfyldes automatisk, når Google Search Console-verifikationskoden er lagt
+  // i miljøvariablen NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION - ellers udelades
+  // meta-tagget helt, så vi ikke sender et tomt/forkert verifikationstag.
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -72,6 +79,7 @@ export default function RootLayout({ children }) {
           <CookieBanner />
         </NameProvider>
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );
