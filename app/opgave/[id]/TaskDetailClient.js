@@ -7,9 +7,11 @@ import { ArrowLeft, MessageCircle, FileText, ShieldCheck, Clock } from "lucide-r
 import Badge from "@/components/Badge";
 import MessageThread from "@/components/MessageThread";
 import ReviewForm from "@/components/ReviewForm";
+import Stars from "@/components/Stars";
 import { useName } from "@/lib/NameContext";
 import { feeBreakdown, formatKr, formatBudgetDisplay } from "@/lib/fees";
 import { statusInfo, getDeadlineLabel, capitalizeFirst } from "@/lib/status";
+import { shortDisplayName } from "@/lib/displayName";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -400,7 +402,7 @@ export default function TaskDetailClient() {
           <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 10 }}>Anmeldelser af denne opgave</div>
           {reviews.map((r) => (
             <div key={r.id} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 14, marginBottom: 8, fontSize: 13 }}>
-              <b>{r.reviewerName}</b> gav <b>{r.revieweeName}</b> {r.rating} ★{r.comment ? ` - ${r.comment}` : ""}
+              <b>{shortDisplayName(r.reviewerName)}</b> gav <b>{shortDisplayName(r.revieweeName)}</b> {r.rating} ★{r.comment ? ` - ${r.comment}` : ""}
             </div>
           ))}
         </div>
@@ -528,9 +530,17 @@ export default function TaskDetailClient() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                         <Link href={`/bruger/${encodeURIComponent(b.bidderName)}`} style={{ fontWeight: 700, fontSize: 13.5, color: "#14213D" }}>
-                          {b.bidderName}
+                          {shortDisplayName(b.bidderName)}
                           {b.bidderName === name ? " (dig)" : ""}
                         </Link>
+                        {b.reviewCount > 0 && (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12 }}>
+                            <Stars value={b.avgRating} size={11} />
+                            <span style={{ color: "#5B6478" }}>
+                              {b.avgRating.toFixed(1)} ({b.reviewCount})
+                            </span>
+                          </span>
+                        )}
                         {b.verified && (
                           <span
                             title="Identitet bekræftet via Stripe"
@@ -607,7 +617,7 @@ export default function TaskDetailClient() {
                 Du skal forbinde Stripe, før du kan afgive bud - så er du sikker på at kunne modtage betaling, hvis du vinder.
               </p>
               <Link
-                href="/profil"
+                href="/betalinger"
                 style={{ display: "inline-block", fontSize: 13.5, fontWeight: 700, padding: "11px 20px", borderRadius: 10, background: "#2A55E5", color: "#fff" }}
               >
                 Forbind Stripe på din profil

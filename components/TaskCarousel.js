@@ -7,6 +7,7 @@ import { formatBudgetDisplay } from "@/lib/fees";
 import { capitalizeFirst } from "@/lib/status";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
+import { shortDisplayName } from "@/lib/displayName";
 
 export default function TaskCarousel({ tasks }) {
   if (!tasks || tasks.length === 0) return null;
@@ -59,7 +60,7 @@ export default function TaskCarousel({ tasks }) {
               {t.completedByName && (
                 <div style={{ borderTop: "1px solid #F0F1F5", marginTop: 2, paddingTop: 8 }}>
                   <div style={{ fontSize: 10.5, color: "#9AA2B1", fontWeight: 600 }}>Udført af</div>
-                  <div style={{ fontSize: 12.5, fontWeight: 700, color: "#14213D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.completedByName}</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 700, color: "#14213D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{shortDisplayName(t.completedByName)}</div>
                   <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>
                     {t.completedByReviewCount > 0 ? (
                       <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}>

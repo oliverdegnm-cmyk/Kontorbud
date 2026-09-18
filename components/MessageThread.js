@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Send, FileText } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
+import { shortDisplayName } from "@/lib/displayName";
 
 export default function MessageThread({ taskId, bidderName, currentName }) {
   const [messages, setMessages] = useState(null);
@@ -94,7 +95,7 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
                   )}
                 </div>
                 <div style={{ fontSize: 10.5, color: "#9AA2B1", marginTop: 3, textAlign: mine ? "right" : "left" }}>
-                  {mine ? "Dig" : m.senderName}
+                  {mine ? "Dig" : shortDisplayName(m.senderName)}
                 </div>
               </div>
             );

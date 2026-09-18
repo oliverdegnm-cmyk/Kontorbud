@@ -6,7 +6,7 @@ import { useName } from "@/lib/NameContext";
 import { Copy, Check, Share2 } from "lucide-react";
 
 function InviterPage() {
-  const { id, name } = useName();
+  const { id } = useName();
   const [link, setLink] = useState("");
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
@@ -18,11 +18,17 @@ function InviterPage() {
     setCanNativeShare(typeof navigator !== "undefined" && !!navigator.share);
   }, [id]);
 
-  const shareText = `Hej! ${name ? name + " her - " : ""}jeg synes du skal tjekke Kontorbud.dk ud. Det er en dansk platform, hvor man nemt kan få hjælp til kontoropgaver, eller selv byde og tjene penge.`;
+  const shareText = "Hej! Jeg synes du skal tjekke Kontorbud.dk ud. Det er en dansk platform, hvor man nemt kan få hjælp til kontoropgaver, eller byde på opgaver og tjene penge.";
+  // Selve linket samles ind i denne ene tekst, så det er det allersidste, der
+  // står - vi sender IKKE et separat "url"-felt til navigator.share() ved
+  // siden af, da nogle apps/styresystemer så selv tilføjer linket en ekstra
+  // gang (og nogle gange med mærkelige tegn omkring), så det ender med at stå
+  // der to gange eller med en løs parentes til sidst.
+  const fullMessage = `${shareText}\n${link}`;
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(`${shareText}\n\n${link}`);
+      await navigator.clipboard.writeText(fullMessage);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
@@ -32,7 +38,7 @@ function InviterPage() {
 
   async function nativeShare() {
     try {
-      await navigator.share({ title: "Kontorbud", text: shareText, url: link });
+      await navigator.share({ title: "Kontorbud", text: fullMessage });
     } catch (e) {
       // brugeren annullerede - ingen grund til at vise en fejl
     }

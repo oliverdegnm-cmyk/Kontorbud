@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, ShieldCheck, FileText, Linkedin, Globe, Briefcase, GraduationCap, Award, User } from "lucide-react";
 import Stars from "@/components/Stars";
+import { shortDisplayName } from "@/lib/displayName";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -145,7 +146,7 @@ export default function ProfileClient() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
-            <div style={{ fontSize: 21, fontWeight: 800 }}>{decoded}</div>
+            <div style={{ fontSize: 21, fontWeight: 800 }}>{shortDisplayName(decoded)}</div>
             {profile && profile.stripePayoutsEnabled && (
               <span
                 title="Identitet bekræftet via Stripe"
@@ -283,7 +284,7 @@ export default function ProfileClient() {
       )}
 
       {!hasAboutContent && !hasLinksOrDocs && (
-        <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 16 }}>{decoded} har ikke udfyldt en profil endnu.</p>
+        <p style={{ fontSize: 13.5, color: "#5B6478", marginBottom: 16 }}>{shortDisplayName(decoded)} har ikke udfyldt en profil endnu.</p>
       )}
 
       <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 12, marginTop: 8 }}>Anmeldelser</div>
@@ -293,7 +294,7 @@ export default function ProfileClient() {
         reviews.map((r) => (
           <div key={r.id} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 16, marginBottom: 10 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <span style={{ fontWeight: 700, fontSize: 13.5 }}>{r.reviewerName}</span>
+              <span style={{ fontWeight: 700, fontSize: 13.5 }}>{shortDisplayName(r.reviewerName)}</span>
               <Stars value={r.rating} />
             </div>
             <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 6 }}>om "{r.taskTitle}"</div>

@@ -39,6 +39,8 @@ function mapFullTask(t, bidRows, attRows, revealAddress) {
       message: b.message,
       contactEmail: b.contact_email,
       verified: !!b.stripe_payouts_enabled,
+      avgRating: b.avg_rating != null ? Number(b.avg_rating) : 0,
+      reviewCount: b.review_count != null ? Number(b.review_count) : 0,
     })),
   };
 }
@@ -55,7 +57,17 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Opgaven findes ikke." }, { status: 404 });
     }
     const task = taskRows[0];
-    const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
+    const { rows: bidRows } = await pool.query(
+      `SELECT b.*, p.stripe_payouts_enabled, r.avg_rating, r.review_count
+       FROM bids b
+       LEFT JOIN profiles p ON p.name = b.bidder_name
+       LEFT JOIN (
+         SELECT reviewee_name, AVG(rating)::float AS avg_rating, COUNT(*)::int AS review_count
+         FROM reviews GROUP BY reviewee_name
+       ) r ON r.reviewee_name = b.bidder_name
+       WHERE b.task_id = $1 ORDER BY b.created_at ASC`,
+      [id]
+    );
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
     const { rows: posterProfileRows } = await pool.query("SELECT stripe_payouts_enabled FROM profiles WHERE name = $1", [taskRows[0].posted_by]);
 
@@ -129,7 +141,17 @@ export async function PATCH(request, { params }) {
       }
     }
 
-    const { rows: bidRows } = await pool.query("SELECT b.*, p.stripe_payouts_enabled FROM bids b LEFT JOIN profiles p ON p.name = b.bidder_name WHERE b.task_id = $1 ORDER BY b.created_at ASC", [id]);
+    const { rows: bidRows } = await pool.query(
+      `SELECT b.*, p.stripe_payouts_enabled, r.avg_rating, r.review_count
+       FROM bids b
+       LEFT JOIN profiles p ON p.name = b.bidder_name
+       LEFT JOIN (
+         SELECT reviewee_name, AVG(rating)::float AS avg_rating, COUNT(*)::int AS review_count
+         FROM reviews GROUP BY reviewee_name
+       ) r ON r.reviewee_name = b.bidder_name
+       WHERE b.task_id = $1 ORDER BY b.created_at ASC`,
+      [id]
+    );
     const { rows: attRows } = await pool.query("SELECT * FROM task_attachments WHERE task_id = $1 ORDER BY created_at ASC", [id]);
     return NextResponse.json({ task: mapFullTask(rows[0], bidRows, attRows, true) });
   } catch (err) {

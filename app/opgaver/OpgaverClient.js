@@ -13,6 +13,7 @@ import Stars from "@/components/Stars";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
 import { statusInfo, truncateText, getDeadlineLabel, capitalizeFirst } from "@/lib/status";
 import { formatBudgetDisplay } from "@/lib/fees";
+import { shortDisplayName } from "@/lib/displayName";
 
 const TaskMap = dynamic(() => import("@/components/TaskMap"), {
   ssr: false,
@@ -263,7 +264,7 @@ export default function OpgaverPage() {
                           onClick={(e) => e.stopPropagation()}
                           style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 130 }}
                         >
-                          {t.postedBy}
+                          {shortDisplayName(t.postedBy)}
                         </Link>
                       </div>
                       <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>

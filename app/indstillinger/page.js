@@ -3,10 +3,9 @@
 import RequireAuth from "@/components/RequireAuth";
 import { useState } from "react";
 import { useName } from "@/lib/NameContext";
-import { CheckCircle2 } from "lucide-react";
 
 function SettingsPage() {
-  const { name, email, phone, phoneVerified, emailNotifications, refresh } = useName();
+  const { name, email, phone, emailNotifications, refresh } = useName();
 
   const [newEmail, setNewEmail] = useState(email);
   const [emailSaving, setEmailSaving] = useState(false);
@@ -16,16 +15,6 @@ function SettingsPage() {
   const [newPhone, setNewPhone] = useState(phone);
   const [notifOn, setNotifOn] = useState(emailNotifications);
 
-  // Mobilverificering via SMS-kode (Twilio Verify) - se
-  // app/api/auth/phone/send-code og verify-code. "idle" = intet i gang,
-  // "codeSent" = kode sendt, afventer indtastning.
-  const [phoneStep, setPhoneStep] = useState("idle");
-  const [pendingPhone, setPendingPhone] = useState("");
-  const [verifyCode, setVerifyCode] = useState("");
-  const [phoneSending, setPhoneSending] = useState(false);
-  const [phoneMsg, setPhoneMsg] = useState("");
-  const [phoneErr, setPhoneErr] = useState("");
-  const isPhoneVerified = !!phoneVerified && newPhone.trim() !== "" && newPhone.trim() === (phone || "").trim();
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState(false);
 
@@ -99,68 +88,6 @@ function SettingsPage() {
     setTimeout(() => setSettingsMsg(false), 2500);
   }
 
-  function onPhoneInputChange(value) {
-    setNewPhone(value);
-    // Skifter man nummeret midt i en verificering, må man starte forfra.
-    if (phoneStep !== "idle") {
-      setPhoneStep("idle");
-      setVerifyCode("");
-      setPhoneMsg("");
-      setPhoneErr("");
-    }
-  }
-
-  async function sendPhoneCode() {
-    setPhoneErr("");
-    setPhoneMsg("");
-    setPhoneSending(true);
-    try {
-      const res = await fetch("/api/auth/phone/send-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: newPhone }),
-      });
-      const data = await res.json();
-      setPhoneSending(false);
-      if (data.error) {
-        setPhoneErr(data.error);
-        return;
-      }
-      setPendingPhone(data.phone);
-      setPhoneStep("codeSent");
-      setPhoneMsg(`Vi har sendt en kode til ${data.phone} - indtast den herunder.`);
-    } catch (e) {
-      setPhoneSending(false);
-      setPhoneErr("Kunne ikke sende kode. Prøv igen.");
-    }
-  }
-
-  async function confirmPhoneCode() {
-    setPhoneErr("");
-    setPhoneSending(true);
-    try {
-      const res = await fetch("/api/auth/phone/verify-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: pendingPhone, code: verifyCode }),
-      });
-      const data = await res.json();
-      setPhoneSending(false);
-      if (data.error) {
-        setPhoneErr(data.error);
-        return;
-      }
-      await refresh();
-      setNewPhone(pendingPhone);
-      setPhoneStep("idle");
-      setVerifyCode("");
-      setPhoneMsg("✓ Mobilnummer bekræftet.");
-    } catch (e) {
-      setPhoneSending(false);
-      setPhoneErr("Kunne ikke bekræfte koden. Prøv igen.");
-    }
-  }
-
   return (
     <div style={{ marginTop: 24, maxWidth: 620, marginBottom: 60 }}>
       <h2 style={{ fontSize: 24, marginBottom: 4 }}>Indstillinger</h2>
@@ -189,53 +116,13 @@ function SettingsPage() {
       {/* Telefon + notifikationer */}
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#5B6478", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 14 }}>Mobilnummer</div>
-        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-          <input
-            type="tel"
-            value={newPhone}
-            onChange={(e) => onPhoneInputChange(e.target.value)}
-            placeholder="Fx 12345678"
-            style={{ flex: 1, fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
-          />
-          {isPhoneVerified ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px", fontSize: 12.5, fontWeight: 700, color: "#1AA37A", flex: "0 0 auto" }}>
-              <CheckCircle2 size={16} /> Verificeret
-            </div>
-          ) : (
-            phoneStep === "idle" && (
-              <button
-                onClick={sendPhoneCode}
-                disabled={phoneSending || !newPhone.trim()}
-                style={{ fontSize: 13, fontWeight: 700, padding: "10px 16px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: phoneSending || !newPhone.trim() ? 0.5 : 1, flex: "0 0 auto", whiteSpace: "nowrap" }}
-              >
-                {phoneSending ? "Sender…" : "Verificer nummer"}
-              </button>
-            )
-          )}
-        </div>
-
-        {phoneStep === "codeSent" && (
-          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-            <input
-              value={verifyCode}
-              onChange={(e) => setVerifyCode(e.target.value)}
-              placeholder="6-cifret kode fra SMS"
-              style={{ flex: 1, fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
-            />
-            <button
-              onClick={confirmPhoneCode}
-              disabled={phoneSending || !verifyCode.trim()}
-              style={{ fontSize: 13, fontWeight: 700, padding: "10px 16px", borderRadius: 10, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer", opacity: phoneSending || !verifyCode.trim() ? 0.5 : 1, flex: "0 0 auto" }}
-            >
-              {phoneSending ? "Bekræfter…" : "Bekræft kode"}
-            </button>
-          </div>
-        )}
-
-        <div style={{ marginBottom: 20 }}>
-          {phoneMsg && <div style={{ fontSize: 12.5, fontWeight: 600, color: "#1AA37A" }}>{phoneMsg}</div>}
-          {phoneErr && <div style={{ fontSize: 12.5, fontWeight: 600, color: "#C0392B" }}>{phoneErr}</div>}
-        </div>
+        <input
+          type="tel"
+          value={newPhone}
+          onChange={(e) => setNewPhone(e.target.value)}
+          placeholder="Fx 12345678"
+          style={{ width: "100%", fontSize: 14, padding: "11px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB", marginBottom: 20 }}
+        />
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 18, borderTop: "1px solid #E4E8F0" }}>
           <div>

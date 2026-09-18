@@ -14,6 +14,7 @@ import { formatBudgetDisplay } from "@/lib/fees";
 import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
 import { useName } from "@/lib/NameContext";
+import { shortDisplayName } from "@/lib/displayName";
 
 // Ord der skiftevis vises i forsidens rubrik ("Få bud på dine ___").
 // "kontoropgaver" er sat ind som hvert femte ord, så platformens eget navn
@@ -419,7 +420,7 @@ export default function HomePage() {
                         onClick={(e) => e.stopPropagation()}
                         style={{ fontSize: 13, fontWeight: 700, color: "#2A55E5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 120 }}
                       >
-                        {t.postedBy}
+                        {shortDisplayName(t.postedBy)}
                       </Link>
                     </div>
                     <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2, whiteSpace: "nowrap" }}>
