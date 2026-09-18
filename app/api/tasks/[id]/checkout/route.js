@@ -69,7 +69,7 @@ export async function POST(request, { params }) {
             unit_amount: bid.amount_value * 100,
             product_data: {
               name: task.title,
-              description: `Bud fra ${bid.bidder_name} - betalingen holdes, indtil du markerer opgaven som udført.`,
+              description: `Bud fra ${bid.bidder_name} - betalingen holdes sikkert hos Stripe, indtil du markerer opgaven som udført. Sådan betaler du kun for arbejde du er tilfreds med, og ${bid.bidder_name} kan være sikker på, at pengene allerede står klar, inden arbejdet går i gang.`,
             },
           },
           quantity: 1,
