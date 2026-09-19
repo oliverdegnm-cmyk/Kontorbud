@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
@@ -51,7 +51,7 @@ function Badge({ children, tone }) {
   );
 }
 
-export default function AdminPage() {
+function AdminPageInner() {
   const { name, isAdmin, ready } = useName();
   const searchParams = useSearchParams();
   const [tab, setTab] = useState(searchParams.get("tab") === "support" ? "support" : "tasks");
@@ -285,6 +285,17 @@ export default function AdminPage() {
       {tab === "images" && <ImagesTab />}
       {tab === "support" && <SupportTab presetUser={supportUser} />}
     </div>
+  );
+}
+
+// useSearchParams() kræver en Suspense-grænse omkring sig i App Router, ellers fejler
+// den statiske build-prerendering af siden (se Vercel build-fejl 19/9). AdminPageInner
+// gør det egentlige arbejde, denne wrapper sørger bare for grænsen.
+export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminPageInner />
+    </Suspense>
   );
 }
 
