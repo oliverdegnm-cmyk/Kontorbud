@@ -12,7 +12,7 @@ function initials(name) {
 }
 
 export default function UserMenu() {
-  const { name, logOut, isAdmin } = useName();
+  const { name, logOut, isAdmin, avatarUrl } = useName();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -66,9 +66,10 @@ export default function UserMenu() {
             fontSize: 11.5,
             fontWeight: 800,
             flex: "0 0 auto",
+            overflow: "hidden",
           }}
         >
-          {initials(name)}
+          {avatarUrl ? <img src={avatarUrl} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : initials(name)}
         </div>
         {name}
         <ChevronDown size={14} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .12s ease" }} />

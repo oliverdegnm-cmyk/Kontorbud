@@ -5,14 +5,18 @@ import { Send, FileText } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
 import { shortDisplayName } from "@/lib/displayName";
 
-export default function MessageThread({ taskId, bidderName, currentName }) {
+export default function MessageThread({ taskId, bidderName, currentName, endpoint, placeholder, maxHeight }) {
+  // Bruges både til beskeder om en konkret opgave (default, bygget ud fra taskId)
+  // og til support-tråde uden opgave (endpoint="/api/messages/support") - se
+  // app/beskeder/support/page.js og admin-sidens Support-fane.
+  const apiBase = endpoint || `/api/tasks/${taskId}/messages`;
   const [messages, setMessages] = useState(null);
   const [text, setText] = useState("");
   const [pendingFiles, setPendingFiles] = useState([]);
   const [error, setError] = useState("");
 
   function load() {
-    fetch(`/api/tasks/${taskId}/messages?bidderName=${encodeURIComponent(bidderName)}`)
+    fetch(`${apiBase}?bidderName=${encodeURIComponent(bidderName)}`)
       .then((r) => r.json())
       .then((data) => setMessages(data.messages || []))
       .catch(() => setError("Kunne ikke hente beskeder."));
@@ -21,14 +25,14 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId, bidderName]);
+  }, [apiBase, bidderName]);
 
   async function send() {
     if (!text.trim() && pendingFiles.length === 0) return;
     setError("");
     try {
       const attachment = pendingFiles[0]; // én vedhæftning ad gangen pr. besked, ligesom de fleste chatapps
-      const res = await fetch(`/api/tasks/${taskId}/messages`, {
+      const res = await fetch(apiBase, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -54,7 +58,7 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
 
   return (
     <div style={{ background: "#F5F7FB", borderRadius: 12, padding: 14, marginTop: 10 }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 220, overflowY: "auto", marginBottom: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: maxHeight || 220, overflowY: "auto", marginBottom: 10 }}>
         {messages === null && <div style={{ fontSize: 12.5, color: "#5B6478" }}>Henter beskeder…</div>}
         {messages && messages.length === 0 && <div style={{ fontSize: 12.5, color: "#5B6478" }}>Ingen beskeder endnu. Sig hej.</div>}
         {messages &&
@@ -113,7 +117,7 @@ export default function MessageThread({ taskId, bidderName, currentName }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Skriv en besked…"
+          placeholder={placeholder || "Skriv en besked…"}
           style={{ flex: 1, fontSize: 13, padding: "9px 12px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff" }}
         />
         {pendingFiles.length === 0 && (

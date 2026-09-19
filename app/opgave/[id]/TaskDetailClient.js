@@ -501,6 +501,18 @@ export default function TaskDetailClient() {
 
           <div style={{ marginTop: 30 }}>
             <h3 style={{ fontSize: 15, marginBottom: 14 }}>Bud ({task.bids.length})</h3>
+            {isOwner && task.status === "open" && task.bids.length > 0 && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#5B6478", marginBottom: 16 }}>
+                <ShieldCheck size={13} color="#2A55E5" style={{ flex: "0 0 auto" }} />
+                <span>
+                  Betalinger håndteres sikkert af{" "}
+                  <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2A55E5", fontWeight: 700 }}>
+                    Stripe
+                  </a>
+                  , en af verdens mest brugte betalingsudbydere.
+                </span>
+              </div>
+            )}
             {task.bids.length === 0 && <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen bud endnu. Vær den første.</p>}
             {task.bids.map((b, i) => {
               const canChat = isOwner || b.bidderName === name;

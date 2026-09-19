@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useName } from "@/lib/NameContext";
 import { shortDisplayName } from "@/lib/displayName";
+import { ShieldCheck } from "lucide-react";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -47,7 +48,7 @@ function MessagesInboxPage() {
         threads.map((t) => (
           <Link
             key={`${t.taskId}-${t.bidderName}`}
-            href={`/opgave/${t.taskId}`}
+            href={t.isAdminThread ? "/beskeder/support" : `/opgave/${t.taskId}`}
             style={{ display: "flex", alignItems: "center", gap: 14, background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: "14px 18px", marginBottom: 10 }}
           >
             <div
@@ -65,14 +66,14 @@ function MessagesInboxPage() {
                 flex: "0 0 auto",
               }}
             >
-              {initials(t.counterpart)}
+              {t.isAdminThread ? <ShieldCheck size={17} /> : initials(t.counterpart)}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-                <span style={{ fontWeight: 700, fontSize: 14 }}>{shortDisplayName(t.counterpart)}</span>
+                <span style={{ fontWeight: 700, fontSize: 14 }}>{t.isAdminThread ? t.counterpart : shortDisplayName(t.counterpart)}</span>
                 <span style={{ fontSize: 11.5, color: "#9AA2B1", whiteSpace: "nowrap" }}>{timeAgo(t.lastAt)}</span>
               </div>
-              <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 2 }}>om "{t.taskTitle}"</div>
+              {!t.isAdminThread && <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 2 }}>om "{t.taskTitle}"</div>}
               <div
                 style={{
                   fontSize: 13,

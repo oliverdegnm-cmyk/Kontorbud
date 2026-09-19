@@ -6,10 +6,35 @@ import { upload } from "@vercel/blob/client";
 import { useName } from "@/lib/NameContext";
 import RequireAuth from "@/components/RequireAuth";
 import Stars from "@/components/Stars";
-import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight, Sparkles, Award } from "lucide-react";
+import { LEVELS, RATE_CATEGORIES, rateCategoryFor, formatKr } from "@/lib/fees";
+import { FileText, Upload, X, Globe, Linkedin, ShieldCheck, User, Briefcase, CheckCircle2, AlertTriangle, ChevronRight, Sparkles, Award, Camera, Percent } from "lucide-react";
 
 function initials(name) {
   return name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+}
+
+// Skalerer og komprimerer et uploadet profilbillede i browseren, før det sendes -
+// et lille, kvadratisk billede fylder meget mindre end et rå foto fra en telefon.
+async function optimizeAvatar(file, maxDim = 512, quality = 0.85) {
+  if (!file.type?.startsWith("image/") || file.type === "image/svg+xml") return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    if (!blob) return file;
+    const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], newName, { type: "image/jpeg" });
+  } catch (err) {
+    console.error("Kunne ikke optimere profilbilledet, uploader originalen i stedet:", err);
+    return file;
+  }
 }
 
 function SectionCard({ icon: Icon, title, children }) {
@@ -75,7 +100,10 @@ function FileSlot({ label, hint, fileUrl, filename, uploading, error, onChange, 
 }
 
 function ProfilePage() {
-  const { name, emailVerified } = useName();
+  const { name, emailVerified, refresh } = useName();
+  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState("");
   const [job, setJob] = useState("");
@@ -117,6 +145,7 @@ function ProfilePage() {
           setCvFilename(data.profile.cvFilename || null);
           setPortfolioUrl(data.profile.portfolioUrl || null);
           setPortfolioFilename(data.profile.portfolioFilename || null);
+          setAvatarUrl(data.profile.avatarUrl || null);
         }
         setLoaded(true);
       });
@@ -170,6 +199,48 @@ function ProfilePage() {
 
   const handleCvChange = makeFileHandler({ setUploading: setCvUploading, setError: setCvError, setUrl: setCvUrl, setFilename: setCvFilename, field: "cv" });
   const handlePortfolioChange = makeFileHandler({ setUploading: setPortfolioUploading, setError: setPortfolioError, setUrl: setPortfolioUrl, setFilename: setPortfolioFilename, field: "portfolio" });
+
+  async function handleAvatarChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type?.startsWith("image/")) {
+      setAvatarError("Kun billedfiler er understøttet.");
+      e.target.value = "";
+      return;
+    }
+    setAvatarUploading(true);
+    setAvatarError("");
+    try {
+      const optimized = await optimizeAvatar(file);
+      const blob = await upload(optimized.name, optimized, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ purpose: "image" }),
+      });
+      await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatarUrl: blob.url }),
+      });
+      setAvatarUrl(blob.url);
+      await refresh();
+    } catch (err) {
+      setAvatarError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
+    }
+    setAvatarUploading(false);
+    e.target.value = "";
+  }
+
+  async function removeAvatar() {
+    if (!confirm("Fjern dit profilbillede?")) return;
+    await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatarUrl: null }),
+    });
+    setAvatarUrl(null);
+    await refresh();
+  }
 
   const [parsingCv, setParsingCv] = useState(false);
   const [parseCvError, setParseCvError] = useState("");
@@ -239,22 +310,50 @@ function ProfilePage() {
     <div style={{ marginTop: 24, maxWidth: 680, marginBottom: 60 }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #2A55E5, #6D8CF0)",
-            color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 800,
-            fontSize: 22,
-            flex: "0 0 auto",
-          }}
-        >
-          {initials(name)}
+        <div style={{ position: "relative", flex: "0 0 auto" }}>
+          <div
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              background: avatarUrl ? "#F5F7FB" : "linear-gradient(135deg, #2A55E5, #6D8CF0)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 800,
+              fontSize: 22,
+              overflow: "hidden",
+              opacity: avatarUploading ? 0.5 : 1,
+            }}
+          >
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              initials(name)
+            )}
+          </div>
+          <label
+            title="Upload profilbillede"
+            style={{
+              position: "absolute",
+              bottom: -2,
+              right: -2,
+              width: 26,
+              height: 26,
+              borderRadius: "50%",
+              background: "#fff",
+              border: "1.5px solid #E4E8F0",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: avatarUploading ? "default" : "pointer",
+              boxShadow: "0 2px 6px -2px rgba(20,33,61,0.3)",
+            }}
+          >
+            <Camera size={12} color="#2A55E5" />
+            <input type="file" accept="image/*" onChange={handleAvatarChange} disabled={avatarUploading} style={{ display: "none" }} />
+          </label>
         </div>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -274,6 +373,16 @@ function ProfilePage() {
               Se din profil, som andre ser den →
             </Link>
           </p>
+          {avatarUploading && <p style={{ fontSize: 11.5, color: "#9AA2B1", margin: "4px 0 0" }}>Uploader billede…</p>}
+          {avatarUrl && !avatarUploading && (
+            <button
+              onClick={removeAvatar}
+              style={{ marginTop: 4, fontSize: 11.5, fontWeight: 700, color: "#C0392B", background: "none", border: "none", textDecoration: "underline", cursor: "pointer", padding: 0 }}
+            >
+              Fjern profilbillede
+            </button>
+          )}
+          {avatarError && <p style={{ fontSize: 11.5, color: "#C0392B", margin: "4px 0 0" }}>{avatarError}</p>}
         </div>
       </div>
 
@@ -311,6 +420,8 @@ function ProfilePage() {
           </Link>
         </div>
       )}
+
+      <ServiceLevelCard level={level} />
 
       <SectionCard icon={User} title="Om dig">
         <label style={labelStyle}>Beskrivelse</label>
@@ -472,6 +583,91 @@ function StatBlock({ label, value, border }) {
       <div style={{ fontSize: 16, fontWeight: 800 }}>{value}</div>
       <div style={{ fontSize: 11, color: "#5B6478", marginTop: 2 }}>{label}</div>
     </div>
+  );
+}
+
+// Viser servicegebyr-niveauet (Standard/Sølv/Guld/Platin, se lib/fees.js) med hvor langt
+// brugeren er fra næste niveau, plus hele niveau-stigen - samme idé som Handyhands egen
+// "handyhander-niveauer"-side, så det er tydeligt at man betaler 20 % som udgangspunkt,
+// og hvad der skal til for at betale mindre.
+function ServiceLevelCard({ level }) {
+  if (!level) return null;
+  const { level: current, earnings30d, completionRate: rate } = level;
+  const rateCat = rateCategoryFor(rate);
+  const idx = LEVELS.findIndex((l) => l.key === current.key);
+  const next = idx > 0 ? LEVELS[idx - 1] : null; // LEVELS er sorteret bedst → dårligst
+
+  return (
+    <SectionCard icon={Percent} title="Dit serviceniveau">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
+        <div style={{ fontSize: 15, fontWeight: 800 }}>{current.label}</div>
+        <div style={{ fontSize: 12.5, fontWeight: 800, color: "#2A55E5", background: "#EEF2FF", padding: "4px 12px", borderRadius: 999, whiteSpace: "nowrap" }}>
+          {current.feePercent}% i servicegebyr
+        </div>
+      </div>
+      <p style={{ fontSize: 12, color: "#9AA2B1", margin: "0 0 4px" }}>
+        Servicegebyret trækkes automatisk af det, du vinder et bud på - jo højere niveau, jo mindre gebyr.
+      </p>
+
+      {next ? (
+        <div style={{ fontSize: 12.5, color: "#5B6478", marginTop: 8, lineHeight: 1.6 }}>
+          {earnings30d < next.minEarnings ? (
+            <>
+              Du mangler <b style={{ color: "#14213D" }}>{formatKr(next.minEarnings - earnings30d)}</b> i indtjening de seneste 30 dage for at nå{" "}
+              <b style={{ color: "#14213D" }}>{next.label}</b> ({next.feePercent}% i gebyr).
+            </>
+          ) : (
+            <>
+              Din indtjening de seneste 30 dage rækker allerede til <b style={{ color: "#14213D" }}>{next.label}</b>.
+            </>
+          )}
+          {rateCat.order < next.minRateOrder && (
+            <>
+              {" "}Din udførelsesrate skal desuden op på mindst {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.min}% ("
+              {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.label}") - du ligger på {rate}% ("{rateCat.label}") lige nu.
+            </>
+          )}
+        </div>
+      ) : (
+        <div style={{ fontSize: 12.5, color: "#1AA37A", fontWeight: 700, marginTop: 8 }}>Du har nået det højeste niveau. 🎉</div>
+      )}
+
+      <div style={{ marginTop: 16, borderTop: "1px solid #F0F1F5", paddingTop: 12 }}>
+        {[...LEVELS].reverse().map((l) => {
+          const rc = RATE_CATEGORIES.find((r) => r.order === l.minRateOrder);
+          const isCurrent = l.key === current.key;
+          return (
+            <div
+              key={l.key}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+                padding: "9px 12px",
+                borderRadius: 10,
+                background: isCurrent ? "#EEF2FF" : "transparent",
+                marginBottom: 4,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {isCurrent && <CheckCircle2 size={14} color="#2A55E5" style={{ flex: "0 0 auto" }} />}
+                <span style={{ fontSize: 13, fontWeight: isCurrent ? 800 : 600, color: isCurrent ? "#1B3AA6" : "#14213D" }}>{l.label}</span>
+              </div>
+              <div style={{ fontSize: 11.5, color: "#5B6478", textAlign: "right" }}>
+                <span style={{ fontWeight: 800, color: "#14213D" }}>{l.feePercent}%</span> gebyr
+                {l.minEarnings > 0 && (
+                  <>
+                    {" "}
+                    · fra {formatKr(l.minEarnings)}/30 dage · {rc?.label}+
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </SectionCard>
   );
 }
 

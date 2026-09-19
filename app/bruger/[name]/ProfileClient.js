@@ -130,7 +130,7 @@ export default function ProfileClient() {
                 width: 76,
                 height: 76,
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #2A55E5, #6D8CF0)",
+                background: profile?.avatarUrl ? "#F5F7FB" : "linear-gradient(135deg, #2A55E5, #6D8CF0)",
                 color: "#fff",
                 display: "flex",
                 alignItems: "center",
@@ -139,9 +139,14 @@ export default function ProfileClient() {
                 fontSize: 24,
                 border: "4px solid #fff",
                 flex: "0 0 auto",
+                overflow: "hidden",
               }}
             >
-              {initials(decoded)}
+              {profile?.avatarUrl ? (
+                <img src={profile.avatarUrl} alt={decoded} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                initials(decoded)
+              )}
             </div>
           </div>
 

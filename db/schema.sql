@@ -52,6 +52,9 @@ CREATE TABLE IF NOT EXISTS messages (
 
 ALTER TABLE messages ADD COLUMN IF NOT EXISTS attachment_url TEXT;
 ALTER TABLE messages ADD COLUMN IF NOT EXISTS attachment_name TEXT;
+-- Support-beskeder fra admin har ingen tilknyttet opgave, så task_id skal kunne være NULL
+-- for den slags tråde (nøglet på bidder_name alene i stedet for task_id + bidder_name).
+ALTER TABLE messages ALTER COLUMN task_id DROP NOT NULL;
 
 CREATE TABLE IF NOT EXISTS task_attachments (
   id SERIAL PRIMARY KEY,

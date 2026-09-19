@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useName } from "@/lib/NameContext";
-import { ShieldCheck, Trash2, Image as ImageIcon, Upload, MessageSquare, UserX } from "lucide-react";
+import { ShieldCheck, Trash2, Image as ImageIcon, Upload, MessageSquare, UserX, LifeBuoy } from "lucide-react";
 import { upload } from "@vercel/blob/client";
 import RequireAuth from "@/components/RequireAuth";
+import MessageThread from "@/components/MessageThread";
+import { SUPPORT_SENDER } from "@/lib/support";
 
 // Skalerer og komprimerer et uploadet billede i browseren, før det sendes til Blob-lageret -
 // så store, rå foto-filer fra en telefon (ofte 4000px+ og flere MB) altid ender som et skarpt,
@@ -50,7 +53,9 @@ function Badge({ children, tone }) {
 
 export default function AdminPage() {
   const { name, isAdmin, ready } = useName();
-  const [tab, setTab] = useState("tasks");
+  const searchParams = useSearchParams();
+  const [tab, setTab] = useState(searchParams.get("tab") === "support" ? "support" : "tasks");
+  const [supportUser, setSupportUser] = useState(searchParams.get("bruger") || null);
   const [tasks, setTasks] = useState(null);
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
@@ -124,20 +129,9 @@ export default function AdminPage() {
     loadUsers();
   }
 
-  async function messageUser(userName) {
-    const message = prompt(`Skriv en besked til ${userName}:`);
-    if (!message?.trim()) return;
-    const res = await fetch("/api/admin/message-user", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ recipientName: userName, message }),
-    });
-    const data = await res.json();
-    if (data.error) {
-      alert(data.error);
-      return;
-    }
-    alert("Besked sendt.");
+  function openSupportThread(userName) {
+    setSupportUser(userName);
+    setTab("support");
   }
 
   if (!ready) return null;
@@ -184,6 +178,12 @@ export default function AdminPage() {
           style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "images" ? "#2A55E5" : "transparent", color: tab === "images" ? "#fff" : "#5B6478" }}
         >
           Billeder
+        </button>
+        <button
+          onClick={() => setTab("support")}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", fontSize: 13.5, fontWeight: 700, cursor: "pointer", background: tab === "support" ? "#2A55E5" : "transparent", color: tab === "support" ? "#fff" : "#5B6478" }}
+        >
+          Support
         </button>
       </div>
 
@@ -243,8 +243,8 @@ export default function AdminPage() {
                 {u.emailVerified ? <Badge tone="completed">Email bekræftet</Badge> : <Badge tone="open">Email ikke bekræftet</Badge>}
                 {u.stripeConnected ? <Badge tone="completed">Stripe forbundet</Badge> : <Badge tone="cancelled">Ingen Stripe</Badge>}
                 <button
-                  onClick={() => messageUser(u.name)}
-                  title="Send privat besked"
+                  onClick={() => openSupportThread(u.name)}
+                  title="Se/send support-besked"
                   style={{ width: 32, height: 32, borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#5B6478", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flex: "0 0 auto" }}
                 >
                   <MessageSquare size={14} />
@@ -283,6 +283,110 @@ export default function AdminPage() {
 
       {tab === "contact" && <ContactSettings />}
       {tab === "images" && <ImagesTab />}
+      {tab === "support" && <SupportTab presetUser={supportUser} />}
+    </div>
+  );
+}
+
+function SupportTab({ presetUser }) {
+  const [threads, setThreads] = useState(null);
+  const [selected, setSelected] = useState(presetUser || null);
+  const [manualName, setManualName] = useState("");
+
+  function loadThreads() {
+    fetch("/api/admin/support-threads")
+      .then((r) => r.json())
+      .then((data) => !data.error && setThreads(data.threads));
+  }
+
+  useEffect(() => {
+    loadThreads();
+  }, []);
+
+  useEffect(() => {
+    if (presetUser) setSelected(presetUser);
+  }, [presetUser]);
+
+  function startManual() {
+    const trimmed = manualName.trim();
+    if (!trimmed) return;
+    setSelected(trimmed);
+    setManualName("");
+  }
+
+  return (
+    <div style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
+      <div style={{ width: 260, flex: "0 0 auto", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 12 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#5B6478", marginBottom: 10, padding: "0 4px" }}>Igangværende samtaler</div>
+        {threads === null && <p style={{ fontSize: 12.5, color: "#5B6478", padding: "0 4px" }}>Henter…</p>}
+        {threads && threads.length === 0 && <p style={{ fontSize: 12.5, color: "#5B6478", padding: "0 4px" }}>Ingen support-beskeder endnu.</p>}
+        {threads &&
+          threads.map((t) => (
+            <button
+              key={t.userName}
+              onClick={() => setSelected(t.userName)}
+              style={{
+                display: "block",
+                width: "100%",
+                textAlign: "left",
+                fontSize: 12.5,
+                padding: "9px 10px",
+                borderRadius: 8,
+                border: "none",
+                background: selected === t.userName ? "#EEF2FF" : "transparent",
+                color: "#14213D",
+                cursor: "pointer",
+                marginBottom: 2,
+              }}
+            >
+              <div style={{ fontWeight: 700 }}>{t.userName}</div>
+              <div style={{ color: "#9AA2B1", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {t.lastSender === SUPPORT_SENDER ? "Support: " : `${t.userName}: `}
+                {t.lastBody}
+              </div>
+            </button>
+          ))}
+
+        <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #F0F1F5" }}>
+          <div style={{ fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 6, padding: "0 4px" }}>Start ny samtale</div>
+          <div style={{ display: "flex", gap: 6, padding: "0 4px" }}>
+            <input
+              value={manualName}
+              onChange={(e) => setManualName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && startManual()}
+              placeholder="Brugernavn"
+              style={{ flex: 1, fontSize: 12.5, padding: "8px 10px", border: "1.5px solid #E4E8F0", borderRadius: 8 }}
+            />
+            <button
+              onClick={startManual}
+              style={{ fontSize: 12, fontWeight: 700, padding: "0 12px", borderRadius: 8, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" }}
+            >
+              Gå
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ flex: 1, minWidth: 280, background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, padding: 16 }}>
+        {selected ? (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <LifeBuoy size={15} color="#2A55E5" />
+              <div style={{ fontWeight: 800, fontSize: 14.5 }}>{selected}</div>
+            </div>
+            <MessageThread
+              key={selected}
+              endpoint="/api/messages/support"
+              bidderName={selected}
+              currentName={SUPPORT_SENDER}
+              placeholder="Svar som Kontorbud support…"
+              maxHeight={360}
+            />
+          </>
+        ) : (
+          <p style={{ fontSize: 13.5, color: "#5B6478" }}>Vælg en samtale i listen, eller start en ny.</p>
+        )}
+      </div>
     </div>
   );
 }
