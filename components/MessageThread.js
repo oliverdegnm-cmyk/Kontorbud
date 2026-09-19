@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send, FileText } from "lucide-react";
 import FileUploader from "@/components/FileUploader";
 import { shortDisplayName } from "@/lib/displayName";
@@ -14,6 +14,7 @@ export default function MessageThread({ taskId, bidderName, currentName, endpoin
   const [text, setText] = useState("");
   const [pendingFiles, setPendingFiles] = useState([]);
   const [error, setError] = useState("");
+  const textareaRef = useRef(null);
 
   function load() {
     fetch(`${apiBase}?bidderName=${encodeURIComponent(bidderName)}`)
@@ -50,6 +51,7 @@ export default function MessageThread({ taskId, bidderName, currentName, endpoin
       }
       setText("");
       setPendingFiles([]);
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
       load();
     } catch (e) {
       setError("Kunne ikke sende besked.");
@@ -77,7 +79,7 @@ export default function MessageThread({ taskId, bidderName, currentName, endpoin
                     lineHeight: 1.5,
                   }}
                 >
-                  {m.body && <div>{m.body}</div>}
+                  {m.body && <div style={{ whiteSpace: "pre-wrap" }}>{m.body}</div>}
                   {m.attachmentUrl && (
                     <a
                       href={m.attachmentUrl}
@@ -113,12 +115,35 @@ export default function MessageThread({ taskId, bidderName, currentName, endpoin
       )}
 
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <input
+        <textarea
+          ref={textareaRef}
           value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send()}
+          onChange={(e) => {
+            setText(e.target.value);
+            e.target.style.height = "auto";
+            e.target.style.height = `${Math.min(e.target.scrollHeight, 110)}px`;
+          }}
+          onKeyDown={(e) => {
+            // Enter sender beskeden, Shift+Enter laver et linjeskift - som i de fleste chatapps.
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              send();
+            }
+          }}
           placeholder={placeholder || "Skriv en besked…"}
-          style={{ flex: 1, fontSize: 13, padding: "9px 12px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff" }}
+          rows={1}
+          style={{
+            flex: 1,
+            fontSize: 13,
+            padding: "9px 12px",
+            border: "1.5px solid #E4E8F0",
+            borderRadius: 10,
+            background: "#fff",
+            resize: "none",
+            maxHeight: 110,
+            lineHeight: 1.4,
+            fontFamily: "inherit",
+          }}
         />
         {pendingFiles.length === 0 && (
           <div style={{ flex: "0 0 auto" }}>
