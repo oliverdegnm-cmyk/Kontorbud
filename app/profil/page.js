@@ -623,8 +623,8 @@ function ServiceLevelCard({ level }) {
           )}
           {rateCat.order < next.minRateOrder && (
             <>
-              {" "}Din udførelsesrate skal desuden op på mindst {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.min}% ("
-              {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.label}") - du ligger på {rate}% ("{rateCat.label}") lige nu.
+              {" "}Din udførelsesrate skal desuden op på mindst {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.min}% (
+              {RATE_CATEGORIES.find((r) => r.order === next.minRateOrder)?.label}) - du ligger på {rate}% ({rateCat.label}) lige nu.
             </>
           )}
         </div>
