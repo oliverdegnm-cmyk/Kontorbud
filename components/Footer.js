@@ -74,6 +74,14 @@ export default function Footer() {
             ★ Se vores anmeldelser på Trustpilot
           </a>
         )}
+        <a
+          href="https://stripe.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#D6DCEC", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}
+        >
+          🔒 Betalinger sikret af Stripe
+        </a>
       </div>
     </footer>
   );
