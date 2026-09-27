@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -520,52 +520,23 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      {/* Ny sektion: to-spalte "brand story" med skiftevis billede/tekst,
-          inspireret af opsætningen på AIbud.dk - men tilpasset Kontorbuds
-          egen model. Kontorbud udfører ikke selv opgaverne (modsat AIbud),
-          så teksten handler om markedspladsen: flere bud at vælge imellem,
-          og en sikret betaling - ikke et løfte om at "vi løser det for dig".
-          Billederne er dekorative ikon-paneler i sidens eget farvesprog,
-          ikke fotos af påståede "rigtige" hjælpere eller medarbejdere, som
-          Kontorbud ikke har og ikke kan dokumentere. */}
-      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 96 }}>
-        <StoryImage
-          icon={Users2}
-          gradient="linear-gradient(135deg, #EEF2FF 0%, #DCE4FB 100%)"
-          chip1={{ icon: CreditCard, label: "Sikret betaling" }}
-          chip2={{ icon: ShieldCheck, label: "Du vælger selv" }}
-        />
-        <div>
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
-            Flere bud, ét sted
-          </div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
-            Du behøver ikke selv finde og vurdere hjælpere
-          </h2>
-          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
-            Beskriv opgaven én gang, så byder hjælpere med den rette erfaring ind af sig selv. Du ser hver hjælpers profil, tidligere anmeldelser og pris, før du vælger - i stedet for selv at skulle ringe rundt og undersøge.
-          </p>
+      {/* Ny sektion: kort brand story-tekst, inspireret af opsætningen på
+          AIbud.dk - men tilpasset Kontorbuds egen model. Kontorbud udfører
+          ikke selv opgaverne (modsat AIbud), så teksten handler om
+          markedspladsen: flere bud at vælge imellem, uden et løfte om at
+          "vi løser det for dig". Billedet, der oprindeligt sad ved siden
+          af denne tekst, er bevidst fjernet igen (se note ved den anden
+          brand story-sektion nedenfor, som stadig har sit billede). */}
+      <div style={{ marginTop: 96, maxWidth: 640 }}>
+        <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+          Flere bud, ét sted
         </div>
-      </div>
-
-      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 56 }}>
-        <div>
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
-            Tryghed hele vejen
-          </div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
-            Betalingen er sikret, indtil du selv godkender arbejdet
-          </h2>
-          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
-            Når du vælger et bud, betaler du med det samme via Stripe - men pengene holdes sikkert af platformen. De sendes først videre til hjælperen, når du selv markerer opgaven som udført. Er I undervejs uenige om noget, skriver I direkte sammen på opgaven.
-          </p>
-        </div>
-        <StoryImage
-          icon={Lock}
-          gradient="linear-gradient(135deg, #DCE4FB 0%, #EEF2FF 100%)"
-          chip1={{ icon: MessageCircle, label: "Direkte besked" }}
-          chip2={{ icon: Star, label: "Anmeldelser begge veje" }}
-        />
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
+          Du behøver ikke selv finde og vurdere hjælpere
+        </h2>
+        <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 560 }}>
+          Beskriv opgaven én gang, så kan relevante hjælpere byde på opgaven. Du ser hver hjælpers profil, tidligere anmeldelser og pris, før du vælger - i stedet for selv at skulle ringe rundt og undersøge.
+        </p>
       </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
@@ -633,6 +604,29 @@ export default function HomePage() {
         <Link href="/faq" style={{ fontSize: 14, fontWeight: 700, color: "#2A55E5" }}>
           Se alle spørgsmål og svar →
         </Link>
+      </div>
+
+      {/* Anden brand story-sektion (billede + tekst) - rykket ned til under
+          FAQ'en. Billedet er et dekorativt ikon-panel i sidens eget
+          farvesprog, ikke et foto af en påstået "rigtig" hjælper. */}
+      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 72 }}>
+        <div>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+            Tryghed hele vejen
+          </div>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
+            Betalingen er sikret, indtil du selv godkender arbejdet
+          </h2>
+          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
+            Når du vælger et bud, betaler du med det samme via Stripe - men pengene holdes sikkert af platformen. De sendes først videre til hjælperen, når du selv markerer opgaven som udført. Er I undervejs uenige om noget, skriver I direkte sammen på opgaven.
+          </p>
+        </div>
+        <StoryImage
+          icon={Lock}
+          gradient="linear-gradient(135deg, #DCE4FB 0%, #EEF2FF 100%)"
+          chip1={{ icon: MessageCircle, label: "Direkte besked" }}
+          chip2={{ icon: Star, label: "Anmeldelser begge veje" }}
+        />
       </div>
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
