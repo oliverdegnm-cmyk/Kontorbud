@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, UserCheck, FileText as FileTextIcon } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, UserCheck, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -15,6 +15,17 @@ import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
 import { useName } from "@/lib/NameContext";
 import { shortDisplayName } from "@/lib/displayName";
+import { FAQ_SECTIONS } from "@/lib/faqData";
+
+// Udvalgte FAQ-spørgsmål til forsiden - hentet fra samme kilde (lib/faqData.js)
+// som /faq-siden bruger, så indholdet aldrig kan drive fra hinanden. Fire
+// spørgsmål, der dækker både opgavestiller- og hjælper-siden af markedspladsen.
+const HOME_FAQ_ITEMS = [
+  FAQ_SECTIONS[0].items[0], // "Er det gratis at bruge Kontorbud?"
+  FAQ_SECTIONS[0].items[3], // "Kan jeg både oprette opgaver og byde på opgaver med samme konto?"
+  FAQ_SECTIONS[3].items[0], // "Hvordan foregår betalingen?"
+  FAQ_SECTIONS[3].items[1], // "Hvad hvis jeg ikke er tilfreds med arbejdet?"
+];
 
 export default function HomePage() {
   const router = useRouter();
@@ -215,6 +226,25 @@ export default function HomePage() {
             ))}
         </div>
       </div>
+
+      {/* "Sådan fungerer det" er flyttet op til lige efter hero (før "Hvad skal
+          du have løst?"), så den besøgende forstår modellen (bud, sammenlign,
+          betal), før de selv skal skrive noget. */}
+      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#14213D">
+      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
+        {[
+          { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel, beskriv hvad du skal have løst, og sæt dit budget. Det tager under to minutter, og det er gratis." },
+          { num: "02", title: "Modtag og sammenlign bud", text: "Hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser, og vælg selv, hvem du vil arbejde med." },
+          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen holdes sikkert af platformen og frigives først til hjælperen, når du selv markerer opgaven som udført." },
+        ].map((step) => (
+          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
+            <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
+            <div style={{ fontSize: 15.5, fontWeight: 800, marginBottom: 8 }}>{step.title}</div>
+            <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>{step.text}</p>
+          </div>
+        ))}
+      </div>
+      </SectionBand>
 
       <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
       <div
@@ -478,22 +508,6 @@ export default function HomePage() {
         </>
       )}
 
-      <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#14213D">
-      <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
-        {[
-          { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel, beskriv hvad du skal have løst, og sæt dit budget. Det tager under to minutter, og det er gratis." },
-          { num: "02", title: "Modtag og sammenlign bud", text: "Hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser, og vælg selv, hvem du vil arbejde med." },
-          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen holdes sikkert af platformen og frigives først til hjælperen, når du selv markerer opgaven som udført." },
-        ].map((step) => (
-          <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
-            <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
-            <div style={{ fontSize: 15.5, fontWeight: 800, marginBottom: 8 }}>{step.title}</div>
-            <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>{step.text}</p>
-          </div>
-        ))}
-      </div>
-      </SectionBand>
-
       {/* Ny sektion: forklarer HVEM der løser opgaverne, og hvad man som
           opgavestiller reelt kan se og sammenligne, før man vælger - uden at
           love en fagkyndig verificering, Kontorbud ikke faktisk foretager. */}
@@ -506,13 +520,63 @@ export default function HomePage() {
       </div>
 
       {/* Ny sektion: konkrete, dokumenterbare fordele ved markedspladsmodellen -
-          ingen generiske marketingfraser. */}
-      <SectionHead title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." />
+          ingen generiske marketingfraser. Samme navy-indramning ("tint") som
+          "Sådan fungerer det" ovenfor, så de to sektioner visuelt hænger sammen. */}
+      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
         <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
         <InfoTile icon={Star} title="Sammenlign før du vælger" text="Se bud, profiler og anmeldelser, og vælg selv den hjælper, der passer bedst til opgaven." />
         <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
         <InfoTile icon={CreditCard} title="Sikker betaling" text="Betalingen holdes af Stripe og frigives først, når du selv markerer opgaven som udført." />
+      </div>
+      </SectionBand>
+
+      {/* Ny sektion: to-spalte "brand story" med skiftevis billede/tekst,
+          inspireret af opsætningen på AIbud.dk - men tilpasset Kontorbuds
+          egen model. Kontorbud udfører ikke selv opgaverne (modsat AIbud),
+          så teksten handler om markedspladsen: flere bud at vælge imellem,
+          og en sikret betaling - ikke et løfte om at "vi løser det for dig".
+          Billederne er dekorative ikon-paneler i sidens eget farvesprog,
+          ikke fotos af påståede "rigtige" hjælpere eller medarbejdere, som
+          Kontorbud ikke har og ikke kan dokumentere. */}
+      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 96 }}>
+        <StoryImage
+          icon={Users2}
+          gradient="linear-gradient(135deg, #EEF2FF 0%, #DCE4FB 100%)"
+          chip1={{ icon: CreditCard, label: "Sikret betaling" }}
+          chip2={{ icon: ShieldCheck, label: "Du vælger selv" }}
+        />
+        <div>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+            Flere bud, ét sted
+          </div>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
+            Du behøver ikke selv finde og vurdere hjælpere
+          </h2>
+          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
+            Beskriv opgaven én gang, så byder hjælpere med den rette erfaring ind af sig selv. Du ser hver hjælpers profil, tidligere anmeldelser og pris, før du vælger - i stedet for selv at skulle ringe rundt og undersøge.
+          </p>
+        </div>
+      </div>
+
+      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 56 }}>
+        <div>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+            Tryghed hele vejen
+          </div>
+          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
+            Betalingen er sikret, indtil du selv godkender arbejdet
+          </h2>
+          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
+            Når du vælger et bud, betaler du med det samme via Stripe - men pengene holdes sikkert af platformen. De sendes først videre til hjælperen, når du selv markerer opgaven som udført. Er I undervejs uenige om noget, skriver I direkte sammen på opgaven.
+          </p>
+        </div>
+        <StoryImage
+          icon={Lock}
+          gradient="linear-gradient(135deg, #DCE4FB 0%, #EEF2FF 100%)"
+          chip1={{ icon: MessageCircle, label: "Direkte besked" }}
+          chip2={{ icon: Star, label: "Anmeldelser begge veje" }}
+        />
       </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
@@ -559,6 +623,29 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Ny sektion: FAQ på forsiden, med samme layout-idé som på AIbud.dk -
+          hentet fra den samme FAQ_SECTIONS-kilde som /faq-siden bruger, så
+          der ikke opstår to sæt svar, der kan komme til at modsige hinanden. */}
+      <SectionHead title="Ofte stillede spørgsmål" sub="Et udpluk af de spørgsmål, vi oftest får - se alle svar på FAQ-siden." />
+      <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 24, padding: "6px 32px" }}>
+        {HOME_FAQ_ITEMS.map((item, i) => (
+          <div key={item.q} style={{ display: "flex", gap: 16, padding: "26px 0", borderTop: i > 0 ? "1px solid #F0F1F5" : "none" }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <HelpCircle size={16} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14.5, fontWeight: 800, marginBottom: 6 }}>{item.q}</div>
+              <p style={{ fontSize: 13, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ textAlign: "center", marginTop: 22 }}>
+        <Link href="/faq" style={{ fontSize: 14, fontWeight: 700, color: "#2A55E5" }}>
+          Se alle spørgsmål og svar →
+        </Link>
+      </div>
+
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
@@ -602,6 +689,31 @@ function InfoTile({ icon: Icon, title, text }) {
       </div>
       <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 6 }}>{title}</div>
       <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>{text}</p>
+    </div>
+  );
+}
+
+// Dekorativt "billede"-panel til brand story-sektionen på forsiden - en
+// farvet gradient-boks med et stort ikon og to små "chip"-badges i hjørnerne,
+// i stedet for et foto. Undgår både et afhængighed af et eksternt
+// billed-bibliotek og risikoen for at vise fotos, der giver indtryk af
+// "rigtige" hjælpere/medarbejdere, som Kontorbud ikke kan dokumentere.
+function StoryImage({ icon: Icon, gradient, chip1, chip2 }) {
+  const Chip1Icon = chip1.icon;
+  const Chip2Icon = chip2.icon;
+  return (
+    <div style={{ position: "relative", borderRadius: 24, minHeight: 260, background: gradient, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 28px rgba(20,33,61,0.12)" }}>
+        <Icon size={40} color="#2A55E5" />
+      </div>
+      <div style={{ position: "absolute", top: 22, left: 22, display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 999, padding: "8px 14px", fontSize: 12.5, fontWeight: 700, color: "#14213D", boxShadow: "0 8px 20px rgba(20,33,61,0.1)" }}>
+        <Chip1Icon size={14} color="#2A55E5" />
+        {chip1.label}
+      </div>
+      <div style={{ position: "absolute", bottom: 22, right: 22, display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 999, padding: "8px 14px", fontSize: 12.5, fontWeight: 700, color: "#14213D", boxShadow: "0 8px 20px rgba(20,33,61,0.1)" }}>
+        <Chip2Icon size={14} color="#2A55E5" />
+        {chip2.label}
+      </div>
     </div>
   );
 }
