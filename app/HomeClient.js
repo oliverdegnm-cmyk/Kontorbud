@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Headset, Clock, Bell } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, UserCheck, FileText as FileTextIcon } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -15,22 +15,6 @@ import Footer from "@/components/Footer";
 import TaskCarousel from "@/components/TaskCarousel";
 import { useName } from "@/lib/NameContext";
 import { shortDisplayName } from "@/lib/displayName";
-
-// Ord der skiftevis vises i forsidens rubrik ("Få bud på dine ___").
-// "kontoropgaver" er sat ind som hvert femte ord, så platformens eget navn
-// jævnligt vender tilbage og fremhæves med et lille "pop".
-const HERO_ROTATING_WORDS = [
-  "AI-opgaver",
-  "IT-opgaver",
-  "regnskabsopgaver",
-  "kundeserviceopgaver",
-  "kontoropgaver",
-  "oversættelsesopgaver",
-  "HR-opgaver",
-  "marketingopgaver",
-  "designopgaver",
-  "kontoropgaver",
-];
 
 export default function HomePage() {
   const router = useRouter();
@@ -119,16 +103,6 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
-  const [heroWordIndex, setHeroWordIndex] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroWordIndex((i) => (i + 1) % HERO_ROTATING_WORDS.length);
-    }, 2400);
-    return () => clearInterval(interval);
-  }, []);
-  const heroWord = HERO_ROTATING_WORDS[heroWordIndex];
-  const heroWordIsKontor = heroWord === "kontoropgaver";
-
   const activeTasks = (tasks || []).filter((t) => t.status !== "cancelled");
   const openTasks = (tasks || []).filter((t) => t.status === "open");
   const inspirationTasks = (tasks || []).filter((t) => t.status === "completed" || t.status === "matched");
@@ -158,19 +132,17 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks platform for kontoropgaver
           </div>
+          {/* H1 er bevidst FAST tekst (ikke længere et roterende ord som "AI-opgaver",
+              "IT-opgaver" osv.) - en besøgende, der lander på siden eller tager et
+              screenshot, skal altid se den samme, tydelige sætning om, hvad Kontorbud
+              er: en bred markedsplads for kontoropgaver, ikke en AI-tjeneste. */}
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
             Få bud på dine
             <br />
-            <span
-              key={heroWordIndex}
-              className={heroWordIsKontor ? "kb-hero-rotate-word kb-hero-rotate-word--pop" : "kb-hero-rotate-word"}
-              style={{ color: heroWordIsKontor ? "#2A55E5" : "inherit" }}
-            >
-              {heroWord}
-            </span>
+            <span style={{ color: "#2A55E5" }}>kontoropgaver</span>
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
-            Beskriv opgaven, sæt et budget, og modtag bud fra dygtige hjælpere til kontoropgaver.
+            Beskriv hvad du skal have løst, sæt dit budget, og modtag bud fra hjælpere - lige fra bogføring og kundeservice til IT og AI-opgaver. Sammenlign buddene, og vælg selv hvem der skal løse opgaven.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
@@ -203,15 +175,20 @@ export default function HomePage() {
             </Link>
           </div>
           <div style={{ display: "flex", gap: 18, marginTop: 20, flexWrap: "wrap" }}>
-            <TrustBadge icon={CreditCard} text="Betaling holdes sikkert" />
-            <TrustBadge icon={MessageCircle} text="Al kontakt på siden" />
-            <TrustBadge icon={Star} text="Anmeldelser begge veje" />
-            <TrustBadge icon={Headset} text="Dansk kundeservice" />
+            <TrustBadge icon={CreditCard} text="Gratis at oprette" />
+            <TrustBadge icon={Star} text="Du vælger selv hjælperen" />
+            <TrustBadge icon={ShieldCheck} text="Sikker betaling" />
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
-            <ShieldCheck size={15} />
-            {activeTasks.length} opgaver oprettet af rigtige brugere.
-          </div>
+          {/* "X opgaver oprettet af rigtige brugere" vises kun, når tallet reelt
+              styrker troværdigheden - et meget lavt tal (0-4) virker mod hensigten
+              og er fjernet herfra i stedet for vist som social proof. Se også
+              status-dokumentet for baggrund. */}
+          {activeTasks.length >= 5 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
+              <ShieldCheck size={15} />
+              {activeTasks.length} opgaver oprettet af rigtige brugere.
+            </div>
+          )}
         </div>
         <div
           className="kb-hide-mobile"
@@ -504,9 +481,9 @@ export default function HomePage() {
       <SectionBand title="Sådan fungerer det" sub="Tre trin, fra du opretter opgaven, til den er løst." tint="#14213D">
       <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
         {[
-          { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel og sæt dit budget. Det tager under to minutter, og det er gratis." },
-          { num: "02", title: "Modtag bud", text: "Dygtige hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser." },
-          { num: "03", title: "Betal når du er tilfreds", text: "Beløbet holdes sikkert og frigives først, når opgaven er løst som aftalt." },
+          { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel, beskriv hvad du skal have løst, og sæt dit budget. Det tager under to minutter, og det er gratis." },
+          { num: "02", title: "Modtag og sammenlign bud", text: "Hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser, og vælg selv, hvem du vil arbejde med." },
+          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen holdes sikkert af platformen og frigives først til hjælperen, når du selv markerer opgaven som udført." },
         ].map((step) => (
           <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
@@ -516,6 +493,27 @@ export default function HomePage() {
         ))}
       </div>
       </SectionBand>
+
+      {/* Ny sektion: forklarer HVEM der løser opgaverne, og hvad man som
+          opgavestiller reelt kan se og sammenligne, før man vælger - uden at
+          love en fagkyndig verificering, Kontorbud ikke faktisk foretager. */}
+      <SectionHead title="Hvem løser opgaverne?" sub="Alle med en konto kan byde - her er, hvad du kan se, før du vælger." />
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
+        <InfoTile icon={Users2} title="Hvem kan byde?" text="Alle med en gratis konto kan byde på opgaver. Der er ingen adskillelse mellem opgavestillere og hjælpere - samme person kan gøre begge dele." />
+        <InfoTile icon={UserCheck} title="Hvad kan du se?" text="Hjælperens profil, tidligere anmeldelser og niveau, samt buddets pris og besked - alt sammen før du vælger." />
+        <InfoTile icon={Star} title="Kan du sammenligne anmeldelser?" text="Ja. Efter en opgave giver opgavestiller og hjælper hinanden stjerner, så andres erfaringer er synlige, næste gang du skal vælge." />
+        <InfoTile icon={MessageCircle} title="Hvordan vælger du?" text="Du sammenligner buddene og vælger selv, hvem der skal løse opgaven - der er ingen forpligtelse til at vælge det billigste bud." />
+      </div>
+
+      {/* Ny sektion: konkrete, dokumenterbare fordele ved markedspladsmodellen -
+          ingen generiske marketingfraser. */}
+      <SectionHead title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." />
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
+        <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
+        <InfoTile icon={Star} title="Sammenlign før du vælger" text="Se bud, profiler og anmeldelser, og vælg selv den hjælper, der passer bedst til opgaven." />
+        <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
+        <InfoTile icon={CreditCard} title="Sikker betaling" text="Betalingen holdes af Stripe og frigives først, når du selv markerer opgaven som udført." />
+      </div>
 
       <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
@@ -545,18 +543,18 @@ export default function HomePage() {
           <div style={{ maxWidth: 480 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <Bell size={18} color="#2A55E5" />
-              <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Gå ikke glip af nye opgaver</span>
+              <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Vil du tjene penge på dine kompetencer?</span>
             </div>
-            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Opret en gratis konto og hold øje med opgaver i dit felt</h3>
+            <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Byd på opgaver og få besked, når der er noget i dit felt</h3>
             <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0 }}>
-              Det tager under et minut. Som hjælper får du besked med det samme, når der sker noget på dine egne bud og opgaver.
+              Opret en gratis konto på under et minut, gennemse åbne opgaver, og byd på dem, der passer dig. Du får besked med det samme, når der sker noget på dine egne bud og opgaver.
             </p>
           </div>
           <Link
-            href="/login"
+            href="/opgaver"
             style={{ display: "inline-block", flexShrink: 0, fontSize: 14.5, fontWeight: 700, padding: "12px 24px", borderRadius: 999, background: "#2A55E5", color: "#fff" }}
           >
-            Opret gratis konto
+            Se åbne opgaver
           </Link>
         </div>
       )}
@@ -589,6 +587,21 @@ function TrustBadge({ icon: Icon, text }) {
     <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12.5, fontWeight: 600, color: "#5B6478" }}>
       <Icon size={15} color="#2A55E5" />
       {text}
+    </div>
+  );
+}
+
+// Kompakt info-kort brugt i "Hvem løser opgaverne?" og "Hvorfor Kontorbud?" -
+// samme visuelle stil (hvid boks, farvet ikon-cirkel) som resten af siden,
+// så de to nye sektioner ikke introducerer et nyt designsprog.
+function InfoTile({ icon: Icon, title, text }) {
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 22 }}>
+      <div style={{ width: 36, height: 36, borderRadius: 10, background: "#EEF2FF", color: "#2A55E5", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+        <Icon size={17} />
+      </div>
+      <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 6 }}>{title}</div>
+      <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>{text}</p>
     </div>
   );
 }
