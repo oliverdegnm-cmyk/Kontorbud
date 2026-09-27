@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, UserCheck, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
+import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, Users2, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -507,17 +507,6 @@ export default function HomePage() {
           <TaskCarousel tasks={inspirationTasks} />
         </>
       )}
-
-      {/* Ny sektion: forklarer HVEM der løser opgaverne, og hvad man som
-          opgavestiller reelt kan se og sammenligne, før man vælger - uden at
-          love en fagkyndig verificering, Kontorbud ikke faktisk foretager. */}
-      <SectionHead title="Hvem løser opgaverne?" sub="Alle med en konto kan byde - her er, hvad du kan se, før du vælger." />
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
-        <InfoTile icon={Users2} title="Hvem kan byde?" text="Alle med en gratis konto kan byde på opgaver. Der er ingen adskillelse mellem opgavestillere og hjælpere - samme person kan gøre begge dele." />
-        <InfoTile icon={UserCheck} title="Hvad kan du se?" text="Hjælperens profil, tidligere anmeldelser og niveau, samt buddets pris og besked - alt sammen før du vælger." />
-        <InfoTile icon={Star} title="Kan du sammenligne anmeldelser?" text="Ja. Efter en opgave giver opgavestiller og hjælper hinanden stjerner, så andres erfaringer er synlige, næste gang du skal vælge." />
-        <InfoTile icon={MessageCircle} title="Hvordan vælger du?" text="Du sammenligner buddene og vælger selv, hvem der skal løse opgaven - der er ingen forpligtelse til at vælge det billigste bud." />
-      </div>
 
       {/* Ny sektion: konkrete, dokumenterbare fordele ved markedspladsmodellen -
           ingen generiske marketingfraser. Samme navy-indramning ("tint") som
