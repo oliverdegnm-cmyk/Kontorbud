@@ -246,18 +246,10 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      {/* Betalings-tillidsboks - flyttet herop, lige under "Sådan fungerer det",
-          efter ønske om at den skal stå direkte under trin-boksen på forsiden. */}
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 32 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
-          <ShieldCheck size={18} color="#2A55E5" />
-          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
-        </div>
-        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
-        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
-        </p>
-      </div>
+      {/* Betalings-tillidsboksen herunder er fjernet 28/9 - indholdet (Stripe,
+          PCI DSS, datasikkerhed) er i stedet flettet ind i trin 03-kortet
+          ovenfor i "Sådan fungerer det", så det ikke længere skal gentages
+          som en selvstændig boks på forsiden. */}
 
       <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
       <div
