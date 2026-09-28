@@ -24,7 +24,11 @@ export default function TopBar() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "22px 4px",
+        // Sidepadding ændret fra 4px til 24px (29/9): matcher nu <main>-wrapperens
+        // egen padding i app/layout.js ("0 24px 80px"), så logoet i venstre side
+        // og bjælden/"Oliver" i højre side rammer præcis samme margin som resten
+        // af sidens indhold nedenunder, i stedet for at stikke længere ud.
+        padding: "22px 24px",
         flexWrap: "wrap",
         gap: 12,
         maxWidth: 1080,
@@ -32,7 +36,7 @@ export default function TopBar() {
       }}
     >
       <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-        <Logo size={22} tagline />
+        <Logo size={25} tagline />
       </Link>
       <div className="kb-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
         <Link
