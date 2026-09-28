@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { useName } from "@/lib/NameContext";
 import { Mail, CheckCircle2, ShieldAlert } from "lucide-react";
+import MessageThread from "@/components/MessageThread";
 
 export default function ContactClient({ initialKontaktFoto }) {
   const { name, email: accountEmail } = useName();
@@ -62,7 +64,17 @@ export default function ContactClient({ initialKontaktFoto }) {
 
       <div className="kb-grid-detail" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "start" }}>
         <div style={{ maxWidth: 560, background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 30 }}>
-          {done ? (
+          {name ? (
+            // Logget ind: beskeden går direkte ind i den rigtige support-samtale
+            // (samme tråd/endpoint som app/beskeder/support/page.js og admin-panelets
+            // Support-fane) - fremfor kun at sende en email. Det betyder beskeden med
+            // det samme dukker op under "Beskeder" i menuen, at alle administratorer får
+            // en almindelig in-app-notifikation, og at administratoren kan svare direkte
+            // her (samtalen opdaterer sig selv), i stedet for kun at kunne besvare en email.
+            // Rettet 28/9, se status-dokumentet: den gamle rene email-formular gav ikke
+            // brugeren nogen synlig tråd og gav ikke administratorer nogen notifikation.
+            <MessageThread endpoint="/api/messages/support" bidderName={name} currentName={name} placeholder="Skriv til support…" maxHeight={380} />
+          ) : done ? (
             <div style={{ textAlign: "center", padding: "20px 0" }}>
               <CheckCircle2 size={36} color="#1AA37A" style={{ marginBottom: 12 }} />
               <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>Tak for din besked</div>
@@ -102,6 +114,9 @@ export default function ContactClient({ initialKontaktFoto }) {
                   {error}
                 </div>
               )}
+              <p style={{ marginTop: 16, fontSize: 12, color: "#9AA2B1" }}>
+                <Link href="/login" style={{ color: "#2A55E5", fontWeight: 700 }}>Log ind</Link> for at skrive direkte til support og se svaret her på siden, i stedet for kun via email.
+              </p>
             </>
           )}
         </div>
