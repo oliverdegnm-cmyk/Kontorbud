@@ -542,18 +542,6 @@ export default function HomePage() {
         </>
       )}
 
-      {/* Ny sektion: konkrete, dokumenterbare fordele ved markedspladsmodellen -
-          ingen generiske marketingfraser. Samme navy-indramning ("tint") som
-          "Sådan fungerer det" ovenfor, så de to sektioner visuelt hænger sammen. */}
-      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
-        <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
-        <InfoTile icon={Star} title="Sammenlign før du vælger" text="Se bud, profiler og anmeldelser, og vælg selv den hjælper, der passer bedst til opgaven." />
-        <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
-        <InfoTile icon={CreditCard} title="Sikker betaling" text="Betalingen holdes af Stripe og frigives først, når du selv markerer opgaven som udført." />
-      </div>
-      </SectionBand>
-
       {!name && (
         <div
           style={{
@@ -609,6 +597,20 @@ export default function HomePage() {
           Se alle spørgsmål og svar →
         </Link>
       </div>
+
+      {/* "Hvorfor Kontorbud?" flyttet herned 29/9 (lå tidligere lige efter
+          "Opgaver løst gennem Kontorbud", før FAQ) - ligger nu i stedet under
+          "Ofte stillede spørgsmål", efter ønske. Samme navy-indramning ("tint")
+          som "Sådan fungerer det" længere oppe, så de to sektioner stadig
+          visuelt hænger sammen, selvom de ikke længere ligger ved siden af hinanden. */}
+      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
+        <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
+        <InfoTile icon={Star} title="Sammenlign før du vælger" text="Se bud, profiler og anmeldelser, og vælg selv den hjælper, der passer bedst til opgaven." />
+        <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
+        <InfoTile icon={CreditCard} title="Sikker betaling" text="Betalingen holdes af Stripe og frigives først, når du selv markerer opgaven som udført." />
+      </div>
+      </SectionBand>
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
