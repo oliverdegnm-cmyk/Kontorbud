@@ -127,6 +127,14 @@ export default function HomePage() {
             background: "#fff",
             borderRadius: 24,
             padding: "8px 48px 48px 0",
+            // display:flex + justifyContent:"center" tilføjet 29/9: boksen strækkes
+            // allerede til samme højde som billedet til højre (alignItems:"stretch"
+            // på grid-forælderen), men indholdet fyldte kun toppen, så der stod en
+            // stor tom luftboks nederst, der ikke matchede billedets underkant.
+            // Centreret indhold fordeler den ekstra højde jævnt i stedet.
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
           <div
@@ -235,7 +243,22 @@ export default function HomePage() {
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel, beskriv hvad du skal have løst, og sæt dit budget. Det tager under to minutter, og det er gratis." },
           { num: "02", title: "Modtag og sammenlign bud", text: "Hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser, og vælg selv, hvem du vil arbejde med." },
-          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen håndteres sikkert af Stripe (højeste standard for datasikkerhed, PCI DSS niveau 1) og frigives først til hjælperen, når du selv markerer opgaven som udført." },
+          {
+            num: "03",
+            title: "Godkend arbejdet og betal",
+            // 29/9: linker "Stripe" til stripe.com og nævner i stedet, at Stripe
+            // bruges af millioner af virksomheder verden over - fremfor at nævne
+            // "højeste standard for datasikkerhed / PCI DSS niveau 1", efter ønske.
+            text: (
+              <>
+                Betalingen håndteres sikkert af{" "}
+                <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2A55E5", fontWeight: 700 }}>
+                  Stripe
+                </a>
+                , som bruges af millioner af virksomheder verden over, og frigives først til hjælperen, når du selv markerer opgaven som udført.
+              </>
+            ),
+          },
         ].map((step) => (
           <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>
@@ -367,7 +390,7 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      <SectionBand title="Åbne opgaver" sub="Et hurtigt indblik i, hvad andre får løst lige nu.">
+      <SectionBand title="Find opgaver" sub="Se aktuelle opgaver, du kan byde på og få mulighed for at løse.">
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
@@ -474,7 +497,7 @@ export default function HomePage() {
             color: "#14213D",
           }}
         >
-          Se alle opgaver →
+          Se alle åbne opgaver →
         </Link>
         <Link
           href="/opgaver?filter=private"
@@ -511,7 +534,7 @@ export default function HomePage() {
 
       {inspirationTasks.length > 0 && (
         <>
-          <SectionHead title="Til inspiration" sub="Se, hvad andre allerede har fået løst - eller er i gang med lige nu." />
+          <SectionHead title="Opgaver løst gennem Kontorbud" sub="Se eksempler på opgaver, andre har fået hjælp til – eller som er ved at blive løst." />
           <TaskCarousel tasks={inspirationTasks} />
         </>
       )}
