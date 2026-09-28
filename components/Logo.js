@@ -7,7 +7,7 @@
 // at indlæse en ny skrifttype, da den bold/afrundede stil allerede ligner godt.
 export default function Logo({ size = 20, tagline = false, align = "flex-start" }) {
   return (
-    <div style={{ display: "inline-flex", flexDirection: "column", alignItems: tagline ? "center" : align }}>
+    <div style={{ display: "inline-flex", flexDirection: "column", alignItems: align }}>
       <div style={{ fontSize: size, fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1, whiteSpace: "nowrap" }}>
         <span style={{ color: "#03203A" }}>Kontor</span>
         <span style={{ color: "#0980FE" }}>bud</span>

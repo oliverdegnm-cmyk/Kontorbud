@@ -235,7 +235,7 @@ export default function HomePage() {
         {[
           { num: "01", title: "Beskriv opgaven", text: "Skriv en kort titel, beskriv hvad du skal have løst, og sæt dit budget. Det tager under to minutter, og det er gratis." },
           { num: "02", title: "Modtag og sammenlign bud", text: "Hjælpere byder på opgaven. Sammenlign pris, profil og anmeldelser, og vælg selv, hvem du vil arbejde med." },
-          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen holdes sikkert af platformen og frigives først til hjælperen, når du selv markerer opgaven som udført." },
+          { num: "03", title: "Godkend arbejdet og betal", text: "Betalingen håndteres sikkert af Stripe (højeste standard for datasikkerhed, PCI DSS niveau 1) og frigives først til hjælperen, når du selv markerer opgaven som udført." },
         ].map((step) => (
           <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: "#DCE4FB", marginBottom: 10 }}>{step.num}</div>

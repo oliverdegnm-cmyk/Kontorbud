@@ -55,7 +55,7 @@ export default function MobileMenu() {
             <button onClick={() => setOpen(false)} aria-label="Luk menu" style={{ background: "none", border: "none", cursor: "pointer", color: "#14213D" }}>
               <X size={22} />
             </button>
-            <Logo size={18} />
+            <Logo size={18} tagline />
             <div style={{ width: 22 }} />
           </div>
 

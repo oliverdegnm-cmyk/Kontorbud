@@ -32,7 +32,7 @@ export default function TopBar() {
       }}
     >
       <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-        <Logo size={22} />
+        <Logo size={22} tagline />
       </Link>
       <div className="kb-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
         <Link
