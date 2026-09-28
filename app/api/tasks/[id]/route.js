@@ -11,6 +11,7 @@ function mapFullTask(t, bidRows, attRows, revealAddress) {
     budget: t.budget,
     deadline: t.deadline,
     deadlineDate: t.deadline_date,
+    isUrgent: t.is_urgent,
     description: t.description,
     postedBy: t.posted_by,
     posterType: t.poster_type,
@@ -85,7 +86,7 @@ export async function PATCH(request, { params }) {
     await ensureSchema();
     const id = Number(params.id);
     const body = await request.json();
-    const { requesterName, title, category, budget, deadline, deadlineDate, description, area, locationType, address, newAttachments, posterType, companyName } = body;
+    const { requesterName, title, category, budget, deadline, deadlineDate, isUrgent, description, area, locationType, address, newAttachments, posterType, companyName } = body;
 
     const { rows: taskRows } = await pool.query("SELECT * FROM tasks WHERE id = $1", [id]);
     if (taskRows.length === 0) {
@@ -111,14 +112,15 @@ export async function PATCH(request, { params }) {
     if (!isInPerson) coords = { lat: null, lng: null };
 
     const { rows } = await pool.query(
-      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, deadline_date = $5, description = $6, area = $7, lat = $8, lng = $9, poster_type = $10, company_name = $11, location_type = $12, address = $13
-       WHERE id = $14 RETURNING *`,
+      `UPDATE tasks SET title = $1, category = $2, budget = $3, deadline = $4, deadline_date = $5, is_urgent = $6, description = $7, area = $8, lat = $9, lng = $10, poster_type = $11, company_name = $12, location_type = $13, address = $14
+       WHERE id = $15 RETURNING *`,
       [
         title.trim(),
         category || task.category,
         budget?.trim() || "Ikke angivet",
         deadlineDate ? null : deadline?.trim() || "Fleksibel",
         deadlineDate || null,
+        !!isUrgent,
         description.trim(),
         isInPerson ? area?.trim() || null : null,
         coords.lat,

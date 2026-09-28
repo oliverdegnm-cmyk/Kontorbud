@@ -35,7 +35,7 @@ export default async function CategoryPage({ params }) {
   try {
     await ensureSchema();
     const { rows } = await pool.query(
-      "SELECT id, title, budget, deadline, deadline_date AS \"deadlineDate\", area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY created_at DESC LIMIT 20",
+      "SELECT id, title, budget, deadline, deadline_date AS \"deadlineDate\", is_urgent AS \"isUrgent\", area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY created_at DESC LIMIT 20",
       [cat.name]
     );
     tasks = rows;
@@ -124,7 +124,14 @@ export default async function CategoryPage({ params }) {
               style={{ display: "flex", alignItems: "center", gap: 16, background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: "16px 18px" }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
+                  {t.isUrgent && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#FDEDEB", color: "#C0392B", flex: "0 0 auto" }}>
+                      ⚡ Haster
+                    </span>
+                  )}
+                </div>
                 <div style={{ fontSize: 12.5, color: "#5B6478" }}>
                   Frist: {getDeadlineLabel(t).text}
                   {t.area ? ` · 📍 ${t.area}` : ""}

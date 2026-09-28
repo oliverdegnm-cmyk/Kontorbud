@@ -451,7 +451,14 @@ export default function TaskDetailClient() {
               </div>
             )}
           </div>
-          <h2 style={{ fontSize: 22, lineHeight: 1.25, marginBottom: 12 }}>{capitalizeFirst(task.title)}</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
+            <h2 style={{ fontSize: 22, lineHeight: 1.25, margin: 0 }}>{capitalizeFirst(task.title)}</h2>
+            {task.isUrgent && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 11.5, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "#FDEDEB", color: "#C0392B", flex: "0 0 auto" }}>
+                ⚡ Hasteopgave
+              </span>
+            )}
+          </div>
           <p style={{ fontSize: 14, color: "#5B6478", lineHeight: 1.7 }}>{task.description}</p>
           {task.attachments && task.attachments.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>

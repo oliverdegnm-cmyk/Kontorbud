@@ -24,6 +24,7 @@ export default function EditTaskPage() {
     d.setDate(d.getDate() + 7);
     return d.toISOString().slice(0, 10);
   });
+  const [isUrgent, setIsUrgent] = useState(false);
   const [locationType, setLocationType] = useState("remote"); // "remote" | "in_person"
   const [area, setArea] = useState("");
   const [address, setAddress] = useState("");
@@ -58,6 +59,7 @@ export default function EditTaskPage() {
         } else {
           setDeadlineType("flexible");
         }
+        setIsUrgent(!!t.isUrgent);
         setLocationType(t.locationType === "in_person" ? "in_person" : "remote");
         setArea(t.area || "");
         setAddress(t.address || "");
@@ -86,6 +88,7 @@ export default function EditTaskPage() {
         budget,
         deadline: isFlexible ? "Fleksibel" : null,
         deadlineDate: isFlexible ? null : deadlineDate,
+        isUrgent,
         description,
         locationType,
         area: isInPerson ? area : "",
@@ -195,6 +198,35 @@ export default function EditTaskPage() {
             {deadlineType === "flexible" && (
               <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 10 }}>Ingen fast deadline - I aftaler tidsplanen indbyrdes.</div>
             )}
+          </div>
+
+          <div>
+            <label
+              onClick={() => setIsUrgent((v) => !v)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "12px 14px",
+                border: isUrgent ? "1.5px solid #C0392B" : "1.5px solid #E4E8F0",
+                background: isUrgent ? "#FDEDEB" : "#F5F7FB",
+                borderRadius: 10,
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={isUrgent}
+                onChange={(e) => setIsUrgent(e.target.checked)}
+                style={{ width: 16, height: 16, accentColor: "#C0392B", flex: "0 0 auto" }}
+              />
+              <span>
+                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: isUrgent ? "#C0392B" : "#14213D" }}>Dette er en hasteopgave</span>
+                <span style={{ display: "block", fontSize: 11.5, color: "#9AA2B1", marginTop: 2 }}>
+                  Vises tydeligt for hjælpere, så de ved, du gerne vil have opgaven løst hurtigt. Det er ikke en garanti for en bestemt svartid.
+                </span>
+              </span>
+            </label>
           </div>
 
           <div>

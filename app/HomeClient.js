@@ -141,19 +141,19 @@ export default function HomePage() {
               marginBottom: 16,
             }}
           >
-            🇩🇰 Danmarks platform for kontoropgaver
+            🇩🇰 Danmarks markedsplads for kontoropgaver
           </div>
           {/* H1 er bevidst FAST tekst (ikke længere et roterende ord som "AI-opgaver",
               "IT-opgaver" osv.) - en besøgende, der lander på siden eller tager et
               screenshot, skal altid se den samme, tydelige sætning om, hvad Kontorbud
               er: en bred markedsplads for kontoropgaver, ikke en AI-tjeneste. */}
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
-            Få bud på dine
+            Få den rette hjælp til
             <br />
-            <span style={{ color: "#2A55E5" }}>kontoropgaver</span>
+            <span style={{ color: "#2A55E5" }}>dine kontoropgaver</span>
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
-            Beskriv hvad du skal have løst, sæt dit budget, og modtag bud fra hjælpere - lige fra bogføring og kundeservice til IT og AI-opgaver. Sammenlign buddene, og vælg selv hvem der skal løse opgaven.
+            Beskriv din opgave, dit budget og hvornår du skal have den løst. Modtag bud fra relevante hjælpere, sammenlign dine muligheder og vælg selv den løsning, der passer dig bedst.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
@@ -186,9 +186,9 @@ export default function HomePage() {
             </Link>
           </div>
           <div style={{ display: "flex", gap: 18, marginTop: 20, flexWrap: "wrap" }}>
-            <TrustBadge icon={CreditCard} text="Gratis at oprette" />
-            <TrustBadge icon={Star} text="Du vælger selv hjælperen" />
-            <TrustBadge icon={ShieldCheck} text="Sikker betaling" />
+            <TrustBadge icon={Star} text="Du vælger selv din hjælper" />
+            <TrustBadge icon={Clock} text="Mulighed for hasteopgaver" />
+            <TrustBadge icon={ShieldCheck} text="Betalingen frigives først, når du har godkendt arbejdet" />
           </div>
           {/* "X opgaver oprettet af rigtige brugere" vises kun, når tallet reelt
               styrker troværdigheden - et meget lavt tal (0-4) virker mod hensigten
@@ -404,7 +404,10 @@ export default function HomePage() {
                   <CatIcon name={cat ? cat.icon : "FileText"} size={18} />
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div className="kb-task-title" style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>{capitalizeFirst(t.title)}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+                    <div className="kb-task-title" style={{ fontSize: 14, fontWeight: 700 }}>{capitalizeFirst(t.title)}</div>
+                    {t.isUrgent && <UrgentBadge />}
+                  </div>
                   <div className="kb-task-meta" style={{ fontSize: 12, color: "#5B6478" }}>
                     {t.category}
                     {" · "}
@@ -608,6 +611,16 @@ export default function HomePage() {
 
       <Footer />
     </div>
+  );
+}
+
+// Lille pil, der viser hjælpere, at opgavestilleren selv har markeret opgaven
+// som en hasteopgave - ikke et løfte om en bestemt svartid fra Kontorbud.
+function UrgentBadge() {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#FDEDEB", color: "#C0392B", flex: "0 0 auto" }}>
+      ⚡ Haster
+    </span>
   );
 }
 

@@ -240,6 +240,11 @@ export default function OpgaverPage() {
                           Virksomhed
                         </span>
                       )}
+                      {t.isUrgent && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#FDEDEB", color: "#C0392B", flex: "0 0 auto" }}>
+                          ⚡ Haster
+                        </span>
+                      )}
                     </div>
                     <div style={{ fontSize: 12.5, color: "#5B6478" }}>
                       {t.category}
