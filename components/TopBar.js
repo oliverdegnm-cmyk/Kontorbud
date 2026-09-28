@@ -6,6 +6,7 @@ import { useName } from "@/lib/NameContext";
 import NotificationBell from "@/components/NotificationBell";
 import UserMenu from "@/components/UserMenu";
 import MobileMenu from "@/components/MobileMenu";
+import Logo from "@/components/Logo";
 
 export default function TopBar() {
   const pathname = usePathname();
@@ -30,24 +31,8 @@ export default function TopBar() {
         margin: "0 auto",
       }}
     >
-      <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: 11,
-            background: "#2A55E5",
-            color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 800,
-            fontSize: 15,
-          }}
-        >
-          KB
-        </div>
-        <div style={{ fontSize: 19, fontWeight: 800 }}>Kontorbud</div>
+      <Link href="/" style={{ display: "flex", alignItems: "center" }}>
+        <Logo size={22} />
       </Link>
       <div className="kb-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
         <Link

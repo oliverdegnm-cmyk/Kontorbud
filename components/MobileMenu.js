@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 import { useName } from "@/lib/NameContext";
+import Logo from "@/components/Logo";
 
 export default function MobileMenu() {
   const { name, logOut, isAdmin } = useName();
@@ -54,12 +55,7 @@ export default function MobileMenu() {
             <button onClick={() => setOpen(false)} aria-label="Luk menu" style={{ background: "none", border: "none", cursor: "pointer", color: "#14213D" }}>
               <X size={22} />
             </button>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: "#2A55E5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>
-                KB
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 800 }}>Kontorbud</div>
-            </div>
+            <Logo size={18} />
             <div style={{ width: 22 }} />
           </div>
 
