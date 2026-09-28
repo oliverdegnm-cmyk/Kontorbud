@@ -74,6 +74,11 @@ export default function OpgaverPage() {
   else if (sort === "lowbudget") list = [...list].sort((a, b) => (budgetNumber(a.budget) ?? Infinity) - (budgetNumber(b.budget) ?? Infinity));
   else if (sort === "highbudget") list = [...list].sort((a, b) => (budgetNumber(b.budget) ?? -Infinity) - (budgetNumber(a.budget) ?? -Infinity));
 
+  // Hasteopgaver flyder altid til toppen, uanset hvilken sortering brugeren har
+  // valgt herover - .sort() er stabil, så rækkefølgen INDEN for hver af de to
+  // grupper (haster / ikke-haster) er uændret, kun selve grupperne bytter plads.
+  list = [...list].sort((a, b) => (b.isUrgent ? 1 : 0) - (a.isUrgent ? 1 : 0));
+
   const withLocation = list.filter((t) => t.lat && t.lng).length;
 
   return (

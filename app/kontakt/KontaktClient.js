@@ -112,7 +112,12 @@ export default function ContactClient({ initialKontaktFoto }) {
               src={kontaktFoto.url}
               alt="Kundeservice hos os"
               fill
-              sizes="230px"
+              quality={90}
+              // Samme grund som i HomeClient.js: boksen er 230px, men zoom-funktionen i
+              // admin-panelet kan forstørre billedet op til 200% via CSS - "sizes" skal
+              // afspejle den maksimale forstørrelse, ellers henter next/image en for lille
+              // kilde og opskalerer den selv, hvilket giver et sløret/pixeleret resultat.
+              sizes="460px"
               style={{
                 objectFit: "cover",
                 objectPosition: `center ${kontaktFoto.position}%`,

@@ -15,7 +15,7 @@ export async function GET() {
        FROM tasks t
        LEFT JOIN bids b ON b.task_id = t.id
        GROUP BY t.id
-       ORDER BY t.created_at DESC`
+       ORDER BY t.is_urgent DESC, t.created_at DESC`
     );
 
     return NextResponse.json({
@@ -29,6 +29,7 @@ export async function GET() {
         postedBy: t.posted_by,
         bidCount: t.bid_count,
         pendingBidId: t.pending_bid_id,
+        isUrgent: t.is_urgent,
         createdAt: t.created_at,
       })),
     });

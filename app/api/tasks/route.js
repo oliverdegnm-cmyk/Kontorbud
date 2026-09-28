@@ -44,7 +44,9 @@ function mapTask(row, bids, attachments) {
 export async function GET() {
   try {
     await ensureSchema();
-    const { rows: taskRows } = await pool.query("SELECT * FROM tasks ORDER BY created_at DESC");
+    // Hasteopgaver ("is_urgent") vises først, så hjælpere hurtigt opdager dem -
+    // derefter nyeste-først som hidtil.
+    const { rows: taskRows } = await pool.query("SELECT * FROM tasks ORDER BY is_urgent DESC, created_at DESC");
 
     const needsGeocode = taskRows.filter((t) => t.area && (t.lat === null || t.lng === null)).slice(0, 3);
     for (const t of needsGeocode) {

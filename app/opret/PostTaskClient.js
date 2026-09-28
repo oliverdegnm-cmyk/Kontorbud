@@ -305,32 +305,48 @@ function PostTaskPage() {
             )}
           </div>
           <div>
-            <label
-              onClick={() => setIsUrgent((v) => !v)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "12px 14px",
-                border: isUrgent ? "1.5px solid #C0392B" : "1.5px solid #E4E8F0",
-                background: isUrgent ? "#FDEDEB" : "#F5F7FB",
-                borderRadius: 10,
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={isUrgent}
-                onChange={(e) => setIsUrgent(e.target.checked)}
-                style={{ width: 16, height: 16, accentColor: "#C0392B", flex: "0 0 auto" }}
-              />
-              <span>
-                <span style={{ display: "block", fontSize: 13, fontWeight: 700, color: isUrgent ? "#C0392B" : "#14213D" }}>Dette er en hasteopgave</span>
-                <span style={{ display: "block", fontSize: 11.5, color: "#9AA2B1", marginTop: 2 }}>
-                  Vises tydeligt for hjælpere, så de ved, du gerne vil have opgaven løst hurtigt. Det er ikke en garanti for en bestemt svartid.
-                </span>
-              </span>
-            </label>
+            <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Har opgaven høj prioritet?</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                onClick={() => setIsUrgent(false)}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: !isUrgent ? "1.5px solid #2A55E5" : "1.5px solid #E4E8F0",
+                  background: !isUrgent ? "#EEF2FF" : "#fff",
+                  color: !isUrgent ? "#1B3AA6" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Normal opgave
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsUrgent(true)}
+                style={{
+                  flex: 1,
+                  padding: "10px 0",
+                  borderRadius: 10,
+                  border: isUrgent ? "1.5px solid #C0392B" : "1.5px solid #E4E8F0",
+                  background: isUrgent ? "#FDEDEB" : "#fff",
+                  color: isUrgent ? "#C0392B" : "#5B6478",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                ⚡ Hasteopgave
+              </button>
+            </div>
+            {isUrgent && (
+              <div style={{ fontSize: 11.5, color: "#9AA2B1", marginTop: 10 }}>
+                Markér som hasteopgave, hvis du ønsker hjælp hurtigst muligt. Det koster ikke ekstra, og er ikke en garanti for en bestemt svartid - opgaven vises blot tydeligt for hjælperne som noget, du gerne vil have løst hurtigt.
+              </div>
+            )}
           </div>
           <div>
             <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 6 }}>Område</label>

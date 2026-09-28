@@ -140,31 +140,34 @@ export default function HowItWorksClient() {
         </div>
       )}
 
-      <div className="kb-trust-band" style={{ background: "#F5F7FB", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
-        <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center" }}>Tryghed hele vejen</h2>
-        <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 28 }}>
-          <div style={{ textAlign: "center" }}>
+      {/* Samme mørkeblå "navy-tint"-ramme som "Sådan fungerer det" på forsiden
+          (HomeClient.js's SectionBand med tint="#14213D") - hvert punkt er derfor
+          pakket ind i et hvidt kort, så teksten forbliver læsbar på den mørke bund. */}
+      <div className="kb-trust-band" style={{ background: "#14213D", borderRadius: 20, padding: "32px 36px", marginBottom: 48 }}>
+        <h2 style={{ fontSize: 17, fontWeight: 800, marginBottom: 22, textAlign: "center", color: "#fff" }}>Tryghed hele vejen</h2>
+        <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
+          <div style={{ textAlign: "center", background: "#fff", borderRadius: 16, padding: "22px 16px" }}>
             <ShieldCheck size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Betaling holdes sikkert</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Pengene frigives først, når du selv markerer opgaven som udført.
             </p>
           </div>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center", background: "#fff", borderRadius: 16, padding: "22px 16px" }}>
             <MessageCircle size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Al kontakt på siden</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               I skriver sammen direkte på opgaven - ingen grund til at bytte private numre.
             </p>
           </div>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center", background: "#fff", borderRadius: 16, padding: "22px 16px" }}>
             <Star size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Anmeldelser begge veje</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>
               Efter en opgave giver I hinanden stjerner, så tilliden bygges over tid.
             </p>
           </div>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center", background: "#fff", borderRadius: 16, padding: "22px 16px" }}>
             <Headset size={22} color="#2A55E5" style={{ marginBottom: 10 }} />
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Dansk kundeservice</div>
             <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>

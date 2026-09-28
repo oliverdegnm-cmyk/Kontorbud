@@ -14,7 +14,10 @@ import { SUPPORT_SENDER } from "@/lib/support";
 // så store, rå foto-filer fra en telefon (ofte 4000px+ og flere MB) altid ender som et skarpt,
 // hurtigt-indlæsende JPEG i en fornuftig størrelse, uanset hvad der uploades. Fejler optimeringen
 // af en eller anden grund, uploades originalfilen i stedet, så upload aldrig går i stå.
-async function optimizeImage(file, maxDim = 1920, quality = 0.85) {
+// maxDim/quality er bevidst sat i den høje ende (2400px / 92%) - både hero- og kontaktfoto kan
+// zoomes op til 200% i admin-panelet (CSS-forstørrelse af selve billedet), så kilden skal have
+// margin nok til stadig at se skarp ud forstørret, uden at det først bliver udvisket her.
+async function optimizeImage(file, maxDim = 2400, quality = 0.92) {
   if (!file.type?.startsWith("image/") || file.type === "image/svg+xml") return file;
   try {
     const bitmap = await createImageBitmap(file);
@@ -204,6 +207,11 @@ function AdminPageInner() {
                     {t.caseNo} · {t.category} · oprettet af {t.postedBy} · {t.bidCount} bud
                   </div>
                 </div>
+                {t.isUrgent && (
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#FDEDEB", color: "#C0392B", flex: "0 0 auto", whiteSpace: "nowrap" }}>
+                    ⚡ Haster
+                  </span>
+                )}
                 <Badge tone={t.status}>{t.status}</Badge>
                 {t.paymentStatus !== "unpaid" && <Badge tone="matched">{t.paymentStatus}</Badge>}
                 {t.status === "open" && t.pendingBidId && (

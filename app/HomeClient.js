@@ -213,7 +213,13 @@ export default function HomePage() {
                 alt="Kontorbud - få bud på dine kontoropgaver"
                 fill
                 priority={i === 0}
-                sizes="(max-width: 760px) 100vw, 480px"
+                quality={90}
+                // "sizes" er bevidst sat højere end boksens faktiske CSS-bredde (480px):
+                // admin-panelets zoom-funktion kan forstørre billedet op til 200% med en
+                // CSS-transform, og next/image kender ikke til den forstørrelse - uden dette
+                // ville den hente en for lille kilde og selv opskalere den, hvilket ser
+                // sløret/uskarpt ud, præcis det problem der blev rapporteret.
+                sizes="(max-width: 760px) 100vw, 960px"
                 style={{
                   objectFit: "cover",
                   objectPosition: `center ${img.position}%`,
@@ -245,6 +251,19 @@ export default function HomePage() {
         ))}
       </div>
       </SectionBand>
+
+      {/* Betalings-tillidsboks - flyttet herop, lige under "Sådan fungerer det",
+          efter ønske om at den skal stå direkte under trin-boksen på forsiden. */}
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
+          <ShieldCheck size={18} color="#2A55E5" />
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
+        </div>
+        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
+          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+        </p>
+      </div>
 
       <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
       <div
@@ -577,18 +596,6 @@ export default function HomePage() {
         <Link href="/faq" style={{ fontSize: 14, fontWeight: 700, color: "#2A55E5" }}>
           Se alle spørgsmål og svar →
         </Link>
-      </div>
-
-      {/* Betalings-tillidsboks - rykket ned til under FAQ'en. */}
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
-          <ShieldCheck size={18} color="#2A55E5" />
-          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
-        </div>
-        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
-        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
-        </p>
       </div>
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>

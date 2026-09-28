@@ -35,7 +35,7 @@ export default async function CategoryPage({ params }) {
   try {
     await ensureSchema();
     const { rows } = await pool.query(
-      "SELECT id, title, budget, deadline, deadline_date AS \"deadlineDate\", is_urgent AS \"isUrgent\", area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY created_at DESC LIMIT 20",
+      "SELECT id, title, budget, deadline, deadline_date AS \"deadlineDate\", is_urgent AS \"isUrgent\", area FROM tasks WHERE category = $1 AND status = 'open' ORDER BY is_urgent DESC, created_at DESC LIMIT 20",
       [cat.name]
     );
     tasks = rows;
