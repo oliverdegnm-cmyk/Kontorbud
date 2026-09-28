@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, MessageCircle, Star, CreditCard, Clock, Bell, Users, FileText as FileTextIcon, Lock, HelpCircle } from "lucide-react";
+import { ShieldCheck, Star, CreditCard, Clock, Bell, Users, FileText as FileTextIcon, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -520,36 +520,6 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      {/* Ny sektion: kort brand story-tekst, inspireret af opsætningen på
-          AIbud.dk - men tilpasset Kontorbuds egen model. Kontorbud udfører
-          ikke selv opgaverne (modsat AIbud), så teksten handler om
-          markedspladsen: flere bud at vælge imellem, uden et løfte om at
-          "vi løser det for dig". Billedet, der oprindeligt sad ved siden
-          af denne tekst, er bevidst fjernet igen (se note ved den anden
-          brand story-sektion nedenfor, som stadig har sit billede). */}
-      <div style={{ marginTop: 96, maxWidth: 640 }}>
-        <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
-          Flere bud, ét sted
-        </div>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
-          Du behøver ikke selv finde og vurdere hjælpere
-        </h2>
-        <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 560 }}>
-          Beskriv opgaven én gang, så kan relevante hjælpere byde på opgaven. Du ser hver hjælpers profil, tidligere anmeldelser og pris, før du vælger - i stedet for selv at skulle ringe rundt og undersøge.
-        </p>
-      </div>
-
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
-          <ShieldCheck size={18} color="#2A55E5" />
-          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
-        </div>
-        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
-        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
-        </p>
-      </div>
-
       {!name && (
         <div
           style={{
@@ -606,27 +576,16 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* Anden brand story-sektion (billede + tekst) - rykket ned til under
-          FAQ'en. Billedet er et dekorativt ikon-panel i sidens eget
-          farvesprog, ikke et foto af en påstået "rigtig" hjælper. */}
-      <div className="kb-grid-howto2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", marginTop: 72 }}>
-        <div>
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
-            Tryghed hele vejen
-          </div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 14 }}>
-            Betalingen er sikret, indtil du selv godkender arbejdet
-          </h2>
-          <p style={{ fontSize: 14.5, color: "#5B6478", lineHeight: 1.65, margin: 0, maxWidth: 440 }}>
-            Når du vælger et bud, betaler du med det samme via Stripe - men pengene holdes sikkert af platformen. De sendes først videre til hjælperen, når du selv markerer opgaven som udført. Er I undervejs uenige om noget, skriver I direkte sammen på opgaven.
-          </p>
+      {/* Betalings-tillidsboks - rykket ned til under FAQ'en. */}
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 72 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
+          <ShieldCheck size={18} color="#2A55E5" />
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
         </div>
-        <StoryImage
-          icon={Lock}
-          gradient="linear-gradient(135deg, #DCE4FB 0%, #EEF2FF 100%)"
-          chip1={{ icon: MessageCircle, label: "Direkte besked" }}
-          chip2={{ icon: Star, label: "Anmeldelser begge veje" }}
-        />
+        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
+          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+        </p>
       </div>
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
@@ -672,31 +631,6 @@ function InfoTile({ icon: Icon, title, text }) {
       </div>
       <div style={{ fontSize: 13.5, fontWeight: 800, marginBottom: 6 }}>{title}</div>
       <p style={{ fontSize: 12.5, color: "#5B6478", lineHeight: 1.55, margin: 0 }}>{text}</p>
-    </div>
-  );
-}
-
-// Dekorativt "billede"-panel til brand story-sektionen på forsiden - en
-// farvet gradient-boks med et stort ikon og to små "chip"-badges i hjørnerne,
-// i stedet for et foto. Undgår både et afhængighed af et eksternt
-// billed-bibliotek og risikoen for at vise fotos, der giver indtryk af
-// "rigtige" hjælpere/medarbejdere, som Kontorbud ikke kan dokumentere.
-function StoryImage({ icon: Icon, gradient, chip1, chip2 }) {
-  const Chip1Icon = chip1.icon;
-  const Chip2Icon = chip2.icon;
-  return (
-    <div style={{ position: "relative", borderRadius: 24, minHeight: 260, background: gradient, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-      <div style={{ width: 88, height: 88, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 28px rgba(20,33,61,0.12)" }}>
-        <Icon size={40} color="#2A55E5" />
-      </div>
-      <div style={{ position: "absolute", top: 22, left: 22, display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 999, padding: "8px 14px", fontSize: 12.5, fontWeight: 700, color: "#14213D", boxShadow: "0 8px 20px rgba(20,33,61,0.1)" }}>
-        <Chip1Icon size={14} color="#2A55E5" />
-        {chip1.label}
-      </div>
-      <div style={{ position: "absolute", bottom: 22, right: 22, display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 999, padding: "8px 14px", fontSize: 12.5, fontWeight: 700, color: "#14213D", boxShadow: "0 8px 20px rgba(20,33,61,0.1)" }}>
-        <Chip2Icon size={14} color="#2A55E5" />
-        {chip2.label}
-      </div>
     </div>
   );
 }
