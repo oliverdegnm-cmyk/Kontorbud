@@ -612,6 +612,22 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
+      {/* Betalings-tillidsboksen er sat ind igen 29/9, mellem "Hvorfor Kontorbud?"
+          og "Klar til at starte?" - den blev fjernet 28/9 fra sin gamle plads
+          (lige under "Sådan fungerer det"), da indholdet dengang blev flettet
+          ind i trin 03-kortet i stedet. Nu efter ønske genindsat her, som en
+          selvstændig boks igen. */}
+      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
+          <ShieldCheck size={18} color="#2A55E5" />
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
+        </div>
+        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
+        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
+          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+        </p>
+      </div>
+
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
