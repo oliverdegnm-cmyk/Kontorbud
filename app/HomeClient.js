@@ -190,16 +190,10 @@ export default function HomePage() {
             <TrustBadge icon={Clock} text="Mulighed for hasteopgaver" />
             <TrustBadge icon={ShieldCheck} text="Betalingen frigives først, når du har godkendt arbejdet" />
           </div>
-          {/* "X opgaver oprettet af rigtige brugere" vises kun, når tallet reelt
-              styrker troværdigheden - et meget lavt tal (0-4) virker mod hensigten
-              og er fjernet herfra i stedet for vist som social proof. Se også
-              status-dokumentet for baggrund. */}
-          {activeTasks.length >= 5 && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#1AA37A", marginTop: 18, paddingTop: 18, borderTop: "1px solid #F0F1F5" }}>
-              <ShieldCheck size={15} />
-              {activeTasks.length} opgaver oprettet af rigtige brugere.
-            </div>
-          )}
+          {/* "X opgaver oprettet af rigtige brugere"-linjen er fjernet fra visningen
+              28/9 efter ønske fra Oliver (badge't med det grønne skjold) - selve
+              activeTasks-beregningen er bevidst bevaret nedenfor, så linjen let kan
+              genindsættes senere, hvis I ønsker det igen. */}
         </div>
         <div
           className="kb-hide-mobile"
