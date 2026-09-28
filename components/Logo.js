@@ -4,10 +4,11 @@ import { useLayoutEffect, useRef, useState } from "react";
 
 // Kontorbuds ordmærke - to-tonet "Kontor" + "bud", efter det logo Oliver selv
 // designede og sendte 28/9 (erstatter det tidligere "KB"-firkant + almindelig
-// "Kontorbud"-tekst i header/mobilmenu). "Kontor" bruger 29/9 sitets egen
-// mørkeblå/navy (#14213D, samme farve som resten af sitet), efter ønske om at
-// den skal matche - "bud" beholder sin egen, lidt mere elektriske blå (#0980FE)
-// fra referencebilledet, som kontrastfarve.
+// "Kontorbud"-tekst i header/mobilmenu). "Kontor" bruger sitets egen mørkeblå/
+// navy (#14213D), og "bud" bruger 29/9 også sitets egen blå (#2A55E5, samme som
+// f.eks. "Opret opgave"-knappen) - begge dele af logoet matcher nu sitets
+// eksisterende farvepalet i stedet for logoets oprindelige, lidt mere
+// elektriske blå fra referencebilledet.
 // Bruger sitets eksisterende skrifttype (Plus Jakarta Sans, vægt 800) i stedet for
 // at indlæse en ny skrifttype, da den bold/afrundede stil allerede ligner godt.
 
@@ -58,7 +59,7 @@ export default function Logo({ size = 20, tagline = false, align = "flex-start" 
         style={{ fontSize: size, fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1, whiteSpace: "nowrap" }}
       >
         <span style={{ color: "#14213D" }}>Kontor</span>
-        <span style={{ color: "#0980FE" }}>bud</span>
+        <span style={{ color: "#2A55E5" }}>bud</span>
       </div>
       {tagline && (
         <div
