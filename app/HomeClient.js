@@ -45,7 +45,10 @@ export default function HomePage() {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
-  const visibleCatCount = isMobile ? 4 : 8;
+  // Bumpet fra 8 til 12 (29/9): viser nu én række mere som standard, og
+  // "AI-opgaver" er samtidig flyttet frem i lib/categories.js, så den også
+  // er med blandt de kategorier, der vises uden at klikke "+X flere".
+  const visibleCatCount = isMobile ? 4 : 12;
 
   async function goToCreateTask() {
     const title = quickDescription.trim();
@@ -390,7 +393,7 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      <SectionBand title="Find opgaver" sub="Se aktuelle opgaver, du kan byde på og få mulighed for at løse.">
+      <SectionBand title="Find opgaver" sub="Er du mere interesseret i at hjælpe? Find eksempler på åbne opgaver her.">
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
