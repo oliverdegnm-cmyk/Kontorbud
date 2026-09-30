@@ -53,6 +53,21 @@ textarea {
   .kb-trust-band {
     padding: 24px 20px !important;
   }
+  /* Hero-billedet var tidligere skjult helt på mobil (via .kb-hide-mobile) - det
+     hedder nu i stedet .kb-hero-image og vises stadig, bare i en lavere,
+     bredere boks (i stedet for den høje 420px-boks fra 2-kolonne-layoutet på
+     desktop), da den nu ligger under teksten i én kolonne, ikke ved siden af.
+     Mindre gap + mindre marginTop herunder rykker hele hero-blokken (og dermed
+     billedet) tættere på toppen af siden, efter ønske om at billedet fylder
+     mindre og rykkes lidt op. */
+  .kb-grid-hero {
+    gap: 20px !important;
+    margin-top: 20px !important;
+  }
+  .kb-hero-image {
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+  }
   .kb-hide-mobile {
     display: none !important;
   }
@@ -100,6 +115,13 @@ textarea {
   }
   .kb-trust-band {
     padding: 22px 16px !important;
+  }
+  .kb-hero-image {
+    aspect-ratio: 2 / 1 !important;
+    border-radius: 20px !important;
+  }
+  .kb-grid-hero {
+    gap: 14px !important;
   }
   /* Notifikations-dropdownen (klokke-ikonet) er ellers en fast 340px bred boks
      forankret til ikonets højre kant - på en smal telefon (~375px) stikker

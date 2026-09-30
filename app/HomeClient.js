@@ -207,7 +207,7 @@ export default function HomePage() {
               genindsættes senere, hvis I ønsker det igen. */}
         </div>
         <div
-          className="kb-hide-mobile"
+          className="kb-hero-image"
           style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 420 }}
         >
           {heroLoaded &&
