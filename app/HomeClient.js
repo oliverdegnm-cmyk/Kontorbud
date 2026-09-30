@@ -125,7 +125,7 @@ export default function HomePage() {
     <div>
       <div className="kb-grid-hero" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 32, alignItems: "stretch", marginTop: 40 }}>
         <div
-          className="kb-hero-card"
+          className="kb-hero-card kb-mobile-order-last"
           style={{
             background: "#fff",
             borderRadius: 24,
@@ -207,7 +207,7 @@ export default function HomePage() {
               genindsættes senere, hvis I ønsker det igen. */}
         </div>
         <div
-          className="kb-hero-image"
+          className="kb-hero-image kb-mobile-order-first"
           style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", minHeight: 420 }}
         >
           {heroLoaded &&
