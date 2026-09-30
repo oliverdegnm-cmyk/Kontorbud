@@ -88,7 +88,7 @@ export default function OpgaverPage() {
         {list.length} sager {catFilter === "all" ? "" : "i " + catFilter} · {withLocation} med placering på kortet
       </p>
 
-      <div style={{ display: "flex", gap: 4, marginBottom: 10, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
+      <div style={{ display: "flex", gap: 4, marginBottom: 10, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content", flexWrap: "wrap" }}>
         {[
           { key: "open", label: "Åbne opgaver" },
           { key: "closed", label: "Lukkede/gennemførte" },
@@ -112,7 +112,7 @@ export default function OpgaverPage() {
         ))}
       </div>
 
-      <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content" }}>
+      <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#F5F7FB", borderRadius: 10, padding: 4, width: "fit-content", flexWrap: "wrap" }}>
         {[
           { key: "all", label: "Alle" },
           { key: "business", label: "Virksomheder" },

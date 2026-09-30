@@ -120,6 +120,7 @@ export default function NotificationBell({ name }) {
       </button>
       {open && (
         <div
+          className="kb-notif-dropdown"
           style={{
             position: "absolute",
             right: 0,

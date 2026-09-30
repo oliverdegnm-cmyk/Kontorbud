@@ -46,6 +46,7 @@ export default function HowItWorksClient() {
   return (
     <div style={{ marginTop: 24, marginBottom: 60 }}>
       <div
+        className="kb-section-band"
         style={{
           background: "linear-gradient(180deg, #EEF2FF 0%, #fff 100%)",
           borderRadius: 28,

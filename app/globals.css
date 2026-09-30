@@ -101,6 +101,19 @@ textarea {
   .kb-trust-band {
     padding: 22px 16px !important;
   }
+  /* Notifikations-dropdownen (klokke-ikonet) er ellers en fast 340px bred boks
+     forankret til ikonets højre kant - på en smal telefon (~375px) stikker
+     venstre kant af den boks ud over skærmens kant og bliver klippet af.
+     Samme fejl blev fundet og rettet på AIbud 30/9 - rettet her på samme måde:
+     den låses i stedet til sidens faste margin (16px) i begge sider. */
+  .kb-notif-dropdown {
+    position: fixed !important;
+    top: 64px !important;
+    left: 16px !important;
+    right: 16px !important;
+    width: auto !important;
+    max-height: min(400px, 70vh) !important;
+  }
 }
 
 /* ---------- roterende ord i forsidens rubrik ("Få bud på dine ___") ---------- */

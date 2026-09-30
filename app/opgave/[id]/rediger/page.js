@@ -321,9 +321,10 @@ export default function EditTaskPage() {
                     href={a.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 8, width: "fit-content" }}
+                    style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 8, maxWidth: "100%" }}
                   >
-                    <FileText size={13} /> {a.filename}
+                    <FileText size={13} style={{ flex: "0 0 auto" }} />
+                    <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.filename}</span>
                   </a>
                 ))}
               </div>

@@ -85,9 +85,9 @@ function MinePage() {
           <Link
             key={t.id}
             href={`/opgave/${t.id}`}
-            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, marginBottom: 10 }}
+            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "16px 20px", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, marginBottom: 10 }}
           >
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{t.title}</div>
               <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
                 {t.caseNo} · {t.category}
@@ -122,9 +122,9 @@ function MinePage() {
           <Link
             key={t.id}
             href={`/opgave/${t.id}`}
-            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, marginBottom: 10 }}
+            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "16px 20px", background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 14, marginBottom: 10 }}
           >
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{t.title}</div>
               <div style={{ fontSize: 12, color: "#5B6478", marginTop: 2 }}>
                 {t.caseNo} · Dit bud: {formatBudgetDisplay(mine.amount)}

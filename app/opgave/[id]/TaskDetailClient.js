@@ -468,14 +468,15 @@ export default function TaskDetailClient() {
                   href={a.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 10, width: "fit-content" }}
+                  style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600, color: "#2A55E5", background: "#F5F7FB", padding: "8px 12px", borderRadius: 10, maxWidth: "100%" }}
                 >
-                  <FileText size={14} /> {a.filename}
+                  <FileText size={14} style={{ flex: "0 0 auto" }} />
+                  <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.filename}</span>
                 </a>
               ))}
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginTop: 20, paddingTop: 20, borderTop: "1px solid #E4E8F0" }}>
+          <div className="kb-grid-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginTop: 20, paddingTop: 20, borderTop: "1px solid #E4E8F0" }}>
             <div>
               <div style={{ fontSize: 11, color: "#5B6478", fontWeight: 600, marginBottom: 4 }}>Oprettet af</div>
               <Link href={`/bruger/${encodeURIComponent(task.postedBy)}`} style={{ fontSize: 14.5, fontWeight: 700, color: "#2A55E5" }}>

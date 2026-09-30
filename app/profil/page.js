@@ -61,8 +61,13 @@ function FileSlot({ label, hint, fileUrl, filename, uploading, error, onChange, 
       {hint && <p style={{ fontSize: 11.5, color: "#9AA2B1", margin: "0 0 8px" }}>{hint}</p>}
       {fileUrl ? (
         <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#F5F7FB", borderRadius: 12 }}>
-          <FileText size={18} color="#2A55E5" />
-          <a href={fileUrl} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}>
+          <FileText size={18} color="#2A55E5" style={{ flex: "0 0 auto" }} />
+          <a
+            href={fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 13.5, fontWeight: 700, color: "#2A55E5" }}
+          >
             {filename || "Dokument.pdf"}
           </a>
           <button
