@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,6 +25,23 @@ const HOME_FAQ_ITEMS = [
   FAQ_SECTIONS[0].items[3], // "Kan jeg både oprette opgaver og byde på opgaver med samme konto?"
   FAQ_SECTIONS[3].items[0], // "Hvordan foregår betalingen?"
   FAQ_SECTIONS[3].items[1], // "Hvad hvis jeg ikke er tilfreds med arbejdet?"
+];
+
+// Roterende ord i hero-rubrikken (1/10): "Få hjælp til" står fast, mens ordet
+// herunder skifter mellem konkrete opgavetyper. Listen starter med og vender
+// jævnligt tilbage til "dine kontoropgaver", da det er Kontorbuds overordnede
+// budskab - de andre ord er blot eksempler på, hvad platformen også dækker.
+const HERO_ROTATING_WORDS = [
+  "dine kontoropgaver",
+  "AI-opgaver",
+  "dine kontoropgaver",
+  "bogføringsopgaver",
+  "dine kontoropgaver",
+  "HR-opgaver",
+  "dine kontoropgaver",
+  "administrative opgaver",
+  "dine kontoropgaver",
+  "IT-opgaver",
 ];
 
 export default function HomePage() {
@@ -83,6 +100,40 @@ export default function HomePage() {
   const [heroImages, setHeroImages] = useState([{ url: DEFAULT_HERO_IMAGE, position: 50, zoom: 100 }]);
   const [heroIndex, setHeroIndex] = useState(0);
   const [heroLoaded, setHeroLoaded] = useState(false);
+
+  // Roterende hero-ord: skifter automatisk mellem HERO_ROTATING_WORDS med en
+  // rolig fade/slide (kb-hero-rotate-word i globals.css - ingen "pop"/bounce,
+  // ingen typewriter-effekt). heroWordMinHeight reserverer altid plads til det
+  // højeste af alle ordene (målt i en skjult kopi nedenfor), så linjen aldrig
+  // skifter højde og resten af siden derfor ikke hopper, når ordet skifter -
+  // heller ikke på mobil, hvor de længste ord (fx "administrative opgaver")
+  // kan brække om på flere linjer end de korteste (fx "AI-opgaver").
+  const [heroWordIndex, setHeroWordIndex] = useState(0);
+  const [heroWordMinHeight, setHeroWordMinHeight] = useState(0);
+  const heroWordMeasureRef = useRef(null);
+  const uniqueHeroWords = Array.from(new Set(HERO_ROTATING_WORDS));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroWordIndex((i) => (i + 1) % HERO_ROTATING_WORDS.length);
+    }, 2600); // hvert ord vises i ~2,6 sek. - nok tid til at nå at læse det
+    return () => clearInterval(interval);
+  }, []);
+
+  useLayoutEffect(() => {
+    function measure() {
+      const el = heroWordMeasureRef.current;
+      if (!el) return;
+      let max = 0;
+      Array.from(el.children).forEach((child) => {
+        if (child.offsetHeight > max) max = child.offsetHeight;
+      });
+      if (max > 0) setHeroWordMinHeight(max);
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   useEffect(() => {
     fetch("/api/site-settings")
@@ -154,15 +205,47 @@ export default function HomePage() {
           >
             🇩🇰 Danmarks markedsplads for kontoropgaver
           </div>
-          {/* H1 er bevidst FAST tekst (ikke længere et roterende ord som "AI-opgaver",
-              "IT-opgaver" osv.) - en besøgende, der lander på siden eller tager et
-              screenshot, skal altid se den samme, tydelige sætning om, hvad Kontorbud
-              er: en bred markedsplads for kontoropgaver, ikke en AI-tjeneste. */}
+          {/* "Få hjælp til" står fast, mens ordet herunder roterer gennem
+              HERO_ROTATING_WORDS (1/10) - sekvensen starter på og vender
+              jævnligt tilbage til "dine kontoropgaver", som er Kontorbuds
+              overordnede budskab. heroWordMinHeight (målt herunder) holder
+              linjens højde konstant, så H1'en - og dermed resten af siden -
+              ikke hopper, når ordet skifter. */}
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
             Få hjælp til
             <br />
-            <span style={{ color: "#2A55E5" }}>dine kontoropgaver</span>
+            <span
+              key={heroWordIndex}
+              className="kb-hero-rotate-word"
+              style={{
+                display: "inline-block",
+                color: "#2A55E5",
+                minHeight: heroWordMinHeight || undefined,
+              }}
+            >
+              {HERO_ROTATING_WORDS[heroWordIndex]}
+            </span>
           </h1>
+          {/* Skjult "spejl" af H1'en, kun brugt til at måle, hvor høj den
+              blå linje bliver for hvert af ordene ved den aktuelle skærm-
+              bredde (nogle ord brækker om på flere linjer end andre på
+              mobil). visibility:hidden + height:0 + overflow:hidden holder
+              den helt ude af det synlige layout, men lader den stadig
+              optage den fulde bredde, så ordene brækker om på samme måde
+              som i den rigtige H1 ovenfor. */}
+          <div style={{ visibility: "hidden", height: 0, overflow: "hidden" }} aria-hidden="true">
+            <div ref={heroWordMeasureRef}>
+              {uniqueHeroWords.map((word) => (
+                <div
+                  key={word}
+                  className="kb-hero-title"
+                  style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}
+                >
+                  {word}
+                </div>
+              ))}
+            </div>
+          </div>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
             Beskriv din opgave, modtag bud fra hjælpere, og vælg den hjælper, der passer dig bedst.
           </p>
