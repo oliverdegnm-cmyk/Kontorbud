@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, Star, CreditCard, Clock, Bell, Users, FileText as FileTextIcon, HelpCircle } from "lucide-react";
+import { ShieldCheck, Star, Clock, Bell, Users, FileText as FileTextIcon, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -159,12 +159,12 @@ export default function HomePage() {
               screenshot, skal altid se den samme, tydelige sætning om, hvad Kontorbud
               er: en bred markedsplads for kontoropgaver, ikke en AI-tjeneste. */}
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
-            Få den rette hjælp til
+            Få hjælp til
             <br />
             <span style={{ color: "#2A55E5" }}>dine kontoropgaver</span>
           </h1>
           <p style={{ fontSize: 16, color: "#5B6478", margin: "18px 0 22px", maxWidth: 460, lineHeight: 1.6 }}>
-            Beskriv din opgave, dit budget og hvornår du skal have den løst. Modtag bud fra relevante hjælpere, sammenlign dine muligheder og vælg selv den løsning, der passer dig bedst.
+            Beskriv din opgave, modtag bud fra hjælpere, og vælg den hjælper, der passer dig bedst.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link
@@ -199,7 +199,7 @@ export default function HomePage() {
           <div style={{ display: "flex", gap: 18, marginTop: 20, flexWrap: "wrap" }}>
             <TrustBadge icon={Star} text="Du vælger selv din hjælper" />
             <TrustBadge icon={Clock} text="Mulighed for hasteopgaver" />
-            <TrustBadge icon={ShieldCheck} text="Betalingen frigives først, når du har godkendt arbejdet" />
+            <TrustBadge icon={ShieldCheck} text="Betaling frigives, når arbejdet er godkendt" />
           </div>
           {/* "X opgaver oprettet af rigtige brugere"-linjen er fjernet fra visningen
               28/9 efter ønske fra Oliver (badge't med det grønne skjold) - selve
@@ -249,18 +249,10 @@ export default function HomePage() {
           {
             num: "03",
             title: "Godkend arbejdet og betal",
-            // 29/9: linker "Stripe" til stripe.com og nævner i stedet, at Stripe
-            // bruges af millioner af virksomheder verden over - fremfor at nævne
-            // "højeste standard for datasikkerhed / PCI DSS niveau 1", efter ønske.
-            text: (
-              <>
-                Betalingen håndteres sikkert af{" "}
-                <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" style={{ color: "#2A55E5", fontWeight: 700 }}>
-                  Stripe
-                </a>
-                , som bruges af millioner af virksomheder verden over, og frigives først til hjælperen, når du selv markerer opgaven som udført.
-              </>
-            ),
+            // 1/10: Stripe-omtalen og "millioner af virksomheder"-sætningen er fjernet
+            // herfra - betalingsmekanikken er allerede forklaret i den dedikerede
+            // tillidsboks nederst på siden, så dette kort holder sig til selve trinet.
+            text: "Betalingen holdes sikkert, til du markerer opgaven som udført.",
           },
         ].map((step) => (
           <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
@@ -271,11 +263,6 @@ export default function HomePage() {
         ))}
       </div>
       </SectionBand>
-
-      {/* Betalings-tillidsboksen herunder er fjernet 28/9 - indholdet (Stripe,
-          PCI DSS, datasikkerhed) er i stedet flettet ind i trin 03-kortet
-          ovenfor i "Sådan fungerer det", så det ikke længere skal gentages
-          som en selvstændig boks på forsiden. */}
 
       <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
       <div
@@ -393,7 +380,7 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      <SectionBand title="Find opgaver" sub="Er du mere interesseret i at hjælpe? Find eksempler på åbne opgaver her.">
+      <SectionBand title="Find opgaver" sub="Vil du løse opgaver? Find eksempler på åbne opgaver her.">
       {openTasks.length === 0 ? (
         <p style={{ fontSize: 13.5, color: "#5B6478" }}>Ingen åbne opgaver lige nu.</p>
       ) : (
@@ -603,12 +590,11 @@ export default function HomePage() {
           "Ofte stillede spørgsmål", efter ønske. Samme navy-indramning ("tint")
           som "Sådan fungerer det" længere oppe, så de to sektioner stadig
           visuelt hænger sammen, selvom de ikke længere ligger ved siden af hinanden. */}
-      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
+      <SectionBand title="Hvorfor Kontorbud?" sub="Tre konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
         <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
-        <InfoTile icon={Star} title="Sammenlign før du vælger" text="Se bud, profiler og anmeldelser, og vælg selv den hjælper, der passer bedst til opgaven." />
         <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
-        <InfoTile icon={CreditCard} title="Sikker betaling" text="Betalingen holdes af Stripe og frigives først, når du selv markerer opgaven som udført." />
+        <InfoTile icon={Star} title="Anmeldelser begge veje" text="Efter en opgave bedømmer I hinanden, så tilliden mellem brugerne bygges op over tid." />
       </div>
       </SectionBand>
 
@@ -624,7 +610,7 @@ export default function HomePage() {
         </div>
         <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
         <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, der lever op til de højeste standarder for datasikkerhed (PCI DSS niveau 1). Dine kortoplysninger går aldrig gennem Kontorbuds egne servere, og beløbet frigives først, når du selv godkender.
+          Betalingen håndteres af Stripe, og beløbet frigives først, når du selv godkender arbejdet. Dine kortoplysninger går aldrig gennem Kontorbuds egne servere.
         </p>
       </div>
 
