@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, Star, Clock, Bell, Users, FileText as FileTextIcon, HelpCircle } from "lucide-react";
+import { ShieldCheck, Star, Clock, Bell, Users, HelpCircle } from "lucide-react";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
@@ -28,17 +28,22 @@ const HOME_FAQ_ITEMS = [
 ];
 
 // Roterende ord i hero-rubrikken (1/10): "Få hjælp til" står fast, mens ordet
-// herunder skifter mellem konkrete opgavetyper. Listen starter med "dine
-// kontoropgaver", da det er Kontorbuds overordnede budskab, og vender tilbage
-// til det én gang pr. omgang (ikke hver anden gang - justeret samme dag efter
-// ønske) - de andre ord er blot eksempler på, hvad platformen også dækker.
+// herunder skifter mellem konkrete opgavetyper. "dine kontoropgaver" er
+// Kontorbuds overordnede budskab og går derfor igen hvert 3. ord (indeks 0, 3,
+// 6 - listen er bevidst 9 lang, så mønstret går helt rundt uden at knække i
+// overgangen fra sidste til første ord). De andre ord er blot eksempler på,
+// hvad platformen også dækker ("AI-opgaver" optræder to gange, da det ellers
+// ikke går op med 5 unikke ord fordelt på 6 "andre"-pladser).
 const HERO_ROTATING_WORDS = [
   "dine kontoropgaver",
   "AI-opgaver",
   "bogføringsopgaver",
+  "dine kontoropgaver",
   "HR-opgaver",
   "administrative opgaver",
+  "dine kontoropgaver",
   "IT-opgaver",
+  "AI-opgaver",
 ];
 
 export default function HomePage() {
@@ -203,17 +208,23 @@ export default function HomePage() {
             🇩🇰 Danmarks markedsplads for kontoropgaver
           </div>
           {/* "Få hjælp til" står fast, mens ordet herunder roterer gennem
-              HERO_ROTATING_WORDS (1/10) - sekvensen starter på og vender
-              jævnligt tilbage til "dine kontoropgaver", som er Kontorbuds
-              overordnede budskab. heroWordMinHeight (målt herunder) holder
-              linjens højde konstant, så H1'en - og dermed resten af siden -
-              ikke hopper, når ordet skifter. */}
+              HERO_ROTATING_WORDS (1/10) - sekvensen vender tilbage til "dine
+              kontoropgaver" hvert 3. ord, som er Kontorbuds overordnede
+              budskab - det ord får derfor sin egen "blink"-animation
+              (kb-word-blink, efter udtrykkeligt ønske 1/10), mens de øvrige
+              ord bruger den rolige fade (kb-word-fade) som før. heroWordMinHeight
+              (målt herunder) holder linjens højde konstant, så H1'en - og
+              dermed resten af siden - ikke hopper, når ordet skifter. */}
           <h1 className="kb-hero-title" style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: "-0.02em", margin: 0 }}>
             Få hjælp til
             <br />
             <span
               key={heroWordIndex}
-              className="kb-hero-rotate-word"
+              className={
+                HERO_ROTATING_WORDS[heroWordIndex] === "dine kontoropgaver"
+                  ? "kb-hero-rotate-word kb-hero-rotate-word--blink"
+                  : "kb-hero-rotate-word"
+              }
               style={{
                 display: "inline-block",
                 color: "#2A55E5",
@@ -329,10 +340,25 @@ export default function HomePage() {
           {
             num: "03",
             title: "Godkend arbejdet og betal",
-            // 1/10: Stripe-omtalen og "millioner af virksomheder"-sætningen er fjernet
-            // herfra - betalingsmekanikken er allerede forklaret i den dedikerede
-            // tillidsboks nederst på siden, så dette kort holder sig til selve trinet.
-            text: "Betalingen holdes sikkert, til du markerer opgaven som udført.",
+            // 1/10: Stripe nævnes igen her, nu som et klikbart link til stripe.com
+            // (efter ønske) - den tidligere, selvstændige betalings-tillidsboks er
+            // samme dag flettet ind i "Hvorfor Kontorbud?"-gridet i stedet for at
+            // stå for sig selv, så dette er nu det eneste sted på forsiden, der
+            // nævner Stripe ved navn.
+            text: (
+              <>
+                Betalingen holdes sikkert via{" "}
+                <a
+                  href="https://stripe.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#2A55E5", fontWeight: 700 }}
+                >
+                  Stripe
+                </a>
+                , til du markerer opgaven som udført.
+              </>
+            ),
           },
         ].map((step) => (
           <div key={step.num} style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 34 }}>
@@ -670,16 +696,18 @@ export default function HomePage() {
           "Ofte stillede spørgsmål", efter ønske. Samme navy-indramning ("tint")
           som "Sådan fungerer det" længere oppe, så de to sektioner stadig
           visuelt hænger sammen, selvom de ikke længere ligger ved siden af hinanden.
-          1/10: den tidligere selvstændige betalings-tillidsboks (som lå herunder,
-          mellem denne sektion og "Klar til at starte?") er nu i stedet flettet
-          ind som et 4. kort i selve gridet herunder, efter ønske - grid gik
-          derfor fra 3 til 4 kolonner, og sub-teksten fra "Tre" til "Fire". */}
-      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
+          1/10, indhold skærpet igen samme dag: de fire kort er omskrevet til at
+          hver dække sin egen, tydeligt adskilte fordel - valgmuligheder (flere
+          bud) → kontrol (sammenlign og vælg selv) → fleksibilitet (planlagt
+          eller haster) → tryg betaling (Stripe, frigives ved godkendelse) - i
+          stedet for at nogle af dem overlappede med "Sådan fungerer det"
+          ovenfor. Design/layout/kort/farver er bevidst urørt, kun tekst+ikoner. */}
+      <SectionBand title="Hvorfor Kontorbud?" sub="Én opgave. Flere muligheder. Du vælger selv." tint="#14213D">
       <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
-        <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
-        <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
-        <InfoTile icon={Star} title="Anmeldelser begge veje" text="Efter en opgave bedømmer I hinanden, så tilliden mellem brugerne bygges op over tid." />
-        <InfoTile icon={ShieldCheck} title="Pengene bliver stående, til opgaven er løst" text="Betalingen håndteres af Stripe, og beløbet frigives først, når du selv godkender arbejdet. Dine kortoplysninger går aldrig gennem Kontorbuds egne servere." />
+        <InfoTile icon={Users} title="Få flere bud på din opgave" text="Opret opgaven én gang, og modtag bud fra flere hjælpere." />
+        <InfoTile icon={Star} title="Sammenlign og vælg selv" text="Sammenlign pris, profil og anmeldelser, og vælg den hjælper, der passer bedst." />
+        <InfoTile icon={Clock} title="Hjælp, når du har brug for det" text="Find hjælp til både planlagte opgaver og opgaver, der haster." />
+        <InfoTile icon={ShieldCheck} title="Betal først, når arbejdet er godkendt" text="Betalingen håndteres af Stripe og frigives først, når du har godkendt arbejdet." />
       </div>
       </SectionBand>
 

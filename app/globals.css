@@ -186,6 +186,38 @@ textarea {
   animation: kb-word-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* "dine kontoropgaver" (1/10) - blinker synligt et par gange, når det dukker
+   op i rotationen, da det er hovedbudskabet og derfor bevidst skal skille sig
+   ud fra de andre ords rolige fade (kb-word-fade ovenfor). Samme klasse
+   tilføjes OVEN I kb-hero-rotate-word, og overskriver dens animation pga.
+   kildeorden (samme specificitet, defineret senere i filen). */
+@keyframes kb-word-blink {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  32% {
+    opacity: 0.15;
+  }
+  52% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.kb-hero-rotate-word--blink {
+  animation: kb-word-blink 1s ease-in-out;
+}
+
 /* ---------- opgave-kort: fold "Oprettet af" + status/budget ned på en
    ny linje, når PLADSEN er trang - uanset om det skyldes en lille skærm
    eller at kortet ved siden af opgaverne optager plads på en stor skærm.
