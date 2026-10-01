@@ -29,19 +29,19 @@ const HOME_FAQ_ITEMS = [
 
 // Roterende ord i hero-rubrikken (1/10): "Få hjælp til" står fast, mens ordet
 // herunder skifter mellem konkrete opgavetyper. "dine kontoropgaver" er
-// Kontorbuds overordnede budskab og går derfor igen hvert 3. ord (indeks 0, 3,
-// 6 - listen er bevidst 9 lang, så mønstret går helt rundt uden at knække i
-// overgangen fra sidste til første ord). De andre ord er blot eksempler på,
-// hvad platformen også dækker ("AI-opgaver" optræder to gange, da det ellers
-// ikke går op med 5 unikke ord fordelt på 6 "andre"-pladser).
+// Kontorbuds overordnede budskab og går derfor igen hvert 4. ord (indeks 0, 4
+// - listen er bevidst 8 lang, altså et multiplum af 4, så mønstret går helt
+// rundt uden at knække i overgangen fra sidste til første ord). De andre ord
+// er blot eksempler på, hvad platformen også dækker ("AI-opgaver" optræder to
+// gange, da det ellers ikke går op med 5 unikke ord fordelt på 6
+// "andre"-pladser).
 const HERO_ROTATING_WORDS = [
   "dine kontoropgaver",
   "AI-opgaver",
   "bogføringsopgaver",
-  "dine kontoropgaver",
   "HR-opgaver",
-  "administrative opgaver",
   "dine kontoropgaver",
+  "administrative opgaver",
   "IT-opgaver",
   "AI-opgaver",
 ];
