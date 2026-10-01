@@ -28,19 +28,16 @@ const HOME_FAQ_ITEMS = [
 ];
 
 // Roterende ord i hero-rubrikken (1/10): "Få hjælp til" står fast, mens ordet
-// herunder skifter mellem konkrete opgavetyper. Listen starter med og vender
-// jævnligt tilbage til "dine kontoropgaver", da det er Kontorbuds overordnede
-// budskab - de andre ord er blot eksempler på, hvad platformen også dækker.
+// herunder skifter mellem konkrete opgavetyper. Listen starter med "dine
+// kontoropgaver", da det er Kontorbuds overordnede budskab, og vender tilbage
+// til det én gang pr. omgang (ikke hver anden gang - justeret samme dag efter
+// ønske) - de andre ord er blot eksempler på, hvad platformen også dækker.
 const HERO_ROTATING_WORDS = [
   "dine kontoropgaver",
   "AI-opgaver",
-  "dine kontoropgaver",
   "bogføringsopgaver",
-  "dine kontoropgaver",
   "HR-opgaver",
-  "dine kontoropgaver",
   "administrative opgaver",
-  "dine kontoropgaver",
   "IT-opgaver",
 ];
 
@@ -672,30 +669,19 @@ export default function HomePage() {
           "Opgaver løst gennem Kontorbud", før FAQ) - ligger nu i stedet under
           "Ofte stillede spørgsmål", efter ønske. Samme navy-indramning ("tint")
           som "Sådan fungerer det" længere oppe, så de to sektioner stadig
-          visuelt hænger sammen, selvom de ikke længere ligger ved siden af hinanden. */}
-      <SectionBand title="Hvorfor Kontorbud?" sub="Tre konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
-      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
+          visuelt hænger sammen, selvom de ikke længere ligger ved siden af hinanden.
+          1/10: den tidligere selvstændige betalings-tillidsboks (som lå herunder,
+          mellem denne sektion og "Klar til at starte?") er nu i stedet flettet
+          ind som et 4. kort i selve gridet herunder, efter ønske - grid gik
+          derfor fra 3 til 4 kolonner, og sub-teksten fra "Tre" til "Fire". */}
+      <SectionBand title="Hvorfor Kontorbud?" sub="Fire konkrete fordele ved at bruge platformen frem for selv at ringe rundt." tint="#14213D">
+      <div className="kb-grid-cat" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24 }}>
         <InfoTile icon={Users} title="Flere bud på samme opgave" text="Du slipper for selv at kontakte flere forskellige personer - opgaven når ud til flere hjælpere på én gang." />
         <InfoTile icon={FileTextIcon} title="Du bestemmer budgettet" text="Beskriv opgaven og angiv, hvad du forventer at betale - hjælperne byder ud fra det." />
         <InfoTile icon={Star} title="Anmeldelser begge veje" text="Efter en opgave bedømmer I hinanden, så tilliden mellem brugerne bygges op over tid." />
+        <InfoTile icon={ShieldCheck} title="Pengene bliver stående, til opgaven er løst" text="Betalingen håndteres af Stripe, og beløbet frigives først, når du selv godkender arbejdet. Dine kortoplysninger går aldrig gennem Kontorbuds egne servere." />
       </div>
       </SectionBand>
-
-      {/* Betalings-tillidsboksen er sat ind igen 29/9, mellem "Hvorfor Kontorbud?"
-          og "Klar til at starte?" - den blev fjernet 28/9 fra sin gamle plads
-          (lige under "Sådan fungerer det"), da indholdet dengang blev flettet
-          ind i trin 03-kortet i stedet. Nu efter ønske genindsat her, som en
-          selvstændig boks igen. */}
-      <div style={{ background: "#F5F7FB", borderRadius: 20, padding: "44px 48px", marginTop: 32 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 26 }}>
-          <ShieldCheck size={18} color="#2A55E5" />
-          <span style={{ fontSize: 12.5, fontWeight: 700, color: "#2A55E5" }}>Sikker betaling via Stripe</span>
-        </div>
-        <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 14 }}>Pengene bliver stående, til opgaven er løst</h3>
-        <p style={{ fontSize: 13.5, color: "#5B6478", lineHeight: 1.6, margin: 0, maxWidth: 600 }}>
-          Betalingen håndteres af Stripe, og beløbet frigives først, når du selv godkender arbejdet. Dine kortoplysninger går aldrig gennem Kontorbuds egne servere.
-        </p>
-      </div>
 
       <div style={{ textAlign: "center", margin: "100px 0 60px", padding: "0 20px" }}>
         <h2 style={{ fontSize: 27, fontWeight: 800, marginBottom: 28 }}>Klar til at starte?</h2>
