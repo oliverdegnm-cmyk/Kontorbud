@@ -414,11 +414,19 @@ function ImagesTab() {
   return (
     <div>
       <HeroImagesSetting />
+      {/* 3/10: to selvstændige kontaktside-fotos (Josefine + Anna), hver med egen
+          upload/position/zoom - se app/kontakt/KontaktClient.js, som viser dem side om side. */}
       <ImageSetting
-        label="Kontaktside-foto"
+        label="Kontaktside-foto (Josefine)"
         settingKey="kontakt_foto"
         defaultUrl="/kontakt-foto.jpg"
         hint="Vises til højre på kontaktsiden."
+      />
+      <ImageSetting
+        label="Kontaktside-foto (Anna)"
+        settingKey="kontakt_foto_2"
+        defaultUrl="/kontakt-foto-anna.jpg"
+        hint="Vises til højre på kontaktsiden, ved siden af Josefines foto."
       />
     </div>
   );

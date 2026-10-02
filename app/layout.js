@@ -2,6 +2,7 @@ import "./globals.css";
 import { NameProvider } from "@/lib/NameContext";
 import TopBar from "@/components/TopBar";
 import CookieBanner from "@/components/CookieBanner";
+import InstallPrompt from "@/components/InstallPrompt";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { Analytics } from "@vercel/analytics/react";
 import { safeJsonLd } from "@/lib/safeJsonLd";
@@ -77,6 +78,7 @@ export default function RootLayout({ children }) {
           <TopBar />
           <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 80px" }}>{children}</main>
           <CookieBanner />
+          <InstallPrompt siteName="Kontorbud" />
         </NameProvider>
         <Analytics />
         <GoogleAnalytics />
