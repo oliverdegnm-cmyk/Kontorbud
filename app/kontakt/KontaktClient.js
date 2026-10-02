@@ -122,24 +122,31 @@ export default function ContactClient({ initialKontaktFoto }) {
         </div>
 
         {!isReport && (
-          <div className="kb-hide-mobile" style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", width: 230, height: 210 }}>
-            <Image
-              src={kontaktFoto.url}
-              alt="Kundeservice hos os"
-              fill
-              quality={90}
-              // Samme grund som i HomeClient.js: boksen er 230px, men zoom-funktionen i
-              // admin-panelet kan forstørre billedet op til 200% via CSS - "sizes" skal
-              // afspejle den maksimale forstørrelse, ellers henter next/image en for lille
-              // kilde og opskalerer den selv, hvilket giver et sløret/pixeleret resultat.
-              sizes="460px"
-              style={{
-                objectFit: "cover",
-                objectPosition: `center ${kontaktFoto.position}%`,
-                transform: `scale(${kontaktFoto.zoom / 100})`,
-                transformOrigin: "center",
-              }}
-            />
+          <div className="kb-hide-mobile" style={{ width: 230 }}>
+            <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", width: 230, height: 210 }}>
+              <Image
+                src={kontaktFoto.url}
+                alt="Josefine Mortensen, Kundeservice Ansvarlig hos Kontorbud"
+                fill
+                quality={90}
+                // Samme grund som i HomeClient.js: boksen er 230px, men zoom-funktionen i
+                // admin-panelet kan forstørre billedet op til 200% via CSS - "sizes" skal
+                // afspejle den maksimale forstørrelse, ellers henter next/image en for lille
+                // kilde og opskalerer den selv, hvilket giver et sløret/pixeleret resultat.
+                sizes="460px"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: `center ${kontaktFoto.position}%`,
+                  transform: `scale(${kontaktFoto.zoom / 100})`,
+                  transformOrigin: "center",
+                }}
+              />
+            </div>
+            {/* 2/10: navn + titel under kontaktfotoet, efter ønske fra Oliver. */}
+            <div style={{ marginTop: 10, textAlign: "center" }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#14213D" }}>Josefine Mortensen</p>
+              <p style={{ margin: 0, fontSize: 12.5, color: "#5B6478" }}>Kundeservice Ansvarlig</p>
+            </div>
           </div>
         )}
       </div>
