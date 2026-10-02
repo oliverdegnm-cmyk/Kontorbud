@@ -7,28 +7,9 @@ import Image from "next/image";
 import { useName } from "@/lib/NameContext";
 import { Mail, CheckCircle2, ShieldAlert } from "lucide-react";
 import MessageThread from "@/components/MessageThread";
+import { buildDefaultStaff } from "@/lib/staff";
 
-// 3/10: to kundeservicemedarbejdere vises nu under kontaktfotoet (tidligere kun
-// Josefine). Ingen af dem er længere markeret som "Ansvarlig" - begge har
-// samme titel, efter ønske fra Oliver. Navn/titel er bevidst hardcoded her
-// (ligesom før for Josefine), mens selve fotoet pr. person kan
-// uploades/justeres uafhængigt i admin-panelet (se ImagesTab i app/admin/page.js).
-const STAFF = [
-  {
-    key: "foto1",
-    name: "Josefine Mortensen",
-    title: "Kundeservice Medarbejder",
-    alt: "Josefine Mortensen, Kundeservice Medarbejder hos Kontorbud",
-  },
-  {
-    key: "foto2",
-    name: "Anna Minaei",
-    title: "Kundeservice Medarbejder",
-    alt: "Anna Minaei, Kundeservice Medarbejder hos Kontorbud",
-  },
-];
-
-export default function ContactClient({ initialKontaktFotos }) {
+export default function ContactClient({ initialStaff }) {
   const { name, email: accountEmail } = useName();
   const searchParams = useSearchParams();
   const isReport = searchParams.get("type") === "report";
@@ -39,14 +20,11 @@ export default function ContactClient({ initialKontaktFotos }) {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   // Kommer allerede fra serveren via page.js (ingen client-side fetch), så
-  // billederne er korrekte fra første render - undgår at de først viser
-  // standardbillederne og derefter "blinker" til de rigtige, uploadede fotos.
-  const [kontaktFotos] = useState(
-    initialKontaktFotos || {
-      foto1: { url: "/kontakt-foto.jpg", position: 50, zoom: 100 },
-      foto2: { url: "/kontakt-foto-anna.jpg", position: 50, zoom: 100 },
-    }
-  );
+  // medarbejderlisten er korrekt fra første render - undgår at den først
+  // viser standardbillederne og derefter "blinker" til de rigtige. 11/10:
+  // nu en liste af vilkårlig længde (admin kan tilføje/fjerne, se
+  // app/admin/page.js/StaffMembersSetting), i stedet for to faste personer.
+  const [staff] = useState(initialStaff && initialStaff.length ? initialStaff : buildDefaultStaff({}));
 
   async function submit() {
     if (!contactName.trim() || !contactEmail.trim() || !message.trim()) {
@@ -146,41 +124,39 @@ export default function ContactClient({ initialKontaktFotos }) {
           )}
         </div>
 
-        {!isReport && (
-          // 3/10: to medarbejdere side om side i stedet for én - boksen er stadig i alt
-          // 230px bred (110 + 10 gap + 110), så den samlede kolonne fylder det samme som før.
-          <div className="kb-hide-mobile" style={{ display: "flex", gap: 10, width: 230 }}>
-            {STAFF.map((person) => {
-              const foto = kontaktFotos[person.key] || { url: "/kontakt-foto.jpg", position: 50, zoom: 100 };
-              return (
-                <div key={person.key} style={{ width: 110 }}>
-                  <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", width: 110, height: 210 }}>
-                    <Image
-                      src={foto.url}
-                      alt={person.alt}
-                      fill
-                      quality={90}
-                      // Samme grund som i HomeClient.js: boksen er 110px, men zoom-funktionen i
-                      // admin-panelet kan forstørre billedet op til 200% via CSS - "sizes" skal
-                      // afspejle den maksimale forstørrelse, ellers henter next/image en for lille
-                      // kilde og opskalerer den selv, hvilket giver et sløret/pixeleret resultat.
-                      sizes="220px"
-                      style={{
-                        objectFit: "cover",
-                        objectPosition: `center ${foto.position}%`,
-                        transform: `scale(${foto.zoom / 100})`,
-                        transformOrigin: "center",
-                      }}
-                    />
-                  </div>
-                  {/* 2/10 (nu 3/10): navn + titel under kontaktfotoet, efter ønske fra Oliver. */}
-                  <div style={{ marginTop: 10, textAlign: "center" }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#14213D" }}>{person.name}</p>
-                    <p style={{ margin: 0, fontSize: 11, color: "#5B6478" }}>{person.title}</p>
-                  </div>
+        {!isReport && staff.length > 0 && (
+          // 11/10: medarbejderne vises nu i en lodret liste i stedet for side om side -
+          // hver boks er igen 230×210px (samme størrelse som det oprindelige enkelt-foto),
+          // og listen vokser nedad i stedet for i bredden, så den fungerer for hvor mange
+          // medarbejdere admin end tilføjer (se app/admin/page.js/StaffMembersSetting).
+          <div className="kb-hide-mobile" style={{ display: "flex", flexDirection: "column", gap: 24, width: 230 }}>
+            {staff.map((person, idx) => (
+              <div key={idx}>
+                <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F5F7FB", width: 230, height: 210 }}>
+                  <Image
+                    src={person.url}
+                    alt={`${person.name}, ${person.title} hos Kontorbud`}
+                    fill
+                    quality={90}
+                    // Boksen er 230px, men zoom-funktionen i admin-panelet kan forstørre
+                    // billedet op til 200% via CSS - "sizes" skal afspejle den maksimale
+                    // forstørrelse, ellers henter next/image en for lille kilde og
+                    // opskalerer den selv, hvilket giver et sløret/pixeleret resultat.
+                    sizes="460px"
+                    style={{
+                      objectFit: "cover",
+                      objectPosition: `center ${person.position}%`,
+                      transform: `scale(${(person.zoom || 100) / 100})`,
+                      transformOrigin: "center",
+                    }}
+                  />
                 </div>
-              );
-            })}
+                <div style={{ marginTop: 10, textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#14213D" }}>{person.name}</p>
+                  <p style={{ margin: 0, fontSize: 11, color: "#5B6478" }}>{person.title}</p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import ContactClient from "./KontaktClient";
 import { pool, ensureSchema } from "@/lib/db";
+import { parseStaffMembers } from "@/lib/staff";
 
 export const metadata = {
   title: "Kontakt kundeservice - Kontorbud",
@@ -13,44 +14,30 @@ export const metadata = {
 // bruger samme force-dynamic mønster.
 export const dynamic = "force-dynamic";
 
-// 3/10: udvidet fra ét til to kontaktfotos (Josefine + Anna), efter ønske om en
-// ekstra kundeservicemedarbejder på /kontakt. "foto1"/"foto2" bruger hver sit
-// sæt settings-nøgler (kontakt_foto[_2]/_position/_zoom), så de kan
-// uploades/justeres uafhængigt af hinanden i admin-panelet (se ImagesTab i
-// app/admin/page.js).
-async function getKontaktFotos() {
+// 11/10: medarbejderne vises nu som en admin-styret liste (se app/admin/page.js,
+// StaffMembersSetting) i stedet for to hardcodede personer - "staff_members" i
+// site_settings er en JSON-liste af { name, title, url, position, zoom}. Er
+// den ikke sat endnu, bygger parseStaffMembers() den samme to-personers-liste
+// (Josefine + Anna), der var der før, ud fra de gamle enkeltstående nøgler.
+async function getStaffMembers() {
   try {
     await ensureSchema();
     const { rows } = await pool.query(
-      "SELECT key, value FROM site_settings WHERE key IN ('kontakt_foto', 'kontakt_foto_position', 'kontakt_foto_zoom', 'kontakt_foto_2', 'kontakt_foto_2_position', 'kontakt_foto_2_zoom')"
+      "SELECT key, value FROM site_settings WHERE key IN ('staff_members', 'kontakt_foto', 'kontakt_foto_position', 'kontakt_foto_zoom', 'kontakt_foto_2', 'kontakt_foto_2_position', 'kontakt_foto_2_zoom')"
     );
     const settings = {};
     rows.forEach((r) => (settings[r.key] = r.value));
-    return {
-      foto1: {
-        url: settings.kontakt_foto || "/kontakt-foto.jpg",
-        position: settings.kontakt_foto_position ? parseFloat(settings.kontakt_foto_position) : 50,
-        zoom: settings.kontakt_foto_zoom ? parseFloat(settings.kontakt_foto_zoom) : 100,
-      },
-      foto2: {
-        url: settings.kontakt_foto_2 || "/kontakt-foto-anna.jpg",
-        position: settings.kontakt_foto_2_position ? parseFloat(settings.kontakt_foto_2_position) : 50,
-        zoom: settings.kontakt_foto_2_zoom ? parseFloat(settings.kontakt_foto_2_zoom) : 100,
-      },
-    };
+    return parseStaffMembers(settings.staff_members, settings);
   } catch (err) {
-    return {
-      foto1: { url: "/kontakt-foto.jpg", position: 50, zoom: 100 },
-      foto2: { url: "/kontakt-foto-anna.jpg", position: 50, zoom: 100 },
-    };
+    return parseStaffMembers(null, {});
   }
 }
 
 export default async function Page() {
-  const kontaktFotos = await getKontaktFotos();
+  const staff = await getStaffMembers();
   return (
     <Suspense fallback={null}>
-      <ContactClient initialKontaktFotos={kontaktFotos} />
+      <ContactClient initialStaff={staff} />
     </Suspense>
   );
 }

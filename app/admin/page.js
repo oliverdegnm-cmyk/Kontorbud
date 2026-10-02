@@ -414,20 +414,250 @@ function ImagesTab() {
   return (
     <div>
       <HeroImagesSetting />
-      {/* 3/10: to selvstændige kontaktside-fotos (Josefine + Anna), hver med egen
-          upload/position/zoom - se app/kontakt/KontaktClient.js, som viser dem side om side. */}
-      <ImageSetting
-        label="Kontaktside-foto (Josefine)"
-        settingKey="kontakt_foto"
-        defaultUrl="/kontakt-foto.jpg"
-        hint="Vises til højre på kontaktsiden."
-      />
-      <ImageSetting
-        label="Kontaktside-foto (Anna)"
-        settingKey="kontakt_foto_2"
-        defaultUrl="/kontakt-foto-anna.jpg"
-        hint="Vises til højre på kontaktsiden, ved siden af Josefines foto."
-      />
+      {/* 11/10: de to faste kontaktside-fotos (Josefine + Anna) er afløst af en
+          admin-styret liste, så Oliver selv kan tilføje/fjerne medarbejdere -
+          se StaffMembersSetting herunder og app/kontakt/KontaktClient.js. */}
+      <StaffMembersSetting />
+    </div>
+  );
+}
+
+// 11/10: ønske fra Oliver om at kunne tilføje/fjerne kontaktside-medarbejdere
+// selv, i stedet for kun at kunne justere de to faste personer Josefine og
+// Anna. Modelleret direkte efter HeroImagesSetting herover (samme JSON-liste-
+// mønster i site_settings), men med navn + titel som ekstra, redigerbare
+// felter pr. person. Gemmes som JSON i site_settings-nøglen "staff_members"
+// (se lib/staff.js, som bruges af både denne fane og den offentlige side).
+function StaffMembersSetting() {
+  const [staff, setStaff] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [rowUploading, setRowUploading] = useState(null);
+  const [rowSaved, setRowSaved] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/site-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        const settings = data.settings || {};
+        try {
+          const parsed = settings.staff_members ? JSON.parse(settings.staff_members) : null;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setStaff(parsed);
+            return;
+          }
+        } catch (err) {
+          // ugyldig JSON - fald igennem til migreringen herunder
+        }
+        // Migrering: endnu ingen gemt medarbejderliste - byg den ud fra de to
+        // faste fotos, der var sat op før denne fane fandtes, så Oliver ikke
+        // selv skal genoprette Josefine og Anna første gang han åbner denne fane.
+        setStaff([
+          {
+            name: "Josefine Mortensen",
+            title: "Kundeservice Medarbejder",
+            url: settings.kontakt_foto || "/kontakt-foto.jpg",
+            position: settings.kontakt_foto_position ? parseFloat(settings.kontakt_foto_position) : 50,
+            zoom: settings.kontakt_foto_zoom ? parseFloat(settings.kontakt_foto_zoom) : 100,
+          },
+          {
+            name: "Anna Minaei",
+            title: "Kundeservice Medarbejder",
+            url: settings.kontakt_foto_2 || "/kontakt-foto-anna.jpg",
+            position: settings.kontakt_foto_2_position ? parseFloat(settings.kontakt_foto_2_position) : 50,
+            zoom: settings.kontakt_foto_2_zoom ? parseFloat(settings.kontakt_foto_2_zoom) : 100,
+          },
+        ]);
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  async function persist(next) {
+    setStaff(next);
+    await fetch("/api/admin/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "staff_members", value: JSON.stringify(next) }),
+    });
+  }
+
+  function updateField(idx, field, value) {
+    setStaff((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
+  }
+
+  async function addMember(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setError("");
+    try {
+      const optimized = await optimizeImage(file);
+      const blob = await upload(optimized.name, optimized, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ purpose: "image" }),
+      });
+      await persist([...staff, { name: "", title: "Kundeservice Medarbejder", url: blob.url, position: 50, zoom: 100 }]);
+    } catch (err) {
+      setError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
+    }
+    setUploading(false);
+    e.target.value = "";
+  }
+
+  async function changePhoto(idx, e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setRowUploading(idx);
+    setError("");
+    try {
+      const optimized = await optimizeImage(file);
+      const blob = await upload(optimized.name, optimized, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+        clientPayload: JSON.stringify({ purpose: "image" }),
+      });
+      const next = staff.map((p, i) => (i === idx ? { ...p, url: blob.url, position: 50, zoom: 100 } : p));
+      await persist(next);
+    } catch (err) {
+      setError(err?.message || "Kunne ikke uploade billedet. Prøv igen.");
+    }
+    setRowUploading(null);
+    e.target.value = "";
+  }
+
+  async function removeMember(idx) {
+    await persist(staff.filter((_, i) => i !== idx));
+  }
+
+  async function saveRow(idx) {
+    await persist(staff);
+    setRowSaved(idx);
+    setTimeout(() => setRowSaved(null), 2000);
+  }
+
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 16, padding: 20, marginBottom: 16 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Medarbejdere på kontaktsiden</div>
+      <div style={{ fontSize: 12, color: "#5B6478", marginBottom: 14 }}>
+        Vises til højre på kontaktsiden (skjules på mobil). Tilføj, fjern eller ret navn, titel og foto efter behov.
+      </div>
+
+      {!loaded && <p style={{ color: "#5B6478", fontSize: 13.5 }}>Henter…</p>}
+      {loaded && staff.length === 0 && (
+        <p style={{ color: "#5B6478", fontSize: 13, marginBottom: 14 }}>Der er ingen medarbejdere sat op endnu - tilføj én herunder.</p>
+      )}
+
+      {loaded && staff.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 14 }}>
+          {staff.map((person, idx) => (
+            <div key={idx} style={{ border: "1px solid #E4E8F0", borderRadius: 12, padding: 14 }}>
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                <div style={{ width: 140, height: 130, borderRadius: 12, border: "1px solid #E4E8F0", overflow: "hidden", flexShrink: 0 }}>
+                  <img
+                    src={person.url}
+                    alt={person.name || `Medarbejder ${idx + 1}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: `center ${person.position}%`,
+                      transform: `scale(${(person.zoom || 100) / 100})`,
+                      transformOrigin: "center",
+                      display: "block",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1, minWidth: 220 }}>
+                  <input
+                    value={person.name}
+                    onChange={(e) => updateField(idx, "name", e.target.value)}
+                    placeholder="Navn"
+                    style={{ width: "100%", fontSize: 13.5, fontWeight: 700, padding: "9px 12px", border: "1.5px solid #E4E8F0", borderRadius: 8, background: "#F5F7FB", marginBottom: 8 }}
+                  />
+                  <input
+                    value={person.title}
+                    onChange={(e) => updateField(idx, "title", e.target.value)}
+                    placeholder="Titel"
+                    style={{ width: "100%", fontSize: 13, padding: "9px 12px", border: "1.5px solid #E4E8F0", borderRadius: 8, background: "#F5F7FB" }}
+                  />
+                </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 380, marginTop: 12, marginBottom: 12 }}>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+                    <span>Lodret position</span>
+                    <span>{person.position}%</span>
+                  </div>
+                  <input type="range" min="0" max="100" value={person.position} onChange={(e) => updateField(idx, "position", Number(e.target.value))} style={{ width: "100%" }} />
+                </div>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, fontWeight: 700, color: "#5B6478", marginBottom: 4 }}>
+                    <span>Zoom</span>
+                    <span>{person.zoom}%</span>
+                  </div>
+                  <input type="range" min="100" max="200" value={person.zoom} onChange={(e) => updateField(idx, "zoom", Number(e.target.value))} style={{ width: "100%" }} />
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                <button
+                  onClick={() => saveRow(idx)}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 16px", borderRadius: 8, border: "1.5px solid #E4E8F0", background: "#fff", color: "#14213D", cursor: "pointer" }}
+                >
+                  Gem
+                </button>
+                <label
+                  style={{
+                    fontSize: 12.5,
+                    fontWeight: 700,
+                    padding: "8px 16px",
+                    borderRadius: 8,
+                    border: "1.5px solid #E4E8F0",
+                    background: "#fff",
+                    color: "#14213D",
+                    cursor: rowUploading === idx ? "default" : "pointer",
+                    opacity: rowUploading === idx ? 0.6 : 1,
+                  }}
+                >
+                  {rowUploading === idx ? "Uploader…" : "Skift foto"}
+                  <input type="file" accept="image/*" onChange={(e) => changePhoto(idx, e)} disabled={rowUploading === idx} style={{ display: "none" }} />
+                </label>
+                <button
+                  onClick={() => removeMember(idx)}
+                  style={{ fontSize: 12.5, fontWeight: 700, padding: "8px 16px", borderRadius: 8, border: "1.5px solid #FDECEC", background: "#fff", color: "#C0392B", cursor: "pointer" }}
+                >
+                  Fjern
+                </button>
+                {rowSaved === idx && <span style={{ fontSize: 12, fontWeight: 700, color: "#1AA37A" }}>✓ Gemt</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <label
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 13,
+          fontWeight: 700,
+          padding: "10px 18px",
+          borderRadius: 10,
+          border: "1.5px solid #E4E8F0",
+          color: "#14213D",
+          cursor: uploading ? "default" : "pointer",
+          opacity: uploading ? 0.6 : 1,
+        }}
+      >
+        <Upload size={14} />
+        {uploading ? "Uploader…" : "Tilføj medarbejder"}
+        <input type="file" accept="image/*" onChange={addMember} disabled={uploading} style={{ display: "none" }} />
+      </label>
+      <div style={{ fontSize: 11, color: "#9AA2B1", marginTop: 8 }}>Upload et foto for at tilføje en ny medarbejder, og udfyld navn/titel bagefter.</div>
+      {error && <div style={{ marginTop: 10, fontSize: 12.5, color: "#C0392B" }}>{error}</div>}
     </div>
   );
 }

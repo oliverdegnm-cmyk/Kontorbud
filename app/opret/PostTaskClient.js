@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CATS, matchCategoryFromText } from "@/lib/categories";
 import { useName } from "@/lib/NameContext";
 import FileUploader from "@/components/FileUploader";
+import { Sparkles } from "lucide-react";
 
 function PostTaskPage() {
   const router = useRouter();
@@ -79,6 +80,55 @@ function PostTaskPage() {
   const [error, setError] = useState("");
   const [okId, setOkId] = useState("");
 
+  // 11/10: "udfyld automatisk med AI" - brugeren beskriver kort opgaven med
+  // egne ord, og AI'en forslår felterne nedenfor, så brugeren kun skal tjekke
+  // dem igennem og rette til, i stedet for at udfylde alt fra bunden.
+  const [aiText, setAiText] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
+  const [aiDone, setAiDone] = useState(false);
+
+  async function autofillFromText() {
+    if (!aiText.trim()) return;
+    setAiLoading(true);
+    setAiError("");
+    setAiDone(false);
+    try {
+      const res = await fetch("/api/autofill-task", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: aiText }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setAiError(data.error);
+        setAiLoading(false);
+        return;
+      }
+      const e = data.extracted || {};
+      // Udfylder kun felter, der stadig er tomme/på standardværdi, så vi ikke
+      // risikerer at overskrive noget, brugeren allerede selv har skrevet -
+      // samme princip som "Udfyld profil automatisk fra CV" i app/profil/page.js.
+      if (e.title && !title.trim()) setTitle(e.title);
+      if (e.category && CATS.some((c) => c.name === e.category)) {
+        setCategory(e.category);
+        setCategoryTouched(true);
+        setCategorySuggested(true);
+      }
+      if (e.description && !description.trim()) setDescription(e.description);
+      if (e.budget && !budget.trim()) setBudget(e.budget);
+      if (e.isUrgent) setIsUrgent(true);
+      if (e.locationType === "in_person") {
+        setLocationType("in_person");
+        if (e.area && !area.trim()) setArea(e.area);
+      }
+      setAiDone(true);
+    } catch (err) {
+      setAiError("Kunne ikke udfylde formularen automatisk. Prøv igen, eller udfyld felterne manuelt.");
+    }
+    setAiLoading(false);
+  }
+
   async function lookupCvr(value) {
     const digitsOnly = value.replace(/\D/g, "");
     if (digitsOnly.length !== 8) {
@@ -150,6 +200,53 @@ function PostTaskPage() {
       <p style={{ color: "#5B6478", fontSize: 14, marginBottom: 24 }}>
         Beskriv opgaven klart, så bydere ved præcis, hvad de byder på. Det er gratis at oprette.
       </p>
+
+      {/* 11/10: lad AI udfylde felterne nedenfor ud fra en kort fritekst-beskrivelse,
+          så man ikke selv skal udfylde alt fra bunden - man tjekker og retter til bagefter. */}
+      <div style={{ background: "#F5F7FF", border: "1.5px solid #DCE4FB", borderRadius: 20, padding: 24, marginBottom: 20, maxWidth: 660 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+          <Sparkles size={16} color="#1B3AA6" />
+          <span style={{ fontSize: 14.5, fontWeight: 700, color: "#14213D" }}>Lad AI udfylde opgaven for dig</span>
+        </div>
+        <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 12, lineHeight: 1.5 }}>
+          Beskriv kort med dine egne ord, hvad du har brug for hjælp til - AI udfylder felterne nedenfor, så du kan tjekke dem igennem og rette til, før du opretter opgaven.
+        </p>
+        <textarea
+          value={aiText}
+          onChange={(e) => setAiText(e.target.value)}
+          placeholder="f.eks. Jeg skal have bogført mit Q3-regnskab i Dinero, gerne inden 1. november, budget omkring 2000 kr"
+          style={{ width: "100%", minHeight: 70, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff", resize: "vertical", marginBottom: 10 }}
+        />
+        <button
+          type="button"
+          onClick={autofillFromText}
+          disabled={aiLoading || !aiText.trim()}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            fontSize: 13,
+            fontWeight: 700,
+            padding: "10px 18px",
+            borderRadius: 10,
+            border: "none",
+            background: "#2A55E5",
+            color: "#fff",
+            cursor: aiLoading || !aiText.trim() ? "default" : "pointer",
+            opacity: aiLoading || !aiText.trim() ? 0.6 : 1,
+          }}
+        >
+          <Sparkles size={13} />
+          {aiLoading ? "Analyserer…" : "Udfyld formular automatisk"}
+        </button>
+        {aiDone && (
+          <div style={{ fontSize: 12, color: "#1AA37A", marginTop: 10, fontWeight: 600 }}>
+            ✓ Felterne nedenfor er udfyldt ud fra din beskrivelse - tjek dem gerne igennem, og ret til hvis noget ikke er helt rigtigt.
+          </div>
+        )}
+        {aiError && <div style={{ fontSize: 12, color: "#C0392B", marginTop: 10 }}>{aiError}</div>}
+      </div>
+
       <div style={{ background: "#fff", border: "1.5px solid #E4E8F0", borderRadius: 20, padding: 30, maxWidth: 660 }}>
         <div style={{ marginBottom: 20 }}>
           <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#5B6478", marginBottom: 8 }}>Opretter du som</label>
