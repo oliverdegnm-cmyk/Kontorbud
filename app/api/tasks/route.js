@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { pool, ensureSchema } from "@/lib/db";
 import { geocodeArea } from "@/lib/geocode";
+import { CATS } from "@/lib/categories";
 
 function mapTask(row, bids, attachments) {
   return {
@@ -109,13 +110,20 @@ export async function POST(request) {
     // antal opgaver, som gav kollisioner, når ældre opgaver blev slettet.
     const coords = locationType === "in_person" ? await geocodeArea(area) : null;
 
+    // 3/10: en kategori sendt af den nye AI-analyse (se app/api/tasks/analyze)
+    // behandles ALDRIG som automatisk korrekt her - samme "AI må ikke kunne
+    // oprette nye kategorier"-regel som analyse-routen selv allerede følger,
+    // men gentaget her som et sikkerhedsnet, da denne route er det sted,
+    // der rent faktisk skriver til databasen.
+    const safeCategory = CATS.some((c) => c.name === category) ? category : "Andet";
+
     const { rows } = await pool.query(
       `INSERT INTO tasks (case_no, title, category, budget, deadline, deadline_date, is_urgent, description, posted_by, area, lat, lng, poster_type, company_name, cvr_number, location_type, address)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
       [
         "midlertidig",
         title.trim(),
-        category || "Andet",
+        safeCategory,
         budget?.trim() || "Ikke angivet",
         deadlineDate ? null : deadline?.trim() || "Fleksibel",
         deadlineDate || null,
