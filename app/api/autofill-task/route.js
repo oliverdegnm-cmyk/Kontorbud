@@ -20,6 +20,18 @@ export async function POST(request) {
       extracted.category = null;
     }
 
+    // 2/10: samme forsigtighedsprincip som kategorien ovenfor - en dato, der
+    // ikke er et gyldigt, reelt (og ikke allerede overstået) YYYY-MM-DD-format,
+    // bliver aldrig sendt videre til formularen. Så falder siden tilbage til
+    // brugerens egen valgte/forudvalgte dato, i stedet for at vise noget forkert.
+    if (extracted.deadlineDate) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(extracted.deadlineDate.trim());
+      const parsed = match ? new Date(`${extracted.deadlineDate.trim()}T00:00:00Z`) : null;
+      const todayIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Copenhagen" }).format(new Date());
+      const isValid = match && parsed && !isNaN(parsed.getTime()) && extracted.deadlineDate.trim() >= todayIso;
+      extracted.deadlineDate = isValid ? extracted.deadlineDate.trim() : "";
+    }
+
     return NextResponse.json({ extracted });
   } catch (err) {
     console.error("Kunne ikke AI-udfylde opgaveformularen:", err);

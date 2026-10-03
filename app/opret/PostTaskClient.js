@@ -66,6 +66,10 @@ function PostTaskPage() {
     d.setDate(d.getDate() + 7);
     return d.toISOString().slice(0, 10);
   });
+  // 2/10: samme princip som categoryTouched ovenfor - så AI-udfyldningen kun
+  // sætter fristen, hvis brugeren ikke allerede selv har rørt ved den (og
+  // dermed ikke overskriver et valg, brugeren selv har taget).
+  const [deadlineTouched, setDeadlineTouched] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
   const [area, setArea] = useState("");
   const [locationType, setLocationType] = useState("remote"); // "remote" | "in_person"
@@ -121,6 +125,17 @@ function PostTaskPage() {
       if (e.locationType === "in_person") {
         setLocationType("in_person");
         if (e.area && !area.trim()) setArea(e.area);
+      }
+      // 2/10: udfylder kun fristen, hvis brugeren ikke allerede selv har valgt
+      // dato/fleksibel - ellers rører vi ikke ved den, samme "kun tomme felter"-
+      // princip som resten af denne funktion.
+      if (!deadlineTouched) {
+        if (e.deadlineFlexible) {
+          setDeadlineType("flexible");
+        } else if (e.deadlineDate) {
+          setDeadlineType("date");
+          setDeadlineDate(e.deadlineDate);
+        }
       }
       setAiDone(true);
     } catch (err) {
@@ -215,8 +230,17 @@ function PostTaskPage() {
           value={aiText}
           onChange={(e) => setAiText(e.target.value)}
           placeholder="f.eks. Jeg skal have bogført mit Q3-regnskab i Dinero, gerne inden 1. november, budget omkring 2000 kr"
-          style={{ width: "100%", minHeight: 70, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff", resize: "vertical", marginBottom: 10 }}
+          style={{ width: "100%", minHeight: 70, fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#fff", resize: "vertical", marginBottom: 8 }}
         />
+        {/* 2/10: et fast eksempel, der IKKE forsvinder når man skriver (modsat
+            placeholder-teksten i feltet ovenfor) - så man altid kan se, hvordan
+            en brugbar beskrivelse ser ud, også mens man selv er i gang med at skrive. */}
+        <div style={{ fontSize: 12, color: "#5B6478", lineHeight: 1.5, marginBottom: 12, padding: "10px 12px", background: "#fff", border: "1px dashed #DCE4FB", borderRadius: 10 }}>
+          <span style={{ fontWeight: 700, color: "#14213D" }}>Eksempel: </span>
+          "Jeg skal have bogført mit Q3-regnskab i Dinero, gerne inden 1. november, budget omkring 2000 kr."
+          <br />
+          Skriv gerne hvad opgaven handler om, en frist eller et tidspunkt, og et budget, hvis du har et - så udfylder AI både felterne og kalenderen for dig.
+        </div>
         <button
           type="button"
           onClick={autofillFromText}
@@ -355,7 +379,10 @@ function PostTaskPage() {
             <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "date" ? 8 : 0 }}>
               <button
                 type="button"
-                onClick={() => setDeadlineType("date")}
+                onClick={() => {
+                  setDeadlineType("date");
+                  setDeadlineTouched(true);
+                }}
                 style={{
                   flex: 1,
                   padding: "10px 0",
@@ -372,7 +399,10 @@ function PostTaskPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setDeadlineType("flexible")}
+                onClick={() => {
+                  setDeadlineType("flexible");
+                  setDeadlineTouched(true);
+                }}
                 style={{
                   flex: 1,
                   padding: "10px 0",
@@ -393,7 +423,10 @@ function PostTaskPage() {
                 type="date"
                 min={new Date().toISOString().slice(0, 10)}
                 value={deadlineDate}
-                onChange={(e) => setDeadlineDate(e.target.value)}
+                onChange={(e) => {
+                  setDeadlineDate(e.target.value);
+                  setDeadlineTouched(true);
+                }}
                 style={{ width: "100%", fontSize: 14, padding: "12px 14px", border: "1.5px solid #E4E8F0", borderRadius: 10, background: "#F5F7FB" }}
               />
             )}
