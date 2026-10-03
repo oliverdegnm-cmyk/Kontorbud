@@ -208,6 +208,9 @@ function PostTaskPage() {
       if (m === "category" || m === "clarify") return fieldSource.category !== "user";
       if (m === "workMode") return fieldSource.locationType !== "user";
       if (m === "priority") return fieldSource.isUrgent !== "user";
+      if (m === "posterType") return fieldSource.posterType !== "user";
+      if (m === "budget") return fieldSource.budget !== "user";
+      if (m === "deadline") return fieldSource.deadline !== "user";
       return true;
     });
     setCategoryCandidates(data.categoryCandidates || []);
@@ -278,6 +281,26 @@ function PostTaskPage() {
     setIsUrgent(value);
     setFieldSource((s) => ({ ...s, isUrgent: "user" }));
     setMissingFields((m) => m.filter((k) => k !== "priority"));
+  }
+
+  // 3/10 (opfølgning): tre nye, lette spørgsmål - lagt til efter Olivers
+  // feedback om at AI'en gerne må spørge om flere ting på én gang (privat/
+  // virksomhed, budget, tidspunkt), ikke kun kategori/arbejdsform/prioritet.
+  // Vises samlet med de øvrige kort på "clarify"-skærmen, ikke sekventielt.
+  function answerPosterType(value) {
+    setPosterType(value);
+    setFieldSource((s) => ({ ...s, posterType: "user" }));
+    setMissingFields((m) => m.filter((k) => k !== "posterType"));
+  }
+  function answerBudget(value) {
+    setBudget(value);
+    setFieldSource((s) => ({ ...s, budget: "user" }));
+    setMissingFields((m) => m.filter((k) => k !== "budget"));
+  }
+  function answerDeadlineType(type) {
+    setDeadlineType(type);
+    setFieldSource((s) => ({ ...s, deadline: "user" }));
+    setMissingFields((m) => m.filter((k) => k !== "deadline"));
   }
 
   function undoTitle() {
@@ -557,6 +580,48 @@ function PostTaskPage() {
                 <PillButton onClick={() => answerWorkMode("remote")}>Eksternt</PillButton>
                 <PillButton onClick={() => answerWorkMode("in_person")}>Personligt fremmøde</PillButton>
               </div>
+            </div>
+          )}
+          {missingFields.includes("posterType") && (
+            <div style={cardStyle}>
+              <label style={labelStyle}>Opretter du som privatperson eller virksomhed?</label>
+              <div style={{ display: "flex", gap: 8 }}>
+                <PillButton onClick={() => answerPosterType("private")}>Privatperson</PillButton>
+                <PillButton onClick={() => answerPosterType("business")}>Virksomhed</PillButton>
+              </div>
+            </div>
+          )}
+          {missingFields.includes("budget") && (
+            <div style={cardStyle}>
+              <label style={labelStyle}>Har du et omtrentligt budget?</label>
+              <input
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                placeholder="f.eks. 1.500 kr"
+                style={inputStyle}
+              />
+              <div style={{ marginTop: 10, display: "flex", gap: 16 }}>
+                <button type="button" onClick={() => answerBudget(budget)} style={linkBtnStyle}>Gem</button>
+                <button type="button" onClick={() => answerBudget("")} style={{ ...linkBtnStyle, color: "#5B6478" }}>Ved ikke endnu</button>
+              </div>
+            </div>
+          )}
+          {missingFields.includes("deadline") && (
+            <div style={cardStyle}>
+              <label style={labelStyle}>Hvornår skal opgaven helst være løst?</label>
+              <div style={{ display: "flex", gap: 8, marginBottom: deadlineType === "date" ? 8 : 0 }}>
+                <PillButton active={deadlineType === "date"} onClick={() => answerDeadlineType("date")}>Vælg dato</PillButton>
+                <PillButton active={deadlineType === "flexible"} onClick={() => answerDeadlineType("flexible")}>Fleksibel</PillButton>
+              </div>
+              {deadlineType === "date" && (
+                <input
+                  type="date"
+                  min={new Date().toISOString().slice(0, 10)}
+                  value={deadlineDate}
+                  onChange={(e) => { setDeadlineDate(e.target.value); markUser("deadline"); }}
+                  style={inputStyle}
+                />
+              )}
             </div>
           )}
           {missingFields.includes("priority") && (

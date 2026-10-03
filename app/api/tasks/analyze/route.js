@@ -80,19 +80,32 @@ export async function POST(request) {
     // Spørg kun om det, der reelt mangler (punkt 5-6 i briefet) - i den
     // rækkefølge, der oftest giver mest mening at få afklaret: en uklar
     // kategori (eller det opklarende spørgsmål, der hænger sammen med den
-    // valgte kategori) vejer tungest, dernæst arbejdsform, og til sidst
-    // prioritet - som ofte slet ikke er nødvendig at spørge om.
+    // valgte kategori) vejer tungest, dernæst arbejdsform/privat-virksomhed,
+    // så budget/tidspunkt, og til sidst prioritet - som ofte slet ikke er
+    // nødvendig at spørge om.
+    //
+    // 3/10 (opfølgning efter Olivers feedback på den live side): udvidet med
+    // posterType/budget/deadline, som den første udgave bevidst ALDRIG
+    // spurgte om (de har alle sikre standardværdier, og AI'en opfinder dem
+    // aldrig) - men Oliver ønsker at AI'en aktivt spørger om dem, når
+    // kunden ikke selv har nævnt dem, i stedet for at lade dem stå stille.
+    // Klienten viser ALLE kortene i missingFields samlet på én gang på
+    // samme skærm (ikke ét ad gangen) - det er det, der gør "spørg evt.
+    // flere ting på én gang" muligt uden en lang, sekventiel spørgerække.
     const missingFields = [];
     if (!fields.category) missingFields.push("category");
     else if (validClarifying) missingFields.push("clarify");
     if (!fields.locationType) missingFields.push("workMode");
+    if (!fields.posterType) missingFields.push("posterType");
+    if (!fields.budget) missingFields.push("budget");
+    if (!fields.deadlineDate && !fields.deadlineFlexible) missingFields.push("deadline");
     if (raw.isUrgentUncertain) missingFields.push("priority");
 
     return NextResponse.json({
       fields,
       categoryCandidates: fields.category ? [] : validCandidates,
       clarifyingQuestion: fields.category ? validClarifying : null,
-      missingFields: missingFields.slice(0, 3),
+      missingFields: missingFields.slice(0, 7),
     });
   } catch (err) {
     console.error("Kunne ikke AI-analysere opgaven:", err);
