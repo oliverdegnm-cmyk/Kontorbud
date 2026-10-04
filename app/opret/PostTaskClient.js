@@ -18,7 +18,11 @@ const inputStyle = { width: "100%", fontSize: 14, padding: "12px 14px", border: 
 const primaryBtnStyle = { marginTop: 6, fontSize: 14.5, fontWeight: 700, padding: "12px 22px", borderRadius: 12, border: "none", background: "#2A55E5", color: "#fff", cursor: "pointer" };
 const linkBtnStyle = { background: "none", border: "none", padding: 0, fontSize: 12.5, fontWeight: 700, color: "#2A55E5", textDecoration: "underline", cursor: "pointer" };
 const errorBoxStyle = { marginTop: 14, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#FDECEC", color: "#C0392B" };
-const okBoxStyle = { marginTop: 14, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#E9F9F1", color: "#1AA37A" };
+// Diskrete hint-chips under fritekstfeltet på intro-skærmen. Samme pille-form
+// som Badge, men lysere og med normal vægt, så de ikke ligner knapper/felter.
+const WIZARD_HINTS = ["Deadline", "Program/system", "Omfang", "Budget"];
+const hintChipStyle = { fontSize: 12, fontWeight: 500, lineHeight: 1.2, padding: "4px 10px", borderRadius: 999, background: "#fff", border: "1px solid #DCE4FB", color: "#5B6478", whiteSpace: "nowrap" };
+const okBoxStyle ={ marginTop: 14, padding: "11px 14px", borderRadius: 10, fontSize: 12.5, fontWeight: 700, background: "#E9F9F1", color: "#1AA37A" };
 
 // Genbrugt "vælg mellem to/flere" knap - erstatter de tidligere gentagne,
 // håndskrevne knap-par (dato/fleksibel, normal/haste, eksternt/fremmøde,
@@ -481,14 +485,29 @@ function PostTaskPage() {
           Beskriv kort, hvad du skal have hjælp til – så klarer AI resten. Det er gratis at oprette.
         </p>
         <div style={aiCardStyle}>
-          <label style={{ display: "block", fontSize: 14.5, fontWeight: 700, color: "#14213D", marginBottom: 6 }}>Hvad skal du have hjælp til?</label>
-          <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 12, lineHeight: 1.5 }}>Beskriv det med dine egne ord. Du behøver ikke udfylde en masse felter.</p>
+          <label htmlFor="kb-wizard-text" style={{ display: "block", fontSize: 14.5, fontWeight: 700, color: "#14213D", marginBottom: 6 }}>Hvad skal du have hjælp til?</label>
+          <p style={{ fontSize: 12.5, color: "#5B6478", marginBottom: 12, lineHeight: 1.5 }}>Skriv bare det, du ved – vi spørger ind til resten.</p>
           <textarea
+            id="kb-wizard-text"
+            aria-describedby="kb-wizard-hints"
             value={wizardText}
             onChange={(e) => setWizardText(e.target.value)}
-            placeholder="Fx: Jeg skal have bogført Q3 i Dinero inden 1. november. Mit budget er ca. 2.000 kr."
-            style={{ ...inputStyle, minHeight: 110, resize: "vertical", marginBottom: 14, background: "#fff" }}
+            placeholder="Fx: Jeg skal have bogført Q3 i Dinero inden 1. november."
+            style={{ ...inputStyle, minHeight: 110, resize: "vertical", marginBottom: 10, background: "#fff" }}
           />
+          {/* Permanente hints under feltet - forbliver synlige mens brugeren skriver
+              (i modsætning til placeholderen). Bevidst ikke-klikbare, dæmpede
+              "chips", så de læses som inspiration og ikke som obligatoriske felter;
+              AI-flowet spørger efterfølgende ind til det, der mangler. */}
+          <div
+            id="kb-wizard-hints"
+            style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6, marginBottom: 18 }}
+          >
+            <span style={{ fontSize: 12, color: "#9AA2B1", marginRight: 2 }}>Gode ting at nævne:</span>
+            {WIZARD_HINTS.map((h) => (
+              <span key={h} style={hintChipStyle}>{h}</span>
+            ))}
+          </div>
           <button
             type="button"
             onClick={runInitialAnalysis}
