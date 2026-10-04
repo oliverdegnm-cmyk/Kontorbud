@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, Star, Clock, Bell, Users, HelpCircle } from "lucide-react";
-import { CATS, matchCategoryFromText } from "@/lib/categories";
+import { CATS } from "@/lib/categories";
 import { CatIcon } from "@/lib/icons";
 import Badge from "@/components/Badge";
 import Stars from "@/components/Stars";
@@ -50,11 +50,9 @@ export default function HomePage() {
   const router = useRouter();
   const { name } = useName();
   const [quickDescription, setQuickDescription] = useState("");
-  const [matchingWithAi, setMatchingWithAi] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
-  const matchedCategory = matchCategoryFromText(quickDescription);
 
-  // Viser færre kategori-chips på mobil, så "Hvad skal du have løst?"
+  // Viser færre kategori-chips på mobil, så "Hvad skal du have hjælp til?"
   // ikke bliver en lang, rodet søjle af kategorier på en smal skærm.
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -69,33 +67,16 @@ export default function HomePage() {
   // er med blandt de kategorier, der vises uden at klikke "+X flere".
   const visibleCatCount = isMobile ? 4 : 12;
 
-  async function goToCreateTask() {
-    const title = quickDescription.trim();
-    const titleParam = title ? `title=${encodeURIComponent(title)}` : "";
-
-    const localMatch = matchCategoryFromText(quickDescription);
-    if (localMatch || !title) {
-      const params = [titleParam, localMatch ? `category=${encodeURIComponent(localMatch.name)}` : ""].filter(Boolean).join("&");
-      router.push(`/opret${params ? "?" + params : ""}`);
-      return;
-    }
-
-    // Ordlisten fandt intet - spørger AI'en som sikkerhedsnet, før vi giver op
-    // og lader brugeren vælge kategori selv på opret-siden.
-    setMatchingWithAi(true);
-    try {
-      const res = await fetch("/api/match-category", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: quickDescription }),
-      });
-      const data = await res.json();
-      const params = [titleParam, data.category ? `category=${encodeURIComponent(data.category)}` : ""].filter(Boolean).join("&");
-      router.push(`/opret${params ? "?" + params : ""}`);
-    } catch (err) {
-      router.push(`/opret${titleParam ? "?" + titleParam : ""}`);
-    }
-    setMatchingWithAi(false);
+  // 4/10: forsidens felt er nu første trin i opret-flowet. Brugeren skal ikke
+  // kende kategori, felter eller hvilke oplysninger vi skal bruge - teksten
+  // sendes derfor uændret videre som beskrivelse, og opret-siden (AI-analysen
+  // i PostTaskClient) finder selv kategori, titel og det, der mangler. Den
+  // tidligere kategori-match her blev sendt som "category=" og blev dermed
+  // låst som brugerens eget valg på opret-siden, selvom brugeren aldrig
+  // havde valgt den.
+  function goToCreateTask() {
+    const text = quickDescription.trim();
+    router.push(text ? `/opret?description=${encodeURIComponent(text)}&auto=1` : "/opret");
   }
   const [tasks, setTasks] = useState(null);
   const DEFAULT_HERO_IMAGE = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&auto=format&fit=crop&q=70";
@@ -370,7 +351,7 @@ export default function HomePage() {
       </div>
       </SectionBand>
 
-      <SectionBand title="Hvad skal du have løst?" sub="Skriv en kort titel - vi finder automatisk den rette kategori for dig." border="#14213D">
+      <SectionBand title="Hvad skal du have hjælp til?" sub="Beskriv kort, hvad du skal have lavet. Vi hjælper dig med at gøre opgaven klar." border="#14213D">
       <div
         style={{
           display: "flex",
@@ -387,12 +368,12 @@ export default function HomePage() {
           value={quickDescription}
           onChange={(e) => setQuickDescription(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && goToCreateTask()}
-          placeholder="f.eks. Hjælp til mit årsregnskab…"
+          placeholder="Fx: Jeg skal have hjælp til mit årsregnskab..."
+          aria-label="Hvad skal du have hjælp til?"
           style={{ flex: "1 1 240px", fontSize: 14.5, padding: "13px 16px", border: "1.5px solid #E4E8F0", borderRadius: 12, background: "#fff" }}
         />
         <button
           onClick={goToCreateTask}
-          disabled={matchingWithAi}
           style={{
             fontSize: 14.5,
             fontWeight: 700,
@@ -401,19 +382,15 @@ export default function HomePage() {
             border: "none",
             background: "#2A55E5",
             color: "#fff",
-            cursor: matchingWithAi ? "default" : "pointer",
-            opacity: matchingWithAi ? 0.7 : 1,
+            cursor: "pointer",
             flex: "0 0 auto",
           }}
         >
-          {matchingWithAi ? "Finder bedste kategori…" : "Opret opgave →"}
+          Fortsæt →
         </button>
       </div>
-      {matchedCategory && (
-        <div style={{ fontSize: 12.5, color: "#1AA37A", marginTop: -18, marginBottom: 20, fontWeight: 700 }}>✓ Fundet: {matchedCategory.name}</div>
-      )}
 
-      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>...eller tryk på en kategori for inspiration og typiske opgaver:</div>
+      <div style={{ fontSize: 12.5, color: "#9AA2B1", marginBottom: 18 }}>Mangler du inspiration? Se eksempler på, hvad du kan få hjælp til:</div>
       <div className="kb-cat-chips" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10, marginBottom: 20 }}>
         {CATS.filter((c) => c.name !== "Journalføring & arkivering")
           .slice(0, showAllCategories ? undefined : visibleCatCount)

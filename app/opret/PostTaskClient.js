@@ -257,6 +257,21 @@ function PostTaskPage() {
     setScreen("form");
   }
 
+  // 4/10: kommer brugeren fra forsidens "Hvad skal du have hjælp til?" (med
+  // ?description=...&auto=1), har de allerede trykket "Fortsæt" - analysen
+  // starter derfor med det samme i stedet for at bede dem trykke igen. Fejler
+  // den, står de på intro-skærmen med teksten udfyldt og "Prøv igen"/"Fortsæt
+  // manuelt" som i dag. Ref'en sikrer, at det kun sker én gang pr. besøg.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    if (searchParams.get("auto") === "1" && wizardText.trim()) {
+      autoStartedRef.current = true;
+      runInitialAnalysis();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function answerCategory(value) {
     setCategory(value);
     setFieldSource((s) => ({ ...s, category: "user" }));
